@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import SearchResults from './SearchResults';
+import SearchResults from '../SearchResults/SearchResults';
 import './NavBar.css';
 import hypeLogo from './hypeLogo.png';
 import searchIcon from './searchIcon.png'; // 돋보기 이미지 추가
@@ -47,7 +47,6 @@ const NavBar = () => {
         <button className="nav-button">회원가입</button>
         <button className="nav-button">메뉴</button>
       </div>
-      <SearchResults results={searchResults} />
     </header>
   );
 };
