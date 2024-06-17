@@ -3,6 +3,7 @@ import './SearchResults.css'; // 스타일을 위한 CSS 파일 추가
 import likeImg from './like.png';
 import unlikeImg from './unlike.png';
 import eventImg from './eventImg.jpeg';
+import NavBar from '../NavBar/NavBar';
 
 const SearchResults = ({ results }) => {
   // 결과 예시 데이터 배열 생성
@@ -23,27 +24,30 @@ const SearchResults = ({ results }) => {
   }
 
   return (
-    <div className="search-results">
-      {resultExamples.map((result) => (
-        <div className="search-result-item" key={result.id}>
-          <img className="result-image" src={result.image} alt={result.title} />
+    <>
+      <NavBar />
+      <div className="search-results">
+        {resultExamples.map((result) => (
+          <div className="search-result-item" key={result.id}>
+            <img className="result-image" src={result.image} alt={result.title} />
 
-          <div className="result-details">
-            <div className="result-top">
-              <h3 className="result-title">{result.title}</h3>
-              {result.liked ? (
-                <img className="like-image" src={likeImg} alt="Liked" />
-              ) : (
-                <img className="like-image" src={unlikeImg} alt="Not Liked" />
-              )}
+            <div className="result-details">
+              <div className="result-top">
+                <h3 className="result-title">{result.title}</h3>
+                {result.liked ? (
+                  <img className="like-image" src={likeImg} alt="Liked" />
+                ) : (
+                  <img className="like-image" src={unlikeImg} alt="Not Liked" />
+                )}
+              </div>
+
+              <p className="result-location">{result.location}</p>
+              <p className="result-summary">{result.summary}</p>
             </div>
-
-            <p className="result-location">{result.location}</p>
-            <p className="result-summary">{result.summary}</p>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 };
 

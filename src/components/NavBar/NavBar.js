@@ -4,16 +4,19 @@ import SearchResults from '../SearchResults/SearchResults';
 import './NavBar.css';
 import hypeLogo from './hypeLogo.png';
 import searchIcon from './searchIcon.png'; // 돋보기 이미지 추가
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
-      setSearchResults(response.data);
+      //const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
+      //setSearchResults(response.data);
+      navigate('/search');
     } catch (error) {
       console.error('There was an error fetching the search results!', error);
     }
