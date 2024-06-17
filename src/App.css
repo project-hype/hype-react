@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.hypeLogo {
+  width: 70px;
+  height: 28px;
+  margin-right: 10px;
+}
