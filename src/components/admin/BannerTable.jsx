@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Rectangle200 from '../../assets/img/common/Rectangle200.png';
 
 const BannerWrapper = styled.div`
   align-self: stretch;
@@ -87,7 +88,7 @@ const BannerTable = () => {
       <div style={{ position: 'absolute', top: '711px', left: '438px', width: '122px', height: '32px' }}>
         <div
           style={{
-            backgroundImage: 'url(./rectangle-200.png)',
+            backgroundImage: `url(${Rectangle200})`,
             backgroundSize: '100% 100%',
             height: '34px',
             position: 'relative',
