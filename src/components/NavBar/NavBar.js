@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import SearchResults from '../SearchResults/SearchResults';
 import './NavBar.css';
-import hypeLogo from './hypeLogo.png';
-import searchIcon from './searchIcon.png'; // 돋보기 이미지 추가
+import hypeLogo from '../../assets/img/layout/hypeLogo.png';
+import searchIcon from '../../assets/img/layout/searchIcon.png'; // 돋보기 이미지 추가
 import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
