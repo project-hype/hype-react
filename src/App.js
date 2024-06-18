@@ -3,6 +3,7 @@ import './App.css';
 import SearchResults from './components/SearchResults/SearchResults';
 // import Main from './components/Main/Main';
 import Main from './pages/MainPage';
+import SignIn from './pages/member/SignInPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const CommonRouter = () => {
@@ -11,6 +12,7 @@ const CommonRouter = () => {
       <Routes>
         <Route path="/" element={<Main />}></Route>
         <Route path="/search" element={<SearchResults />}></Route>
+        <Route path="/login" element={<SignIn />}></Route>
       </Routes>
     </BrowserRouter>
   );
