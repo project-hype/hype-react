@@ -1,8 +1,8 @@
 import React from 'react';
 import './SearchResults.css'; // 스타일을 위한 CSS 파일 추가
-import likeImg from './like.png';
-import unlikeImg from './unlike.png';
-import eventImg from './eventImg.jpeg';
+import likeImg from '../../assets/img/event/like.png';
+import unlikeImg from '../../assets/img/event/unlike.png';
+import eventImg from '../../assets/img/event/eventImg.jpeg';
 import NavBar from '../NavBar/NavBar';
 
 const SearchResults = ({ results }) => {
