@@ -5,6 +5,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
 import image from '../../assets/img/event/eventImg.jpeg';
+import favoriteImage from '../../assets/img/layout/bookmark.svg';
+import afterImage from '../../assets/img/layout/download.png';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
@@ -112,6 +114,93 @@ function EventBanner({ title, type }) {
     cursor: pointer;
   `;
 
+  const FavoriteP = styled.p`
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+  `;
+
+  const FavoriteA = styled.a`
+    position: absolute;
+    color: inherit;
+    cursor: pointer;
+    right: 0;
+    top: 0;
+  `;
+
+  const FavoriteImg = styled.img`
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    display: block;
+  `;
+
+  const SlideImgWrap = styled.div`
+    display: block;
+    unicode-bidi: isolate;
+    box-sizing: border-box;
+
+    &:after {
+      background: url(${afterImage}) 0 0;
+      content: ' ';
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-size: cover;
+      left: 0;
+      top: 0;
+      opacity: 0.8;
+      z-index: 1;
+    }
+  `;
+
+  const EventImage = styled.img`
+    width: 260px;
+    height: 260px;
+    border-radius: 8px;
+  `;
+
+  const EventInfo = styled.ul`
+    position: absolute;
+    left: -25px;
+    bottom: 20px;
+    z-index: 10;
+    color: white;
+  `;
+
+  const EventLi = styled.li`
+    padding-bottom: 5px;
+    list-style: none;
+  `;
+
+  const EventName = styled(EventLi)`
+    font-size: 16px;
+    font-weight: 700;
+  `;
+
+  const EventBranch = styled(EventLi)`
+    font-size: 12px;
+    opacity: 0.6;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 3px;
+  `;
+
+  const EventType = styled(EventLi)`
+    font-size: 10px;
+    opacity: 0.6;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 3px;
+  `;
+
   return (
     <BannerWrap>
       <Header>
@@ -124,22 +213,28 @@ function EventBanner({ title, type }) {
 
       <EventInner>
         <Slider {...settings}>
-          <div className="popupbanner-list">
-            <FontAwesomeIcon icon={faHeart} />
-            <FontAwesomeIcon icon={faRegularHeart} />
-            <p> //즐겨찾기</p>
-            <div className="slide-img-wrap">
-              <img src={image} className="popup-img" />
-            </div>
-            <ul className="eventbanner-list-info">
-              <li className="event-name">
+          <PopupBannerList>
+            {/* <FontAwesomeIcon icon={faRegularHeart} /> */}
+            <FavoriteP>
+              <FavoriteA>
+                {/* <FontAwesomeIcon icon={faHeart} /> */}
+                <FavoriteImg src={favoriteImage} />
+                {/* <FontAwesomeIcon icon={faHeart} /> */}
+              </FavoriteA>
+            </FavoriteP>
+            <SlideImgWrap>
+              <EventImage src={image} />
+            </SlideImgWrap>
+            <EventInfo>
+              <EventName>
                 <p>Event.getTitle</p>
-              </li>
-              <li className="event-branch">
+              </EventName>
+              <EventBranch>
                 <FontAwesomeIcon icon={faLocationDot} /> Event.getBranchName
-              </li>
-            </ul>
-          </div>
+              </EventBranch>
+              <EventType>더현대 서울 </EventType>
+            </EventInfo>
+          </PopupBannerList>
         </Slider>
       </EventInner>
 
