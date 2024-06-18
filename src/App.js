@@ -1,8 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import NavBar from './components/NavBar/NavBar';
 import SearchResults from './components/SearchResults/SearchResults';
-import Main from './components/Main/Main';
+// import Main from './components/Main/Main';
+import Main from './pages/MainPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const CommonRouter = () => {
