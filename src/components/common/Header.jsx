@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import SearchResults from '../SearchResults/SearchResults';
-import hypeLogo from '../../assets/img/layout/hypeLogo.png';
-import searchIcon from '../../assets/img/layout/searchIcon.png'; // 돋보기 이미지 추가
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import hypeLogo from '../../assets/img/layout/hypeLogo.png';
+import searchIcon from '../../assets/img/layout/searchIcon.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f8f9fa;
+  padding: 24px 56px; /* 양옆에 56px, 위아래로 24px */
+  background-color: #ffffff;
   position: relative;
   height: 50px; /* 고정 높이로 설정 */
 
@@ -57,44 +58,51 @@ const NavbarForm = styled.form`
   }
 `;
 
-const SearchInput = styled.input`
-  padding: 5px 10px;
-  width: 50%;
-  height: 32px;
-  flex-grow: 1; /* 나머지 공간을 모두 채우도록 설정 */
-  margin-left: 20%;
-  background-color: #e0e0e0;
-  border: none;
-  border-radius: 20px 0 0 20px;
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 50%; /* 전체 너비의 50% */
+  margin: 0 auto; /* 가운데 정렬을 위한 설정 */
+  background-color: #eaeaea;
+  border-radius: 20px;
 
   @media (max-width: 768px) {
     width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0; /* 모바일 화면에서는 기존 마진을 제거하고 전체 너비로 설정 */
     margin-bottom: 10px;
   }
 `;
 
-const SearchButton = styled.button`
-  background-color: #e0e0e0;
-  width: 5%;
-  height: 42px;
+const SearchInput = styled.input`
   padding: 5px 10px;
-  margin-right: 20%;
-  flex-grow: 0; /* 검색 버튼이 고정 크기를 가지도록 설정 */
+  width: 100%; /* 부모 컨테이너의 너비를 모두 사용 */
+  height: 32px;
+  border: none;
+  background-color: transparent;
+  border-radius: 20px 0 0 20px;
+
+  @media (max-width: 768px) {
+    border-radius: 20px;
+  }
+`;
+
+const SearchButton = styled.button`
+  background-color: #eaeaea;
+  width: 42px; /* 고정 너비 설정 */
+  height: 42px;
+  padding: 5px;
   border: none;
   border-radius: 0 20px 20px 0;
   cursor: pointer;
 
   @media (max-width: 768px) {
-    margin-left: 0; /* 검색 버튼과의 간격을 조정 */
-    margin-bottom: 10px;
+    border-radius: 20px;
   }
 `;
 
 const SearchIcon = styled.img`
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 `;
 
 const NavbarRight = styled.div`
@@ -107,17 +115,19 @@ const NavbarRight = styled.div`
     margin-bottom: 10px;
   }
 `;
+
 const NavButton = styled.button`
+  font-family: '해피니스 산스 타이틀';
+  font-size: 22px;
   margin-left: 10px;
   padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
+  background: none;
+  color: black;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    color: #0056b3;
   }
 
   @media (max-width: 768px) {
@@ -135,8 +145,8 @@ const Header = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      //const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
-      //setSearchResults(response.data);
+      // const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
+      // setSearchResults(response.data);
       navigate('/search');
     } catch (error) {
       console.error('There was an error fetching the search results!', error);
@@ -154,21 +164,20 @@ const Header = () => {
       </NavbarLeft>
       <NavbarCenter>
         <NavbarForm onSubmit={handleSearch}>
-          <SearchInput
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <SearchButton type="submit">
-            <SearchIcon src={searchIcon} alt="Search" />
-          </SearchButton>
+          <SearchContainer>
+            <SearchInput type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <SearchButton type="submit">
+              <SearchIcon src={searchIcon} alt="Search" />
+            </SearchButton>
+          </SearchContainer>
         </NavbarForm>
       </NavbarCenter>
       <NavbarRight className="navbar-right">
         <NavButton className="nav-button">로그인</NavButton>
         <NavButton className="nav-button">회원가입</NavButton>
-        <NavButton className="nav-button">메뉴</NavButton>
+        <NavButton className="nav-button">
+          <FontAwesomeIcon icon={faBars} />
+        </NavButton>
       </NavbarRight>
     </Navbar>
   );
