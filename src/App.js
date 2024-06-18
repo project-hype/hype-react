@@ -3,18 +3,23 @@ import './App.css';
 import NavBar from './components/NavBar/NavBar';
 import SearchResults from './components/SearchResults/SearchResults';
 import Main from './components/Main/Main';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-
-const router = createBrowserRouter([
-  { path: '/', element: <Main /> },
-  { path: '/search', element: <SearchResults /> },
-]);
+const CommonRouter = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />}></Route>
+        <Route path="/search" element={<SearchResults />}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 function App() {
   return (
     <div>
-      <RouterProvider router={router} />
+      <CommonRouter />
     </div>
   );
 }
