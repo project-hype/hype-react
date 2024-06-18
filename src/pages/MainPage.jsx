@@ -8,7 +8,6 @@ function MainPage() {
       <MainLayout>
         <Banner />
       </MainLayout>
-      gsdasf
     </div>
   );
 }
