@@ -122,7 +122,7 @@ const NavButton = styled.button`
   margin-left: 10px;
   padding: 5px 10px;
   background: none;
-  color: black;
+  color: #595959;
   border: none;
   cursor: pointer;
 
@@ -155,6 +155,15 @@ const Header = () => {
 
   const handleHomeClick = () => {
     console.log('Home button clicked');
+    navigate('/');
+  };
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleJoinClick = () => {
+    navigate('/join');
   };
 
   return (
@@ -173,10 +182,14 @@ const Header = () => {
         </NavbarForm>
       </NavbarCenter>
       <NavbarRight className="navbar-right">
-        <NavButton className="nav-button">로그인</NavButton>
-        <NavButton className="nav-button">회원가입</NavButton>
+        <NavButton className="nav-button" onClick={handleLoginClick}>
+          로그인
+        </NavButton>
+        <NavButton className="nav-button" onClick={handleJoinClick}>
+          회원가입
+        </NavButton>
         <NavButton className="nav-button">
-          <FontAwesomeIcon icon={faBars} />
+          <FontAwesomeIcon icon={faBars} size="2x" style={{ color: '#595959' }} />
         </NavButton>
       </NavbarRight>
     </Navbar>

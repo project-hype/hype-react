@@ -1,14 +1,14 @@
 import React from 'react';
 import MainLayout from '../../layout/MainLayout';
-import SignInForm from '../../components/member/SignInForm';
+import JoinForm from '../../components/member/JoinForm';
 
-function LoginPage() {
+function JoinPage() {
   return (
     <div>
       <MainLayout />
-      <SignInForm />
+      <JoinForm />
     </div>
   );
 }
 
-export default LoginPage;
+export default JoinPage;
