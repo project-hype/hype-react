@@ -5,6 +5,8 @@ import SearchResults from './components/SearchResults/SearchResults';
 import Main from './pages/MainPage';
 import SignIn from './pages/member/SignInPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AdminMain from './pages/admin/AdminMainPage';
+import axios from 'axios';
 
 const CommonRouter = () => {
   return (
@@ -13,6 +15,7 @@ const CommonRouter = () => {
         <Route path="/" element={<Main />}></Route>
         <Route path="/search" element={<SearchResults />}></Route>
         <Route path="/login" element={<SignIn />}></Route>
+        <Route path="/admin" element={<AdminMain />}></Route>
       </Routes>
     </BrowserRouter>
   );
