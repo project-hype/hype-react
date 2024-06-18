@@ -3,8 +3,9 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import image from '../../assets/img/event/eventImg.jpeg';
+import styled from 'styled-components';
 
-function BannerList() {
+function Banner(bannerList) {
   const [dragging, setDragging] = useState(false);
   const handleBeforeChange = useCallback(() => {
     setDragging(true);
@@ -32,6 +33,7 @@ function BannerList() {
     const { onClick } = props;
     return <div className="mainPrevious" onClick={onClick} />;
   };
+
   const CustomNextArrow = (props) => {
     const { onClick } = props;
     return <div className="mainNext" onClick={onClick} />;
@@ -58,23 +60,8 @@ function BannerList() {
       },
     ],
   };
-  //   const settings = {
-  //     dots: true,
-  //     dotsClass: 'popup-banner-dots',
-  //     infinite: true,
-  //     speed: 500,
-  //     slidesToShow: 2,
-  //     slidesToScroll: 1,
-  //     autoplay: false,
-  //     autoplaySpeed: 2000,
-  //     arrows: true,
-  //     nextArrow: <CustomNextArrow />,
-  //     prevArrow: <CustomPrevArrow />,
-  //     draggable: false,
-  //   };
   return (
-    <div stlye={{ position: 'relative' }}>
-      <h2> Single Item</h2>
+    <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
       <Slider {...settings}>
         {images.map((el) => (
           <div key={el.title}>
@@ -86,4 +73,4 @@ function BannerList() {
   );
 }
 
-export default BannerList;
+export default Banner;
