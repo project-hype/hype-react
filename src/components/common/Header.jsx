@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -127,7 +127,11 @@ const NavButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: #0056b3;
+    color: #ff8c00;
+  }
+
+  &:hover .icon {
+    color: #ff8c00;
   }
 
   @media (max-width: 768px) {
@@ -140,7 +144,23 @@ const NavButton = styled.button`
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/member/session', { withCredentials: true });
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -166,6 +186,25 @@ const Header = () => {
     navigate('/join');
   };
 
+  const handleLogoutClick = () => {
+    axios
+      .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
+      .then(() => {
+        setIsLoggedIn(false);
+      })
+      .catch((error) => {
+        console.error('Logout failed!', error);
+      });
+  };
+
+  const handleMyPageClick = () => {
+    navigate('/mypage');
+  };
+
+  const handleConfirm = () => {
+    navigate('/');
+  };
+
   return (
     <Navbar>
       <NavbarLeft>
@@ -182,14 +221,27 @@ const Header = () => {
         </NavbarForm>
       </NavbarCenter>
       <NavbarRight className="navbar-right">
-        <NavButton className="nav-button" onClick={handleLoginClick}>
-          로그인
-        </NavButton>
-        <NavButton className="nav-button" onClick={handleJoinClick}>
-          회원가입
-        </NavButton>
+        {isLoggedIn ? (
+          <>
+            <NavButton className="nav-button" onClick={handleLogoutClick}>
+              로그아웃
+            </NavButton>
+            <NavButton className="nav-button" onClick={handleMyPageClick}>
+              마이페이지
+            </NavButton>
+          </>
+        ) : (
+          <>
+            <NavButton className="nav-button" onClick={handleLoginClick}>
+              로그인
+            </NavButton>
+            <NavButton className="nav-button" onClick={handleJoinClick}>
+              회원가입
+            </NavButton>
+          </>
+        )}
         <NavButton className="nav-button">
-          <FontAwesomeIcon icon={faBars} size="2x" style={{ color: '#595959' }} />
+          <FontAwesomeIcon icon={faBars} size="2x" />
         </NavButton>
       </NavbarRight>
     </Navbar>

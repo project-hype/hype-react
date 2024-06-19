@@ -2,8 +2,9 @@ import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import axiosInstance from '../../axiosInstance';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
+import Modal from '../common/Modal';
 
 const StyledForm = styled.form`
   display: flex;
@@ -70,33 +71,6 @@ const SignUpPrompt = styled.div`
   text-align: center;
 `;
 
-const Modal = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 400px; /* 너비 설정 */
-`;
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`;
-
 function LogInForm({ onLogIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -121,44 +95,19 @@ function LogInForm({ onLogIn }) {
         password: password,
       });
       if (res.status === 200) {
-        setShowModal(true); // 로그인 성공시 모달을 보여줌
         console.log(res.data);
+        navigate('/');
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (error.response && error.response.status === 401) {
         setShowModal(true);
-        setLoginError(true); // HTTP 400 에러일 경우 로그인 실패 상태를 true로 설정
+        setLoginError(true); // HTTP 401 에러일 경우 로그인 실패 상태를 true로 설정
       }
       console.log(error);
     }
   };
-  //   const handleSubmit = useCallback(
-  //     (e) => {
-  //       e.preventDefault();
-  //       axios
-  //         .post(
-  //           'localhost:8080/login?username=test&password=test1234',
-  //           {
-  //             username: username,
-  //             password: password,
-  //           },
-  //           {
-  //             withCredentials: true, // 클라이언트와 서버가 통신할때 쿠키와 같은 인증 정보 값을 공유하겠다는 설정
-  //           },
-  //         )
-  //         .then((response) => {
-  //           console.log(response.data);
-  //         })
-  //         .catch((error) => {
-  //           console.log(username, password);
-  //           console.log(error);
-  //         });
-  //     },
-  //     [username, password, onSignIn],
-  //   );
 
   const handleHomeClick = () => {
-    console.log('Home button clicked');
     navigate('/');
   };
 
@@ -173,21 +122,7 @@ function LogInForm({ onLogIn }) {
   return (
     <>
       {showModal && (
-        <>
-          <Overlay />
-          <Modal>
-            {loginError ? (
-              <p>
-                로그인에 실패했습니다.
-                <br />
-                ID나 비밀번호를 확인해주세요.
-              </p>
-            ) : (
-              <p>로그인 성공했습니다</p>
-            )}
-            <Button text="확인" bgColor="#FF8C00" onClick={handleConfirm} />
-          </Modal>
-        </>
+        <Modal message={'로그인에 실패했습니다. ID나 비밀번호를 확인해주세요.'} onConfirm={handleConfirm} />
       )}
       <StyledForm onSubmit={handleSubmit}>
         <HypeLogo src={hypeLogo} alt="Home" onClick={handleHomeClick} />
@@ -206,7 +141,7 @@ function LogInForm({ onLogIn }) {
         <SignUpContainer>
           <div></div>
           <SignUpPrompt>
-            <a href="">아직 회원이 아니신가요?</a>
+            <Link to="/join">아직 회원이 아니신가요?</Link>
           </SignUpPrompt>
         </SignUpContainer>
         <Button type="submit" text="로그인" />
