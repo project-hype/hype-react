@@ -53,6 +53,9 @@ const Input = styled.input`
   height: 50%;
   font-size: 15px;
   padding: 10px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SignUpContainer = styled.div`

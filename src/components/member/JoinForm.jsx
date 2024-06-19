@@ -27,15 +27,8 @@ const Section = styled.div`
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 40px;
-`;
-
-const Separator = styled.div`
-  position: absolute;
-  left: 15px;
-  top: 93px;
-  width: calc(100% - 30px);
-  border: 2px solid #e0ded8;
+  margin-bottom: 48px;
+  border: none;
 `;
 
 const LabelContainer = styled.div`
@@ -44,7 +37,7 @@ const LabelContainer = styled.div`
 `;
 
 const Label = styled.div`
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 타이틀';
   font-weight: bold;
   font-size: 20px;
   color: #595959;
@@ -57,24 +50,30 @@ const Asterisk = styled.span`
 const InputField = styled.input`
   width: calc(100% - 24px);
   padding: 10px;
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 레귤러';
   font-size: 16px;
-  border: 1px solid #e0ded8;
+  border: none;
   border-radius: 5px;
+  background-color: transparent;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SelectField = styled.select`
-  width: calc(100% - 24px);
+  width: 30%;
   padding: 10px;
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 볼드';
   font-size: 16px;
-  border: 1px solid #e0ded8;
-  border-radius: 5px;
+  border: 1px;
+  border-radius: 20px;
+  margin-bottom: 8px;
 `;
 
 const RadioGroup = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 const RadioButton = styled.label`
@@ -95,11 +94,11 @@ const JoinButtonContainer = styled.div`
 `;
 
 const ErrorText = styled.div`
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 레귤러';
   font-weight: bold;
   font-size: 11px;
   color: #f00;
-  margin-top: 10px;
+  margin-top: 8px;
 `;
 
 // 버튼 스타일
@@ -144,16 +143,24 @@ const CheckButton = styled.button`
   padding: 10px;
   width: 128px;
   height: 43px;
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 레귤러';
   font-size: 14px;
-  justifycontent: 'center';
-  border: 1px solid #e0ded8;
-  border-radius: 5px;
-  background-color: #fff;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  background-color: #1e9d8b;
   cursor: pointer;
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #1e9d8b;
   }
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 2px;
+  background-color: #e0ded8;
+  margin-top: 4px;
+  margin-bottom: 16px; /* 구분선 아래에 여백 추가 */
 `;
 
 // 회원가입 폼 컴포넌트
@@ -168,13 +175,32 @@ const JoinForm = () => {
     preferBranchId: '',
     category: '',
   });
-  const [error, setError] = useState('');
+  const [duplicateIdError, setDuplicateIdError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError(''); // 입력값이 변경되면 에러 메시지를 초기화
+    const { name, value } = e.target;
+    setForm((prevForm) => {
+      const updatedForm = { ...prevForm, [name]: value };
+
+      // 비밀번호와 비밀번호 확인이 일치하는지 확인
+      if (name === 'password' || name === 'confirmPassword') {
+        if (updatedForm.password !== updatedForm.confirmPassword) {
+          setPasswordError('비밀번호가 일치하지 않습니다.');
+        } else {
+          setPasswordError('');
+        }
+      }
+
+      return updatedForm;
+    });
+
+    // ID 중복 확인 오류 메시지 초기화
+    if (name === 'loginId') {
+      setDuplicateIdError('');
+    }
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -187,29 +213,22 @@ const JoinForm = () => {
   };
 
   const checkIdAvailability = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/member/checkLoginId', { loginId: form.loginId });
-      const result = response.data;
-      console.log(typeof result);
-      console.log(result);
-      if (result === 'sucess') {
-        setError(''); // ID가 사용 가능하면 에러 메시지를 비움
-      } else {
-        setError('중복된 아이디가 있습니다.'); // ID가 중복되면 에러 메시지 설정
-      }
-    } catch (error) {
-      console.error('Error checking ID availability:', error);
-      setError('');
-    }
+    await axios
+      .post('http://localhost:8080/member/checkLoginId', { loginId: form.loginId })
+      .then((response) => {
+        if (response.status === 200) {
+          setDuplicateIdError('사용 가능한 아이디입니다.'); // ID가 사용 가능하면 에러 메시지를 비움
+        }
+      })
+      .catch((error) => {
+        setDuplicateIdError('중복된 아이디가 있습니다.');
+      });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-    setError('');
+
+    setPasswordError('');
     console.log('Form submitted', form);
     navigate('/');
   };
@@ -238,7 +257,8 @@ const JoinForm = () => {
               />
               <CheckButton onClick={checkIdAvailability}>중복 확인</CheckButton>
             </div>
-            <ErrorText>{error}</ErrorText>
+            <Divider />
+            <ErrorText>{duplicateIdError}</ErrorText>
           </InputContainer>
 
           <InputContainer>
@@ -255,8 +275,8 @@ const JoinForm = () => {
               placeholder="비밀번호를 입력하세요"
               required
             />
+            <Divider />
           </InputContainer>
-
           <InputContainer>
             <LabelContainer>
               <Label>
@@ -271,9 +291,9 @@ const JoinForm = () => {
               placeholder="비밀번호를 다시 입력하세요"
               required
             />
+            <Divider />
+            <ErrorText>{passwordError}</ErrorText>
           </InputContainer>
-
-          {error && <ErrorText>{error}</ErrorText>}
 
           <InputContainer>
             <LabelContainer>
@@ -282,6 +302,7 @@ const JoinForm = () => {
               </Label>
             </LabelContainer>
             <InputField type="date" name="birthDate" value={form.birthDate} onChange={handleChange} required />
+            <Divider />
           </InputContainer>
 
           <InputContainer>
@@ -314,6 +335,7 @@ const JoinForm = () => {
                 여성
               </RadioButton>
             </RadioGroup>
+            <Divider />
           </InputContainer>
 
           <InputContainer>
@@ -342,6 +364,7 @@ const JoinForm = () => {
               <option value="16">경상남도</option>
               <option value="17">제주도</option>
             </SelectField>
+            <Divider />
           </InputContainer>
 
           <InputContainer>
@@ -367,6 +390,7 @@ const JoinForm = () => {
               <option value="15">울산동구점</option>
               <option value="16">충청점</option>
             </SelectField>
+            <Divider />
           </InputContainer>
 
           <InputContainer>
