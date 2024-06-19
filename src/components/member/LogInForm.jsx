@@ -95,7 +95,11 @@ function LogInForm({ onLogIn }) {
         password: password,
       });
       if (res.status === 200) {
-        console.log(res.data);
+        localStorage.setItem('isAdmin', res.data.isAdmin);
+        if (localStorage.getItem('isAdmin') === '1') {
+          navigate('/admin');
+          return;
+        }
         navigate('/');
       }
     } catch (error) {
@@ -103,7 +107,7 @@ function LogInForm({ onLogIn }) {
         setShowModal(true);
         setLoginError(true); // HTTP 401 에러일 경우 로그인 실패 상태를 true로 설정
       }
-      console.log(error);
+      //console.log(error);
     }
   };
 

@@ -191,6 +191,7 @@ const Header = () => {
       .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
       .then(() => {
         setIsLoggedIn(false);
+        localStorage.clear();
       })
       .catch((error) => {
         console.error('Logout failed!', error);
