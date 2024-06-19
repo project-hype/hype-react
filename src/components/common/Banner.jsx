@@ -1,32 +1,35 @@
-import React, { Component, useCallback, useRef, useState } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
+import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import image from '../../assets/img/event/eventImg.jpeg';
 import styled from 'styled-components';
+import '../../assets/scss/common.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
-function Banner(bannerList) {
+const EventBannerList = styled.div``;
+
+function Banner() {
+  const [data, setData] = useState([]);
+
   const [dragging, setDragging] = useState(false);
+
   const handleBeforeChange = useCallback(() => {
     setDragging(true);
   }, [setDragging]);
+
   const handleAfterChange = useCallback(() => {
     setDragging(false);
   }, [setDragging]);
   const moveToDetailPage = (e) => {
     if (dragging) {
-      e.stopPropagation();
+      // e.stopPropagation();
       return;
     }
+    console.log('Image clicked');
   };
   const slickRef = useRef(null);
-  // 슬릭에 임시로 넣을 이미지
-  const images = [
-    { src: image, title: 1 },
-    { src: image, title: 2 },
-    { src: image, title: 3 },
-    { src: image, title: 4 },
-  ];
 
   // slider custom arrow
   const CustomPrevArrow = (props) => {
@@ -60,12 +63,49 @@ function Banner(bannerList) {
       },
     ],
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/event/list/banner');
+        const result = response.data.eventList;
+        setData(result);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
+    // <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative' }}>
       <Slider {...settings}>
-        {images.map((el) => (
-          <div key={el.title}>
-            <img src={el.src} />
+        {data.map((event) => (
+          <div
+            className="popupbanner-list"
+            onClick={(e) => {
+              moveToDetailPage(event.eventId, e);
+            }}
+          >
+            <div className="slide-content">
+              <div className="slide-img-wrap">
+                <img src={event.imageUrl} />
+              </div>
+              <div>
+                <p className="slide-tit">{event.title}</p>
+                <p>
+                  {event.startDate} ~ {event.endDate}
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faLocationDot} />
+                  {event.branchName}
+                </p>
+                <p>{event.eventTypeName}</p>
+              </div>
+            </div>
           </div>
         ))}
       </Slider>
