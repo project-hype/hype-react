@@ -121,9 +121,6 @@ function LogInForm({ onLogIn }) {
   const handleConfirm = () => {
     setShowModal(false);
     setLoginError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
-    if (!loginError) {
-      navigate('/'); // 성공 시 루트 페이지로 이동
-    }
   };
 
   return (

@@ -2,9 +2,10 @@ import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
+import Modal from '../common/Modal';
 import axios from 'axios';
 
-// 공통 스타일
+// 회원가입 폼 컨테이너
 const Container = styled.div`
   position: relative;
   width: 50%;
@@ -13,6 +14,7 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
+// 필수 입력 필드 안내 부분
 const NoticeSection = styled.div`
   position: absolute;
   top: 8px;
@@ -20,7 +22,8 @@ const NoticeSection = styled.div`
   margin-bottom: 8px;
 `;
 
-const Section = styled.div`
+// 입력 폼 부분
+const InputSection = styled.div`
   margin-bottom: 32px;
 `;
 
@@ -65,7 +68,7 @@ const SelectField = styled.select`
   padding: 10px;
   font-family: '해피니스 산스 볼드';
   font-size: 16px;
-  border: 1px;
+  border: 1px solid #e0ded8;
   border-radius: 20px;
   margin-bottom: 8px;
 `;
@@ -141,14 +144,14 @@ const DescriptionText = styled.span`
 const CheckButton = styled.button`
   margin-left: 8px;
   padding: 10px;
-  width: 128px;
+  width: 112px;
   height: 43px;
   font-family: '해피니스 산스 레귤러';
   font-size: 14px;
   color: #ffffff;
   border: none;
   border-radius: 20px;
-  background-color: #1e9d8b;
+  background-color: #ff8c00;
   cursor: pointer;
   &:hover {
     background-color: #1e9d8b;
@@ -167,17 +170,20 @@ const Divider = styled.div`
 const JoinForm = () => {
   const [form, setForm] = useState({
     loginId: '',
+    name: '',
     password: '',
     confirmPassword: '',
-    birthDate: '',
+    birthdate: '',
     gender: '',
     cityId: '',
     preferBranchId: '',
-    category: '',
+    category: [],
   });
   const [duplicateIdError, setDuplicateIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [joinError, setJoinError] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -189,8 +195,10 @@ const JoinForm = () => {
       if (name === 'password' || name === 'confirmPassword') {
         if (updatedForm.password !== updatedForm.confirmPassword) {
           setPasswordError('비밀번호가 일치하지 않습니다.');
+          setJoinError(true);
         } else {
           setPasswordError('');
+          setJoinError(false);
         }
       }
 
@@ -209,7 +217,12 @@ const JoinForm = () => {
     } else {
       setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
     }
-    setForm((prevForm) => ({ ...prevForm, categoryId }));
+    setForm((prevForm) => {
+      const category = prevForm.category.includes(categoryId)
+        ? prevForm.category.filter((id) => id !== categoryId)
+        : [...prevForm.category, categoryId];
+      return { ...prevForm, category };
+    });
   };
 
   const checkIdAvailability = async () => {
@@ -218,227 +231,278 @@ const JoinForm = () => {
       .then((response) => {
         if (response.status === 200) {
           setDuplicateIdError('사용 가능한 아이디입니다.'); // ID가 사용 가능하면 에러 메시지를 비움
+          setJoinError(false);
         }
       })
       .catch((error) => {
         setDuplicateIdError('중복된 아이디가 있습니다.');
+        setJoinError(true);
       });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setPasswordError('');
-    console.log('Form submitted', form);
-    navigate('/');
+    // confirmPassword를 제외한 form 데이터 생성
+    const { confirmPassword, ...submitForm } = form;
+    // category 배열 형식으로 전달
+    submitForm.category = submitForm.category.map((id) => ({ categoryId: id }));
+
+    await axios
+      .post('http://localhost:8080/member/join', submitForm)
+      .then((response) => {
+        if (response.status === 200) {
+          setShowModal(true);
+        }
+      })
+      .catch((error) => {
+        if (error.response || error.response.status === 400) {
+          setShowModal(true);
+          setJoinError(true);
+        }
+      });
+  };
+
+  const handleConfirm = () => {
+    setShowModal(false);
+    setJoinError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
+    if (!joinError) {
+      navigate('/login');
+    }
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <Section>
-          <NoticeSection>
-            <Asterisk>*</Asterisk> <DescriptionText>는 필수 입력 사항입니다.</DescriptionText>
-          </NoticeSection>
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> ID
-              </Label>
-            </LabelContainer>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+    <>
+      {showModal && (
+        <Modal
+          message={joinError ? '회원가입에 실패했습니다. 다시 시도해주세요.' : '가입해주셔서 감사합니다.'}
+          onConfirm={handleConfirm}
+        />
+      )}
+      <Container>
+        <form onSubmit={handleSubmit}>
+          <InputSection>
+            <NoticeSection>
+              <Asterisk>*</Asterisk> <DescriptionText>는 필수 입력 사항입니다.</DescriptionText>
+            </NoticeSection>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> ID
+                </Label>
+              </LabelContainer>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <InputField
+                  type="text"
+                  name="loginId"
+                  value={form.loginId}
+                  onChange={handleChange}
+                  placeholder="ID를 입력하세요"
+                  required
+                />
+                <CheckButton onClick={checkIdAvailability}>중복 확인</CheckButton>
+              </div>
+              <Divider />
+              <ErrorText>{duplicateIdError}</ErrorText>
+            </InputContainer>
+
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 비밀번호
+                </Label>
+              </LabelContainer>
               <InputField
-                type="text"
-                name="loginId"
-                value={form.loginId}
+                type="password"
+                name="password"
+                value={form.password}
                 onChange={handleChange}
-                placeholder="ID를 입력하세요"
+                placeholder="비밀번호를 입력하세요"
                 required
               />
-              <CheckButton onClick={checkIdAvailability}>중복 확인</CheckButton>
-            </div>
-            <Divider />
-            <ErrorText>{duplicateIdError}</ErrorText>
-          </InputContainer>
+              <Divider />
+            </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 비밀번호 확인
+                </Label>
+              </LabelContainer>
+              <InputField
+                type="password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                placeholder="비밀번호를 다시 입력하세요"
+                required
+              />
+              <Divider />
+              <ErrorText>{passwordError}</ErrorText>
+            </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 이름
+                </Label>
+              </LabelContainer>
+              <InputField
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="이름을 입력하세요"
+                required
+              />
+              <Divider />
+            </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 생년월일
+                </Label>
+              </LabelContainer>
+              <InputField type="date" name="birthdate" value={form.birthdate} onChange={handleChange} required />
+              <Divider />
+            </InputContainer>
 
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> 비밀번호
-              </Label>
-            </LabelContainer>
-            <InputField
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="비밀번호를 입력하세요"
-              required
-            />
-            <Divider />
-          </InputContainer>
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> 비밀번호 확인
-              </Label>
-            </LabelContainer>
-            <InputField
-              type="password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="비밀번호를 다시 입력하세요"
-              required
-            />
-            <Divider />
-            <ErrorText>{passwordError}</ErrorText>
-          </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 성별
+                </Label>
+              </LabelContainer>
+              <RadioGroup>
+                <RadioButton>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="M"
+                    checked={form.gender === 'M'}
+                    onChange={handleChange}
+                    required
+                  />
+                  남성
+                </RadioButton>
+                <RadioButton>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="W"
+                    checked={form.gender === 'W'}
+                    onChange={handleChange}
+                    required
+                  />
+                  여성
+                </RadioButton>
+              </RadioGroup>
+              <Divider />
+            </InputContainer>
 
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> 생년월일
-              </Label>
-            </LabelContainer>
-            <InputField type="date" name="birthDate" value={form.birthDate} onChange={handleChange} required />
-            <Divider />
-          </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>
+                  <Asterisk>*</Asterisk> 지역
+                </Label>
+              </LabelContainer>
+              <SelectField name="cityId" value={form.cityId} onChange={handleChange} required>
+                <option value="">-----------------------------------</option>
+                <option value="1">서울특별시</option>
+                <option value="2">부산광역시</option>
+                <option value="3">대구광역시</option>
+                <option value="4">인천광역시</option>
+                <option value="5">대전광역시</option>
+                <option value="6">광주광역시</option>
+                <option value="7">울산광역시</option>
+                <option value="8">세종시</option>
+                <option value="9">경기도</option>
+                <option value="10">강원도</option>
+                <option value="11">충청북도</option>
+                <option value="12">충청남도</option>
+                <option value="13">전라북도</option>
+                <option value="14">전라남도</option>
+                <option value="15">경상북도</option>
+                <option value="16">경상남도</option>
+                <option value="17">제주도</option>
+              </SelectField>
+              <Divider />
+            </InputContainer>
 
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> 성별
-              </Label>
-            </LabelContainer>
-            <RadioGroup>
-              <RadioButton>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="male"
-                  checked={form.gender === 'male'}
-                  onChange={handleChange}
-                  required
-                />
-                남성
-              </RadioButton>
-              <RadioButton>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="female"
-                  checked={form.gender === 'female'}
-                  onChange={handleChange}
-                  required
-                />
-                여성
-              </RadioButton>
-            </RadioGroup>
-            <Divider />
-          </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>자주 가는 지점</Label>
+              </LabelContainer>
+              <SelectField name="preferBranchId" value={form.preferBranchId} onChange={handleChange}>
+                <option value="">-----------------------------------</option>
+                <option value="1">더현대 서울</option>
+                <option value="2">압구정본점</option>
+                <option value="3">무역센터점</option>
+                <option value="4">천호점</option>
+                <option value="5">신촌점</option>
+                <option value="6">미아점</option>
+                <option value="7">목동점</option>
+                <option value="8">디큐브시티</option>
+                <option value="9">중동점</option>
+                <option value="10">판교점</option>
+                <option value="11">킨텍스점</option>
+                <option value="12">부산점</option>
+                <option value="13">더현대 대구</option>
+                <option value="14">울산점</option>
+                <option value="15">울산동구점</option>
+                <option value="16">충청점</option>
+              </SelectField>
+              <Divider />
+            </InputContainer>
 
-          <InputContainer>
-            <LabelContainer>
-              <Label>
-                <Asterisk>*</Asterisk> 지역
-              </Label>
-            </LabelContainer>
-            <SelectField name="cityId" value={form.cityId} onChange={handleChange} required>
-              <option value="">-------------------------------</option>
-              <option value="1">서울특별시</option>
-              <option value="2">부산광역시</option>
-              <option value="3">대구광역시</option>
-              <option value="4">인천광역시</option>
-              <option value="5">대전광역시</option>
-              <option value="6">광주광역시</option>
-              <option value="7">울산광역시</option>
-              <option value="8">세종시</option>
-              <option value="9">경기도</option>
-              <option value="10">강원도</option>
-              <option value="11">충청북도</option>
-              <option value="12">충청남도</option>
-              <option value="13">전라북도</option>
-              <option value="14">전라남도</option>
-              <option value="15">경상북도</option>
-              <option value="16">경상남도</option>
-              <option value="17">제주도</option>
-            </SelectField>
-            <Divider />
-          </InputContainer>
+            <InputContainer>
+              <LabelContainer>
+                <Label>관심카테고리</Label>
+              </LabelContainer>
+              <div>
+                <ButtonGroup>
+                  <StyledButtonWrapper selected={selectedCategories.includes(1)} onClick={() => handleCategoryClick(1)}>
+                    <StyledButtonText selected={selectedCategories.includes(1)}>브랜드</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(2)} onClick={() => handleCategoryClick(2)}>
+                    <StyledButtonText selected={selectedCategories.includes(2)}> 패션/뷰티</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(3)} onClick={() => handleCategoryClick(3)}>
+                    <StyledButtonText selected={selectedCategories.includes(3)}>식품/요리</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(4)} onClick={() => handleCategoryClick(4)}>
+                    <StyledButtonText selected={selectedCategories.includes(4)}>리빙</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(5)} onClick={() => handleCategoryClick(5)}>
+                    <StyledButtonText selected={selectedCategories.includes(5)}>헬스/스포츠</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(6)} onClick={() => handleCategoryClick(6)}>
+                    <StyledButtonText selected={selectedCategories.includes(6)}>소품/굿즈</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(7)} onClick={() => handleCategoryClick(7)}>
+                    <StyledButtonText selected={selectedCategories.includes(7)}>스피치/리스닝</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(8)} onClick={() => handleCategoryClick(8)}>
+                    <StyledButtonText selected={selectedCategories.includes(8)}>취미</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper selected={selectedCategories.includes(9)} onClick={() => handleCategoryClick(9)}>
+                    <StyledButtonText selected={selectedCategories.includes(9)}>공연/이벤트</StyledButtonText>
+                  </StyledButtonWrapper>
+                  <StyledButtonWrapper
+                    selected={selectedCategories.includes(10)}
+                    onClick={() => handleCategoryClick(10)}
+                  >
+                    <StyledButtonText selected={selectedCategories.includes(10)}>유아</StyledButtonText>
+                  </StyledButtonWrapper>
+                </ButtonGroup>
+              </div>
+            </InputContainer>
+          </InputSection>
 
-          <InputContainer>
-            <LabelContainer>
-              <Label>자주 가는 지점</Label>
-            </LabelContainer>
-            <SelectField name="branchId" value={form.branchId} onChange={handleChange} required>
-              <option value="">-------------------------------</option>
-              <option value="1">더현대 서울</option>
-              <option value="2">압구정본점</option>
-              <option value="3">무역센터점</option>
-              <option value="4">천호점</option>
-              <option value="5">신촌점</option>
-              <option value="6">미아점</option>
-              <option value="7">목동점</option>
-              <option value="8">디큐브시티</option>
-              <option value="9">중동점</option>
-              <option value="10">판교점</option>
-              <option value="11">킨텍스점</option>
-              <option value="12">부산점</option>
-              <option value="13">더현대 대구</option>
-              <option value="14">울산점</option>
-              <option value="15">울산동구점</option>
-              <option value="16">충청점</option>
-            </SelectField>
-            <Divider />
-          </InputContainer>
-
-          <InputContainer>
-            <LabelContainer>
-              <Label>관심카테고리</Label>
-            </LabelContainer>
-            <div>
-              <ButtonGroup>
-                <StyledButtonWrapper selected={selectedCategories.includes(1)} onClick={() => handleCategoryClick(1)}>
-                  <StyledButtonText selected={selectedCategories.includes(1)}>브랜드</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(2)} onClick={() => handleCategoryClick(2)}>
-                  <StyledButtonText selected={selectedCategories.includes(2)}> 패션/뷰티</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(3)} onClick={() => handleCategoryClick(3)}>
-                  <StyledButtonText selected={selectedCategories.includes(3)}>식품/요리</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(4)} onClick={() => handleCategoryClick(4)}>
-                  <StyledButtonText selected={selectedCategories.includes(4)}>리빙</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(5)} onClick={() => handleCategoryClick(5)}>
-                  <StyledButtonText selected={selectedCategories.includes(5)}>헬스/스포츠</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(6)} onClick={() => handleCategoryClick(6)}>
-                  <StyledButtonText selected={selectedCategories.includes(6)}>소품/굿즈</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(7)} onClick={() => handleCategoryClick(7)}>
-                  <StyledButtonText selected={selectedCategories.includes(7)}>스피치/리스닝</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(8)} onClick={() => handleCategoryClick(8)}>
-                  <StyledButtonText selected={selectedCategories.includes(8)}>취미</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(9)} onClick={() => handleCategoryClick(9)}>
-                  <StyledButtonText selected={selectedCategories.includes(9)}>공연/이벤트</StyledButtonText>
-                </StyledButtonWrapper>
-                <StyledButtonWrapper selected={selectedCategories.includes(10)} onClick={() => handleCategoryClick(10)}>
-                  <StyledButtonText selected={selectedCategories.includes(10)}>유아</StyledButtonText>
-                </StyledButtonWrapper>
-              </ButtonGroup>
-            </div>
-          </InputContainer>
-        </Section>
-
-        <JoinButtonContainer>
-          <Button type="submit" text="가입하기" />
-        </JoinButtonContainer>
-      </form>
-    </Container>
+          <JoinButtonContainer>
+            <Button type="submit" text="가입하기" />
+          </JoinButtonContainer>
+        </form>
+      </Container>
+    </>
   );
 };
 
