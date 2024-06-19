@@ -79,7 +79,7 @@ const RadioGroup = styled.div`
 
 const RadioButton = styled.label`
   margin-right: 20px;
-  font-family: 'Happiness_Sans';
+  font-family: '해피니스 산스 레귤러';
   font-size: 16px;
   color: #595959;
   input {
@@ -142,8 +142,11 @@ const DescriptionText = styled.span`
 const CheckButton = styled.button`
   margin-left: 8px;
   padding: 10px;
+  width: 128px;
+  height: 43px;
   font-family: 'Happiness_Sans';
-  font-size: 16px;
+  font-size: 14px;
+  justifycontent: 'center';
   border: 1px solid #e0ded8;
   border-radius: 5px;
   background-color: #fff;
@@ -185,16 +188,18 @@ const JoinForm = () => {
 
   const checkIdAvailability = async () => {
     try {
-      const response = await axios.post('/api/check-id', { loginId: form.loginId });
+      const response = await axios.get('http://localhost:8080/member/checkLoginId', { loginId: form.loginId });
       const result = response.data;
-      if (result.isAvailable) {
+      console.log(typeof result);
+      console.log(result);
+      if (result === 'sucess') {
         setError(''); // ID가 사용 가능하면 에러 메시지를 비움
       } else {
         setError('중복된 아이디가 있습니다.'); // ID가 중복되면 에러 메시지 설정
       }
     } catch (error) {
       console.error('Error checking ID availability:', error);
-      setError('서버 요청 중 오류가 발생했습니다.');
+      setError('');
     }
   };
 
@@ -231,7 +236,7 @@ const JoinForm = () => {
                 placeholder="ID를 입력하세요"
                 required
               />
-              <CheckButton onClick={checkIdAvailability}>중복확인</CheckButton>
+              <CheckButton onClick={checkIdAvailability}>중복 확인</CheckButton>
             </div>
             <ErrorText>{error}</ErrorText>
           </InputContainer>
