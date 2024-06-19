@@ -57,11 +57,11 @@ const Menu = (props) => {
       <MenuItem onClick={() => props.setActiveMenu('banner')}>
         <TextWrapper>배너 관리</TextWrapper>
       </MenuItem>
-      <MenuItem>
+      {/* <MenuItem>
         <TextWrapper>통계 보기</TextWrapper>
         <TextWrapper2>즐겨찾기</TextWrapper2>
         <TextWrapper2>별점</TextWrapper2>
-      </MenuItem>
+      </MenuItem> */}
     </MenuWrapper>
   );
 };

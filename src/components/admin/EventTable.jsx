@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import EventRow from './EventRow';
-import EventModal from './EventModal';
+import EventModal from './EventEditModal';
+import EventAddModal from './EventAddModal'; // 추가: EventAddModal import
 import Rectangle200 from '../../assets/img/common/Rectangle200.png';
 
 // Styled Components
@@ -63,11 +64,18 @@ const LoadMoreButton = styled.div`
   justify-content: center;
 `;
 
+const AddEventButton = styled(LoadMoreButton)`
+  margin-bottom: 10px;
+  width: 160px;
+  height: 50px;
+`;
+
 // Component
 const EventTable = () => {
   const [eventData, setEventData] = useState([]);
   const [page, setPage] = useState(1); // 현재 페이지 번호 상태 변수
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false); // 추가: 행사 추가 모달 상태 변수
 
   useEffect(() => {
     fetchData(page); // 페이지가 변경될 때마다 데이터 가져오기
@@ -100,8 +108,24 @@ const EventTable = () => {
     setSelectedEvent(null);
   };
 
+  const handleSaveEvent = (updatedEvent) => {
+    // 이 함수를 통해 EventModal에서 받은 수정된 데이터를 처리합니다.
+    const updatedEventData = eventData.map((event) => (event.eventId === updatedEvent.eventId ? updatedEvent : event));
+    setEventData(updatedEventData); // 데이터 업데이트
+    setSelectedEvent(null); // 모달 닫기
+  };
+
+  const openAddModal = () => {
+    setShowAddModal(true);
+  };
+
+  const closeAddModal = () => {
+    setShowAddModal(false);
+  };
+
   return (
     <EventWrapper>
+      <AddEventButton onClick={openAddModal}>행사 추가</AddEventButton> {/* 추가: 행사 추가 버튼 */}
       <Header>
         <HeaderRow>
           <HeaderCell width="80px">
@@ -126,7 +150,16 @@ const EventTable = () => {
           <EventRow key={event.eventId} event={event} onRowClick={handleRowClick} />
         ))}
       </RowContainer>
-      {selectedEvent && <EventModal event={selectedEvent} onClose={closeModal} />}
+      {selectedEvent && <EventModal event={selectedEvent} onClose={closeModal} onSave={handleSaveEvent} />}
+      {showAddModal && (
+        <EventAddModal
+          onClose={closeAddModal}
+          onSave={(newEvent) => {
+            setEventData([...eventData, newEvent]);
+            closeAddModal();
+          }}
+        />
+      )}
       <LoadMoreContainer>
         <LoadMoreButton onClick={handleLoadMore}>더보기</LoadMoreButton>
       </LoadMoreContainer>

@@ -10,7 +10,6 @@ const NavContainer = styled.div`
   display: inline-flex;
   gap: 984px;
   left: 0;
-  overflow-y: scroll;
   padding: 24px 56px;
   position: absolute;
   top: 0;
