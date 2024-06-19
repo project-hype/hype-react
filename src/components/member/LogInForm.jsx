@@ -95,8 +95,8 @@ function LogInForm({ onLogIn }) {
         password: password,
       });
       if (res.status === 200) {
-        setShowModal(true); // 로그인 성공시 모달을 보여줌
         console.log(res.data);
+        navigate('/');
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -122,10 +122,7 @@ function LogInForm({ onLogIn }) {
   return (
     <>
       {showModal && (
-        <Modal
-          message={loginError ? '로그인에 실패했습니다. ID나 비밀번호를 확인해주세요.' : '로그인 성공했습니다'}
-          onConfirm={handleConfirm}
-        />
+        <Modal message={'로그인에 실패했습니다. ID나 비밀번호를 확인해주세요.'} onConfirm={handleConfirm} />
       )}
       <StyledForm onSubmit={handleSubmit}>
         <HypeLogo src={hypeLogo} alt="Home" onClick={handleHomeClick} />

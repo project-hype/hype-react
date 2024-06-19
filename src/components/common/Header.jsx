@@ -6,7 +6,6 @@ import hypeLogo from '../../assets/img/layout/hypeLogo.png';
 import searchIcon from '../../assets/img/layout/searchIcon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import Modal from './Modal';
 
 const Navbar = styled.nav`
   display: flex;
@@ -128,7 +127,11 @@ const NavButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: #0056b3;
+    color: #ff8c00;
+  }
+
+  &:hover .icon {
+    color: #ff8c00;
   }
 
   @media (max-width: 768px) {
@@ -142,7 +145,6 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -189,7 +191,6 @@ const Header = () => {
       .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
       .then(() => {
         setIsLoggedIn(false);
-        setShowModal(true);
       })
       .catch((error) => {
         console.error('Logout failed!', error);
@@ -201,53 +202,49 @@ const Header = () => {
   };
 
   const handleConfirm = () => {
-    setShowModal(false);
     navigate('/');
   };
 
   return (
-    <>
-      {showModal && <Modal message="로그아웃 되었습니다." onConfirm={handleConfirm} />}
-      <Navbar>
-        <NavbarLeft>
-          <HypeLogo className="hypeLogo" src={hypeLogo} alt="Home" onClick={handleHomeClick} />
-        </NavbarLeft>
-        <NavbarCenter>
-          <NavbarForm onSubmit={handleSearch}>
-            <SearchContainer>
-              <SearchInput type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-              <SearchButton type="submit">
-                <SearchIcon src={searchIcon} alt="Search" />
-              </SearchButton>
-            </SearchContainer>
-          </NavbarForm>
-        </NavbarCenter>
-        <NavbarRight className="navbar-right">
-          {isLoggedIn ? (
-            <>
-              <NavButton className="nav-button" onClick={handleLogoutClick}>
-                로그아웃
-              </NavButton>
-              <NavButton className="nav-button" onClick={handleMyPageClick}>
-                마이페이지
-              </NavButton>
-            </>
-          ) : (
-            <>
-              <NavButton className="nav-button" onClick={handleLoginClick}>
-                로그인
-              </NavButton>
-              <NavButton className="nav-button" onClick={handleJoinClick}>
-                회원가입
-              </NavButton>
-            </>
-          )}
-          <NavButton className="nav-button">
-            <FontAwesomeIcon icon={faBars} size="2x" style={{ color: '#595959' }} />
-          </NavButton>
-        </NavbarRight>
-      </Navbar>
-    </>
+    <Navbar>
+      <NavbarLeft>
+        <HypeLogo className="hypeLogo" src={hypeLogo} alt="Home" onClick={handleHomeClick} />
+      </NavbarLeft>
+      <NavbarCenter>
+        <NavbarForm onSubmit={handleSearch}>
+          <SearchContainer>
+            <SearchInput type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <SearchButton type="submit">
+              <SearchIcon src={searchIcon} alt="Search" />
+            </SearchButton>
+          </SearchContainer>
+        </NavbarForm>
+      </NavbarCenter>
+      <NavbarRight className="navbar-right">
+        {isLoggedIn ? (
+          <>
+            <NavButton className="nav-button" onClick={handleLogoutClick}>
+              로그아웃
+            </NavButton>
+            <NavButton className="nav-button" onClick={handleMyPageClick}>
+              마이페이지
+            </NavButton>
+          </>
+        ) : (
+          <>
+            <NavButton className="nav-button" onClick={handleLoginClick}>
+              로그인
+            </NavButton>
+            <NavButton className="nav-button" onClick={handleJoinClick}>
+              회원가입
+            </NavButton>
+          </>
+        )}
+        <NavButton className="nav-button">
+          <FontAwesomeIcon icon={faBars} size="2x" />
+        </NavButton>
+      </NavbarRight>
+    </Navbar>
   );
 };
 
