@@ -1,8 +1,11 @@
-import dayjs, { Dayjs } from 'dayjs';
-import React, { Component, useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import EventList from '../event/EventList';
+import axios from 'axios';
+import '../../assets/scss/common.scss';
+
 const CalendarList = styled.div`
   width: 100%;
   height: auto;
@@ -51,7 +54,16 @@ const Span = styled.span`
     font-weight: 600;
     color: #fff;
     display: block;
+    font-size: 10px;
   }
+`;
+
+const P = styled.p`
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
 `;
 
 const MoreView = styled.div`
@@ -60,77 +72,75 @@ const MoreView = styled.div`
   justify-content: flex-end;
   padding: 15px 20px 10px;
 }`;
-function DayCalandar() {
-  const [baseDayjs, setDayjs] = useState([dayjs()]);
-  const [selectedDay, setSelectedDay] = useState(dayjs());
-  // const [likeStore, setLikeStore] = useState([]);
-  // const [activeIndex, setActiveIndex] = useState(null);
+
+function DayCalendar() {
   const today = dayjs();
+  const [baseDayjs, setBaseDayjs] = useState(getInitialDays(today));
+  const [selectedDay, setSelectedDay] = useState(today);
+  const [data, setData] = useState([]);
+
+  const getStoresByDate = (date) => {
+    setSelectedDay(dayjs(date));
+  };
 
   useEffect(() => {
-    const endDay = today.add(10, 'day');
-    const nextResult = getDatesStartToLast(selectedDay, endDay, 'next');
-    setDayjs(nextResult);
-    // dispatch(fetchListByDate(today.format('YYYY-MM-DD'), myInfo ? myInfo.userId : null));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=1`,
+        );
+        const result = response.data.eventList;
+        setData(result);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [selectedDay]);
 
   return (
     <>
-      <CalendarList>
-        <Ul>
-          {!!baseDayjs &&
-            baseDayjs.map((day, index) => (
-              //   <li className="" key={index} onClick={() => getStoresBydate(day)}>
-              <Li>
-                <CalendarListBox
-                  className={
-                    selectedDay.format('YYYY-MM-DD') === dayjs(day).format('YYYY-MM-DD')
-                      ? 'calendar-list-box-select'
-                      : ''
-                  }
-                >
-                  <Span
-                    className={
-                      selectedDay.format('YYYY-MM-DD') === dayjs(day).format('YYYY-MM-DD')
-                        ? 'calendar-list-box-select'
-                        : ''
-                    }
-                  >
-                    {today.format('YYYY-MM-DD') === dayjs(day).format('YYYY-MM-DD')
-                      ? 'TODAY'
-                      : dayjs(day).format('ddd')}
-                  </Span>
-                  <p>{dayjs(day).date()}</p>
-                </CalendarListBox>
-              </Li>
-            ))}
-        </Ul>
-      </CalendarList>
-      <div>
-        <MoreView>
+      <div class="calendar-list">
+        <ul>
+          {baseDayjs.map((day, index) => (
+            <li key={index} onClick={() => getStoresByDate(day)}>
+              <div className={selectedDay.isSame(dayjs(day), 'day') ? 'calendar-list-box-select' : ''}>
+                <span className={selectedDay.isSame(dayjs(day), 'day') ? 'calendar-list-box-select' : ''}>
+                  {today.isSame(dayjs(day), 'day') ? 'TODAY' : dayjs(day).format('ddd')}
+                </span>
+                <P>{dayjs(day).date()}</P>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="calendar-popup-list">
+        <div class="moreview">
           <Link to={'/event'}>전체보기</Link>
-          <EventList />
-        </MoreView>
+        </div>
+        <EventList events={data} />
       </div>
     </>
   );
 }
-export default DayCalandar;
 
-const getDatesStartToLast = (startDate, lastDate, buttonType) => {
+export default DayCalendar;
+
+const getInitialDays = (today) => {
+  const endDay = today.add(14, 'day');
+  return getDatesStartToLast(today, endDay);
+};
+
+const getDatesStartToLast = (startDate, lastDate) => {
   const result = [];
-  let flag = false;
-  // TODO 조건이 너무 지저분함. 바꿔야한다.
-  for (let i = 1; i < lastDate.diff(startDate, 'days') + 1; i++) {
-    if (
-      startDate.add(i, 'day').format('YYYY-MM-DD') === dayjs().add(1, 'day').format('YYYY-MM-DD') ||
-      (buttonType === 'next' && flag === false)
-    ) {
-      result.push(startDate);
-      flag = true;
-    } else {
-      result.push(startDate.add(i - 1, 'day').format('YYYY-MM-DD'));
-    }
+  let currentDate = startDate;
+
+  while (currentDate.isBefore(lastDate)) {
+    result.push(currentDate);
+    currentDate = currentDate.add(1, 'day');
   }
+
   return result;
 };

@@ -22,12 +22,13 @@ function Banner() {
   const handleAfterChange = useCallback(() => {
     setDragging(false);
   }, [setDragging]);
-  const moveToDetailPage = (e) => {
+  const moveToDetailPage = (eventId, e) => {
     if (dragging) {
-      // e.stopPropagation();
+      e.stopPropagation();
       return;
+    } else {
+      window.location.href = `/event/${eventId}`;
     }
-    console.log('Image clicked');
   };
   const slickRef = useRef(null);
 
@@ -70,9 +71,9 @@ function Banner() {
         const response = await axios.get('http://localhost:8080/event/list/banner');
         const result = response.data.eventList;
         setData(result);
-        console.log(result);
+        // console.log(result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -83,8 +84,9 @@ function Banner() {
     // <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
     <div style={{ position: 'relative' }}>
       <Slider {...settings}>
-        {data.map((event) => (
+        {data.map((event, index) => (
           <div
+            key={index}
             className="popupbanner-list"
             onClick={(e) => {
               moveToDetailPage(event.eventId, e);
