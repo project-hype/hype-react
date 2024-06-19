@@ -1,0 +1,314 @@
+@import './_variable.scss';
+//공통클래스
+.moreview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 15px 20px 10px;
+
+  a {
+    display: block;
+    font-size: $fs-b2;
+    color: $fontcolor-gray;
+    padding: 5px;
+
+    &:hover {
+      color: $fontcolor-white;
+      font-weight: $fw2;
+    }
+  }
+}
+.popup-img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+}
+.event-name {
+  font-size: $fs-h2;
+  font-weight: $fw2;
+
+  p {
+    word-break: break-all;
+  }
+}
+.event-location {
+  font-size: $fs-c1;
+  opacity: 0.6;
+  font-weight: $fw3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 3px;
+
+  img {
+    display: block;
+    width: 10px;
+  }
+}
+.popup-date {
+  font-size: $fs-h3;
+  font-weight: $fw2;
+  text-align: right;
+  padding-top: 20px;
+}
+.key-text {
+  color: $fontcolor-point;
+}
+.popupbanner-wrap {
+  width: 100%;
+  max-width: 960px;
+  // margin: 40px auto 0;
+  margin: 20px auto 0;
+
+  &:last-child {
+    margin: 20px auto 40px;
+  }
+
+  header {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    .moreview {
+      padding: 0;
+    }
+  }
+}
+.bookmark-wrap {
+  position: relative;
+  display: block;
+  height: fit-content;
+  padding: 10px;
+  z-index: 10;
+}
+.bg {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: $bg-basic;
+  opacity: 0.5;
+  z-index: 99;
+}
+.submenu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 15px 0 20px;
+  padding-bottom: 10px;
+
+  &.back {
+    > a {
+      position: relative;
+      cursor: default;
+
+      .arrow {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        padding: 10px;
+      }
+    }
+  }
+
+  > a {
+    display: block;
+    width: 30%;
+    text-align: center;
+    border-bottom: 1px solid $line-weak;
+    padding: 10px 0;
+    flex: 1 auto;
+
+    &.on {
+      color: $fontcolor-point;
+      border-bottom: 2px solid $line-point;
+      font-weight: $fw1;
+    }
+
+    h2 {
+      font-size: $fs-h2;
+      margin: 0;
+      font-weight: $fw3;
+    }
+  }
+}
+
+ul,
+li,
+ol {
+  list-style: none;
+}
+
+.slick-slide {
+  transition: transform 0.3s ease-in-out;
+}
+.slide-content {
+  width: 100%;
+  height: auto;
+  position: relative;
+
+  .slide-img-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    cursor: pointer;
+
+    &::after {
+      background: url(./../img/common/background.png) 0 0;
+      content: ' ';
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-size: cover;
+      left: 0;
+      top: 0;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+    }
+  }
+
+  div {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    left: 20px;
+    bottom: 60px;
+    z-index: 10;
+
+    p {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      column-gap: 5px;
+      font-size: $fs-b2;
+      font-weight: $fw4;
+      font-family: '해피니스 산스 타이틀';
+      color: white;
+      padding-bottom: 5px;
+
+      img {
+        display: block;
+        width: 10px;
+        height: auto;
+      }
+    }
+
+    p.slide-tit {
+      width: 92%;
+      font-size: $fs-h1;
+      font-weight: $fw2;
+      word-break: keep-all;
+    }
+  }
+}
+
+//main Banner dots custom
+.popup-banner-dots {
+  width: 80%;
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  li {
+    width: 100%;
+    height: 2px;
+    background: $bg-white;
+    opacity: 0.3;
+
+    button {
+      opacity: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  li.slick-active {
+    opacity: 1;
+  }
+}
+
+//main PopupBanner
+.popupbanner-inner {
+  width: 100%;
+  max-width: 960px;
+  height: fit-content;
+  padding-left: 20px;
+
+  .slick-list {
+    width: 100%;
+    max-width: 960px;
+    height: fit-content;
+    margin: 0 auto;
+
+    .slick-track {
+      margin: 0;
+    }
+
+    .slick-slide {
+      box-sizing: content-box;
+
+      .popupbanner-list {
+        width: fit-content !important;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+
+        .bookmark-wrap {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+
+        img.popup-img {
+          width: 260px;
+          height: 260px;
+          border-radius: 8px;
+        }
+
+        .slide-img-wrap::after {
+          background: url('./../img/common/background.png') 0 0;
+        }
+
+        &-info {
+          position: absolute;
+          left: 10px;
+          bottom: 20px;
+          z-index: 10;
+
+          li {
+            padding-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}
