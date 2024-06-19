@@ -8,8 +8,6 @@ import '../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
-const EventBannerList = styled.div``;
-
 function Banner() {
   const [data, setData] = useState([]);
 

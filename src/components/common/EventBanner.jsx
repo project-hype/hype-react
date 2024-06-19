@@ -6,7 +6,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
-import favoriteImage from '../../assets/img/common/bookmark.svg';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +13,6 @@ import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 
 function EventBanner({ title, type }) {
   const [data, setData] = useState([]);
-
   const [dragging, setDragging] = useState(false);
   const handleBeforeChange = useCallback(() => {
     setDragging(true);
@@ -22,6 +20,7 @@ function EventBanner({ title, type }) {
   const handleAfterChange = useCallback(() => {
     setDragging(false);
   }, [setDragging]);
+
   const moveToDetailPage = (eventId, e) => {
     if (dragging) {
       e.stopPropagation();
@@ -39,7 +38,7 @@ function EventBanner({ title, type }) {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 3.3,
     slidesToScroll: 1,
     swipeToSlide: true,
     arrows: false,
@@ -48,25 +47,37 @@ function EventBanner({ title, type }) {
     afterChange: handleAfterChange,
   };
 
-  // const addToFavorite = async (eventId, e) => {
-  //   e.stopPropagation(); // Prevent triggering parent click event
-  //   try {
-  //     const response = await axios.post('http://localhost:8080/event/addFav', {
-  //       memberId: memberId,
-  //       eventId: eventId,
-  //     });
-  //     // Handle success response
-  //     console.log('Added to favorite:', response.data);
-  //   } catch (error) {
-  //     // Handle error response
-  //     console.error('Error adding to favorite:', error);
+  // const bookmarkClick = async (isClick, eventId) => {
+  //   if (!myInfo) {
+  //     window.location.href = `/login`;
+  //   } else {
+  //     setActiveIndex(eventId);
+  //     if (eventId.includes(eventId)) {
+  //       likeEventSetter(likeEvent.filter((item) => item !== eventId));
+  //     } else {
+  //       likeEventSetter([...new Set([...likeEvent, eventId])]);
+  //     }
   //   }
   // };
+
+  const addToFavorite = async (eventId, e) => {
+    console.log('addToFavorite 버튼');
+    e.stopPropagation();
+    try {
+      const response = await axios.post('http://localhost:8080/event/addFav', {
+        memberId: '3',
+        eventId: eventId,
+      });
+      console.log('Added to favorite:', response.data);
+    } catch (error) {
+      console.error('Error adding to favorite:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=1`);
+        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=3`);
         const result = response.data.eventList;
         setData(result);
         // console.log(result);
@@ -90,19 +101,13 @@ function EventBanner({ title, type }) {
         <div class="popupbanner-inner">
           <Slider {...settings}>
             {data.map((event, index) => (
-              <div
-                key={index}
-                className="popupbanner-list"
-                onClick={(e) => {
-                  moveToDetailPage(event.eventId, e);
-                }}
-              >
-                <p>
-                  <a class="bookmark-wrap">
-                    <img src={favoriteImage} />
-                  </a>
-                </p>
-                <div className="slide-img-wrap">
+              <div key={index} className="popupbanner-list">
+                <div
+                  className="slide-img-wrap"
+                  onClick={(e) => {
+                    moveToDetailPage(event.eventId, e);
+                  }}
+                >
                   <img src={event.imageUrl} class="popup-img" />
                 </div>
                 <ul class="popupbanner-list-info">

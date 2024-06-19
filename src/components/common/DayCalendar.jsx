@@ -87,7 +87,7 @@ function DayCalendar() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=1`,
+          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=3`,
         );
         const result = response.data.eventList;
         setData(result);
