@@ -134,7 +134,8 @@ const MyPageForm = () => {
       .delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`)
       .then((response) => {
         if (response.status === 200) {
-          resetUserState();
+          setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
+          localStorage.clear();
           sessionStorage.clear(); // 세션 정보 삭제
           setShowModal(false);
           navigate('/');

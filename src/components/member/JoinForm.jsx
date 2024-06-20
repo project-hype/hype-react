@@ -28,7 +28,7 @@ const JoinForm = () => {
     confirmPassword: '',
     birthdate: '',
     gender: '',
-    cityId: '',
+    cityId: '1',
     preferBranchId: '',
     category: [],
   });
