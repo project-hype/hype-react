@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { InputField } from './styledComponents';
+import { InputField } from './MemberStyledComponents';
 
 const Input = ({ type, name, value, onChange, placeholder, required, readOnly }) => (
   <InputField

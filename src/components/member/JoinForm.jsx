@@ -8,7 +8,7 @@ import {
   InputSection,
   ButtonContainer,
   CheckButton,
-} from './styledComponents'; // 스타일 컴포넌트를 import 합니다
+} from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
 import CategoryButtonGroup from './CategoryButtonGroup';

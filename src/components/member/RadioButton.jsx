@@ -1,5 +1,5 @@
 import React from 'react';
-import { RadioGroup, RadioButtonLabel, RadioButtonInput } from './styledComponents';
+import { RadioGroup, RadioButtonLabel, RadioButtonInput } from './MemberStyledComponents';
 
 const RadioButton = ({ name, value, checked, onChange, label, required }) => (
   <RadioGroup>

@@ -1,4 +1,4 @@
-import { InputSection, ButtonContainer } from './styledComponents'; // 스타일 컴포넌트를 import 합니다
+import { InputSection, ButtonContainer } from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
 import CategoryButtonGroup from './CategoryButtonGroup';
@@ -8,7 +8,7 @@ import Button from '../common/Button';
 import Modal from '../common/Modal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MyPageForm = () => {
   const [form, setForm] = useState({
@@ -27,6 +27,37 @@ const MyPageForm = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [updateError, setUpdateError] = useState(false);
+
+  // useEffect(() => {
+  //   // 사용자 정보를 가져오는 비동기 함수 정의
+  //   const fetchUserData = async () => {
+  //     try {
+  //       // 서버에서 사용자 정보 가져오기
+  //       const response = await axios.get(`http://localhost:8080/member/${memberId}`); // memberId는 세션에서 가져온 값으로 대체해야 함
+
+  //       // 가져온 정보를 form에 설정
+  //       const userData = response.data; // 예시로 가정하고 사용자 정보 객체로 받아온다고 가정
+
+  //       setForm({
+  //         loginId: userData.loginId,
+  //         name: userData.name,
+  //         password: '',
+  //         confirmPassword: '',
+  //         birthdate: userData.birthdate,
+  //         gender: userData.gender,
+  //         cityId: userData.cityId,
+  //         preferBranchId: userData.preferBranchId,
+  //         category: userData.category.map((cat) => cat.categoryId),
+  //       });
+  //     } catch (error) {
+  //       console.error('Failed to fetch user data', error);
+  //       // 에러 처리 로직 추가
+  //     }
+  //   };
+
+  //   // fetchUserData 함수 호출
+  //   fetchUserData();
+  // }, []); // 마운트될 때 한 번만 호출하기 위해 빈 배열을 의존성으로 넣음
 
   const handleChange = (e) => {
     const { name, value } = e.target;

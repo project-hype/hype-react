@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, LabelContainer, Label, Asterisk, ErrorText, Divider } from './styledComponents';
+import { Container, LabelContainer, Label, Asterisk, ErrorText, Divider } from './MemberStyledComponents';
 
 const InputContainer = ({ label, required, children, error, divider }) => (
   <Container>
