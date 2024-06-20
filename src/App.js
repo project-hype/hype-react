@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import SearchResults from './components/SearchResults/SearchResults';
 // import Main from './components/Main/Main';
 import Main from './pages/MainPage';
 import LogIn from './pages/member/LogInPage';
@@ -11,6 +10,7 @@ import AdminMain from './pages/admin/AdminMainPage';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { checkAdmin } from './auth';
+import SearchPage from './pages/event/SearchPage';
 
 // const CommonRouter = () => {
 //   return (
@@ -29,7 +29,7 @@ import { checkAdmin } from './auth';
 const router = createBrowserRouter([
   { path: '/', element: <Main /> },
 
-  { path: '/search', element: <SearchResults /> },
+  { path: '/search', element: <SearchPage /> },
   { path: '/login', element: <LogIn /> },
   { path: '/join', element: <Join /> },
   { path: '/mypage', element: <MyPage /> },
