@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,7 +7,7 @@ import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 
 const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter }) => {
-  const [likeStatus, setLikeStatus] = useState({}); // 각 이벤트의 즐겨찾기 상태를 저장할 객체
+  const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
 
   useEffect(() => {
     // 초기 즐겨찾기 상태 설정

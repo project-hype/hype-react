@@ -1,5 +1,5 @@
-import Banner from '../components/common/Banner';
-import EventBanner from '../components/common/EventBanner';
+import Banner from '../components/event/Banner';
+import EventBanner from '../components/event/EventBanner';
 import React from 'react';
 import MainLayout from '../layout/MainLayout';
 import DayCalendar from '../components/common/DayCalendar';
