@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+// 회원가입 폼 컨테이너
 export const Container = styled.div`
   position: relative;
   width: 50%;
@@ -8,6 +9,7 @@ export const Container = styled.div`
   margin: 0 auto;
 `;
 
+// 필수 입력 필드 안내 부분
 export const NoticeSection = styled.div`
   position: absolute;
   top: 8px;
@@ -15,6 +17,7 @@ export const NoticeSection = styled.div`
   margin-bottom: 8px;
 `;
 
+// 입력 폼 부분
 export const InputSection = styled.div`
   margin-bottom: 32px;
 `;
@@ -24,6 +27,19 @@ export const InputContainer = styled.div`
   width: 100%;
   margin-bottom: 48px;
   border: none;
+`;
+
+export const InputField = styled.input`
+  width: calc(100% - 24px);
+  padding: 10px;
+  font-family: '해피니스 산스 레귤러';
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const LabelContainer = styled.div`
@@ -42,6 +58,43 @@ export const Asterisk = styled.span`
   color: #f00;
 `;
 
+export const SelectField = styled.select`
+  width: 30%;
+  padding: 10px;
+  font-family: '해피니스 산스 볼드';
+  font-size: 16px;
+  border: 1px solid #e0ded8;
+  border-radius: 20px;
+  margin-bottom: 8px;
+`;
+
+export const RadioGroup = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+export const RadioButtonLabel = styled.label`
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  font-family: '해피니스 산스 레귤러';
+  font-size: 16px;
+  color: #595959;
+`;
+
+export const RadioButtonInput = styled.input`
+  margin-right: 5px;
+`;
+
+export const ButtonContainer = styled.div`
+  margin-top: 56px;
+  margin-bottom: 56px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+`;
+
 export const ErrorText = styled.div`
   font-family: '해피니스 산스 레귤러';
   font-weight: bold;
@@ -50,13 +103,7 @@ export const ErrorText = styled.div`
   margin-top: 8px;
 `;
 
-export const JoinButtonContainer = styled.div`
-  margin-top: 56px;
-  margin-bottom: 56px;
-  display: flex;
-  justify-content: center;
-`;
-
+// 버튼 스타일
 export const ButtonGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -75,7 +122,7 @@ export const StyledButtonWrapper = styled.div`
   position: relative;
   width: 107px;
   cursor: pointer;
-  border: ${(props) => (props.selected ? '1px solid #ff8c00;' : '1px solid #E0DED8')};
+  border: ${(props) => (props.selected ? '1px solid #ff8c00;' : '1px solid #E0DED8')}; /* 선택됐을 때의 테두리 색상 */
   margin-top: 16px;
   margin-right: 40px;
 `;
@@ -93,10 +140,27 @@ export const DescriptionText = styled.span`
   color: #000;
 `;
 
+export const CheckButton = styled.button`
+  margin-left: 8px;
+  padding: 10px;
+  width: 112px;
+  height: 43px;
+  font-family: '해피니스 산스 레귤러';
+  font-size: 14px;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  background-color: #ff8c00;
+  cursor: pointer;
+  &:hover {
+    background-color: #1e9d8b;
+  }
+`;
+
 export const Divider = styled.div`
   width: 100%;
   height: 2px;
   background-color: #e0ded8;
   margin-top: 4px;
-  margin-bottom: 16px;
+  margin-bottom: 16px; /* 구분선 아래에 여백 추가 */
 `;
