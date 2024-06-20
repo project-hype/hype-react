@@ -1,4 +1,4 @@
-import { InputSection, ButtonContainer, PageTitle } from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
+import { InputSection, ButtonContainer } from './MemberStyledComponents';
 import Input from './Input';
 import InputContainer from './InputContainer';
 import CategoryButtonGroup from './CategoryButtonGroup';
@@ -9,6 +9,8 @@ import Modal from '../common/Modal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userState } from '../../state/authState';
 
 const MyPageForm = () => {
   const [form, setForm] = useState({
@@ -27,37 +29,27 @@ const MyPageForm = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [updateError, setUpdateError] = useState(false);
+  const user = useRecoilValue(userState); // Recoil 상태에서 유저 정보 가져오기
 
-  // useEffect(() => {
-  //   // 사용자 정보를 가져오는 비동기 함수 정의
-  //   const fetchUserData = async () => {
-  //     try {
-  //       // 서버에서 사용자 정보 가져오기
-  //       const response = await axios.get(`http://localhost:8080/member/${memberId}`); // memberId는 세션에서 가져온 값으로 대체해야 함
-
-  //       // 가져온 정보를 form에 설정
-  //       const userData = response.data; // 예시로 가정하고 사용자 정보 객체로 받아온다고 가정
-
-  //       setForm({
-  //         loginId: userData.loginId,
-  //         name: userData.name,
-  //         password: '',
-  //         confirmPassword: '',
-  //         birthdate: userData.birthdate,
-  //         gender: userData.gender,
-  //         cityId: userData.cityId,
-  //         preferBranchId: userData.preferBranchId,
-  //         category: userData.category.map((cat) => cat.categoryId),
-  //       });
-  //     } catch (error) {
-  //       console.error('Failed to fetch user data', error);
-  //       // 에러 처리 로직 추가
-  //     }
-  //   };
-
-  //   // fetchUserData 함수 호출
-  //   fetchUserData();
-  // }, []); // 마운트될 때 한 번만 호출하기 위해 빈 배열을 의존성으로 넣음
+  useEffect(() => {
+    // Recoil 상태에서 유저 정보를 가져와 form에 설정
+    if (user.userInfo.memberId) {
+      setForm({
+        loginId: user.userInfo.loginId || '',
+        name: user.userInfo.name || '',
+        password: '',
+        confirmPassword: '',
+        birthdate: user.userInfo.birthdate ? new Date(user.userInfo.birthdate).toISOString().split('T')[0] : '',
+        gender: user.userInfo.gender === 'M' ? '남성' : user.userInfo.gender === 'W' ? '여성' : '',
+        cityId: user.userInfo.cityId || '',
+        preferBranchId: user.userInfo.preferBranchId || '',
+        category: user.userInfo.memberCategory ? user.userInfo.memberCategory.map((cat) => cat.categoryId) : [],
+      });
+      setSelectedCategories(
+        user.userInfo.memberCategory ? user.userInfo.memberCategory.map((cat) => cat.categoryId) : [],
+      );
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,16 +88,23 @@ const MyPageForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // confirmPassword를 제외한 form 데이터 생성
-    const { confirmPassword, ...submitForm } = form;
-    // category 배열 형식으로 전달
-    submitForm.category = submitForm.category.map((id) => ({ categoryId: id }));
+    // form 데이터에서 null 값인 category 필드를 제외하고 유효한 값들만 필터링
+    const validCategories = form.category.filter((cat) => cat !== null);
+
+    const submitForm = {
+      memberId: user.userInfo.memberId,
+      password: form.password,
+      cityId: form.cityId,
+      preferBranchId: form.preferBranchId,
+      category: validCategories,
+    };
 
     await axios
-      .post('http://localhost:8080/member/update', submitForm)
+      .put('http://localhost:8080/member/update', submitForm)
       .then((response) => {
         if (response.status === 200) {
           setShowModal(true);
+          setForm({ password: '', confirmPassword: '' });
         }
       })
       .catch((error) => {
@@ -118,7 +117,7 @@ const MyPageForm = () => {
 
   const handleConfirm = () => {
     setShowModal(false);
-    setUpdateError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
+    setUpdateError(false);
   };
 
   return (
@@ -148,8 +147,8 @@ const MyPageForm = () => {
           <InputContainer label="비밀번호 확인" required error={passwordError} divider>
             <Input
               type="password"
-              name="password"
-              value={form.password}
+              name="confirmPassword"
+              value={form.confirmPassword}
               onChange={handleChange}
               placeholder="비밀번호를 다시 입력하세요"
               required
@@ -169,11 +168,11 @@ const MyPageForm = () => {
           </InputContainer>
 
           <InputContainer label="지역" required divider>
-            <CitySelect></CitySelect>
+            <CitySelect name="cityId" value={form.cityId} onChange={handleChange}></CitySelect>
           </InputContainer>
 
           <InputContainer label="자주 가는 지점" divider>
-            <BranchSelect></BranchSelect>
+            <BranchSelect name="preferBranchId" value={form.preferBranchId} onChange={handleChange}></BranchSelect>
           </InputContainer>
 
           <InputContainer label="관심카테고리">
