@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
+import { checkSession } from '../../state/authState';
 
 const Navbar = styled.nav`
   display: flex;
@@ -196,9 +197,10 @@ const Header = () => {
     axios
       .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
       .then(() => {
-        setUser({ ...user, isLoggedIn: false });
+        setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
         localStorage.clear();
         navigate('/');
+        return;
       })
       .catch((error) => {
         console.error('Logout failed!', error);

@@ -29,13 +29,28 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
-const Modal = ({ message, onConfirm }) => {
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const Message = styled.p`
+  font-family: '해피니스 산스 타이틀';
+  font-size: 16px; /* 폰트 크기 설정 */
+  text-align: center; /* 중앙 정렬 */
+`;
+
+const Modal = ({ message, onConfirm, onCancel }) => {
   return (
     <>
       <Overlay />
       <ModalWrapper>
-        <p>{message}</p>
-        <Button text="확인" bgColor="#FF8C00" onClick={onConfirm} />
+        <Message>{message}</Message>
+        <ButtonContainer>
+          <Button text="확인" bgColor="#FF8C00" onClick={onConfirm} />
+          {onCancel && <Button text="취소" bgColor="#E0DED8" onClick={onCancel}></Button>}
+        </ButtonContainer>
       </ModalWrapper>
     </>
   );

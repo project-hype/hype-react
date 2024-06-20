@@ -9,7 +9,7 @@ import Modal from '../common/Modal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
 
 const MyPageForm = () => {
@@ -29,11 +29,17 @@ const MyPageForm = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [updateError, setUpdateError] = useState(false);
-  const user = useRecoilValue(userState); // Recoil 상태에서 유저 정보 가져오기
+  const [deleteError, setDeleteError] = useState(false);
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+
+  const user = useRecoilValue(userState);
+  const resetUserState = useResetRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Recoil 상태에서 유저 정보를 가져와 form에 설정
-    if (user.userInfo.memberId) {
+    if (user.isLoggedIn && user.userInfo.memberId) {
       setForm({
         loginId: user.userInfo.loginId || '',
         name: user.userInfo.name || '',
@@ -48,6 +54,9 @@ const MyPageForm = () => {
       setSelectedCategories(
         user.userInfo.memberCategory ? user.userInfo.memberCategory.map((cat) => cat.categoryId) : [],
       );
+    } else {
+      // 로그인이 되어 있지 않다면 메인 페이지로 리다이렉트
+      navigate('/');
     }
   }, [user]);
 
@@ -120,12 +129,51 @@ const MyPageForm = () => {
     setUpdateError(false);
   };
 
+  const handleDelete = async (e) => {
+    await axios
+      .delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`)
+      .then((response) => {
+        if (response.status === 200) {
+          resetUserState();
+          sessionStorage.clear(); // 세션 정보 삭제
+          setShowModal(false);
+          navigate('/');
+        }
+      })
+      .catch((error) => {
+        if (error.response || error.response.status === 400) {
+          setDeleteError(true);
+          setShowModal(true);
+        }
+      });
+  };
+
+  const handleConfirmDelete = () => {
+    setIsConfirmDelete(true);
+    setShowModal(true);
+  };
+
+  const handleConfirmModal = () => {
+    setShowModal(false);
+    setIsConfirmDelete(false);
+    if (!deleteError) {
+      navigate('/');
+    }
+  };
+
   return (
     <>
       {showModal && (
         <Modal
           message={updateError ? '회원정보 수정에 실패했습니다. 다시 시도해주세요.' : '회원정보가 수정되었습니다.'}
           onConfirm={handleConfirm}
+        />
+      )}
+      {showModal && (
+        <Modal
+          message={deleteError ? '회원 탈퇴에 실패했습니다. 다시 시도해주세요.' : '정말로 탈퇴하시겠습니까?'}
+          onConfirm={deleteError ? handleConfirmModal : handleDelete}
+          onCancel={deleteError ? null : () => setShowModal(false)}
         />
       )}
       <form onSubmit={handleSubmit}>
@@ -182,7 +230,7 @@ const MyPageForm = () => {
 
         <ButtonContainer>
           <Button type="submit" text="수정하기" />
-          <Button type="submit" bgColor="#595959" text="탈퇴하기" />
+          <Button type="button" bgColor="#595959" text="탈퇴하기" onClick={handleConfirmDelete} />
         </ButtonContainer>
       </form>
     </>

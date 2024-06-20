@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../../layout/MainLayout';
 import MyPageForm from '../../components/member/MyPageForm';
-import FavoriteForm from '../../components/member/FavoriteForm';
+import FavoriteEventList from '../../components/member/FavoriteEventList';
 import SubMenu from '../../components/member/Submenu';
 import { PageTitle } from '../../components/member/MemberStyledComponents';
 import { useRecoilValue } from 'recoil';
@@ -15,9 +15,10 @@ function MyPage() {
   useEffect(() => {
     // 로그인 상태를 확인하고, 비로그인 상태라면 메인 페이지로 리다이렉트
     if (!user.isLoggedIn) {
-      return navigate('/');
+      navigate('/');
+      return;
     }
-  }, [user.isLoggedIn, navigate]);
+  }, [user, navigate]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -25,11 +26,15 @@ function MyPage() {
 
   return (
     <div>
-      <MainLayout />
-      <PageTitle>마이페이지</PageTitle>
-      <SubMenu onTabChange={handleTabChange} activeTab={activeTab} />
-      {activeTab === 'myInfo' && <MyPageForm />}
-      {activeTab === 'favorites' && <FavoriteForm />}
+      {user.userInfo && (
+        <>
+          <MainLayout />
+          <PageTitle>마이페이지</PageTitle>
+          <SubMenu onTabChange={handleTabChange} activeTab={activeTab} />
+          {activeTab === 'myInfo' && <MyPageForm />}
+          {activeTab === 'favorites' && <FavoriteEventList />}
+        </>
+      )}
     </div>
   );
 }
