@@ -81,13 +81,13 @@ function EventBanner({ title, type }) {
         <header>
           <h2 className="popupbanner-tit">{title}</h2>
           <div className="moreview">
-            <Link to={`/popup`}>더보기</Link>
+            <Link to={`/search/`}>더보기</Link>
           </div>
         </header>
         <div class="popupbanner-inner">
           <Slider {...settings}>
-            {data.map((event, index) => (
-              <div key={index} className="popupbanner-list">
+            {data.map((event) => (
+              <div key={event.eventId} className="popupbanner-list">
                 <div
                   className="slide-img-wrap"
                   onClick={(e) => {

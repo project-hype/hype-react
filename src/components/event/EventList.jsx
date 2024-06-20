@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 
 const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter }) => {
   const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
@@ -79,8 +79,8 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
               </Link>
               <div>
                 <FontAwesomeIcon
-                  icon={likeStatus[event.eventId] ? faHeart : faRegularHeart}
-                  style={{ color: likeStatus[event.eventId] ? 'red' : 'gray', cursor: 'pointer' }}
+                  icon={likeStatus[event.eventId] ? faStar : faRegularStar}
+                  style={{ color: likeStatus[event.eventId] ? '#ff8c00' : 'gray', cursor: 'pointer' }}
                   onClick={(e) => toggleFavorite(event.eventId, e)}
                   size="2x"
                 />

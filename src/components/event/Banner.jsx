@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import styled from 'styled-components';
 import '../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
@@ -82,12 +82,13 @@ function Banner() {
     // <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
     <div style={{ position: 'relative' }}>
       <Slider {...settings}>
-        {data.map((event, index) => (
+        {data.map((event) => (
           <div
-            key={index}
+            key={event.eventId}
             className="popupbanner-list"
             onClick={(e) => {
               moveToDetailPage(event.eventId, e);
+              console.log(event.eventId);
             }}
           >
             <div className="slide-content">

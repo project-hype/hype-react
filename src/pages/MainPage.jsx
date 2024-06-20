@@ -14,7 +14,7 @@ function MainPage() {
           <Banner />
         </div>
         <article class="article-wrap">
-          <EventBanner title={'🔥이번 주 핫한 곳은?🔥'} type={'top'} />
+          <EventBanner title={'이번 주 핫한 곳은?🔥'} type={'top'} />
           <EventBanner title={'OO님의 취향 저격 행사✨🔫'} type={'top'} />
           <DayCalendar />
         </article>
