@@ -5,6 +5,16 @@ import '../../assets/scss/common.scss';
 import axios from 'axios';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import styled from 'styled-components';
+
+const StyledLink = styled(Link)`
+  text-decoration: none; /* 기본 밑줄 제거 */
+  color: inherit; /* 부모의 색상 상속 */
+  &:hover,
+  &:focus {
+    color: inherit; /* hover와 focus 상태에서도 부모의 색상 유지 */
+  }
+`;
 
 const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter }) => {
   const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
@@ -58,10 +68,10 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
         events.map((event, index) => (
           <li key={index}>
             <div>
-              <Link to={`/event/${event.eventId}`} className="event-img-wrap">
+              <StyledLink to={`/event/${event.eventId}`} className="event-img-wrap">
                 <img src={event.imageUrl} className="event-img" />
-              </Link>
-              <Link to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
+              </StyledLink>
+              <StyledLink to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
                 <ul>
                   <li className="event-name">
                     <p>{event.title}</p>
@@ -76,7 +86,7 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
                     </p>
                   </li>
                 </ul>
-              </Link>
+              </StyledLink>
               <div>
                 <FontAwesomeIcon
                   icon={likeStatus[event.eventId] ? faHeart : faRegularHeart}
