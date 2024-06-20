@@ -88,11 +88,11 @@ export const RadioButtonInput = styled.input`
 `;
 
 export const ButtonContainer = styled.div`
-  margin-top: 56px;
+  margin-top: 72px;
   margin-bottom: 56px;
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 48px;
 `;
 
 export const ErrorText = styled.div`

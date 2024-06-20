@@ -13,7 +13,7 @@ const StyledForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: fit-content; // 전체 화면 높이
+  height: 80vh; // 전체 화면 높이
   margin-top: 80px;
 `;
 
