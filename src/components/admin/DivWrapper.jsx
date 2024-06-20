@@ -4,6 +4,8 @@ import Nav from './Nav';
 import Menu from './Menu';
 import EventTable from './EventTable';
 import BannerTable from './BannerTable';
+import CategoryTable from './CategoryTable';
+import HashtagTable from './HashtagTable';
 
 const Wrapper = styled.div`
   background-color: #ffffff;
@@ -42,6 +44,8 @@ const DivWrapper = () => {
           <Menu setActiveMenu={setActiveMenu} />
           {activeMenu === 'event' && <EventTable />}
           {activeMenu === 'banner' && <BannerTable />}
+          {activeMenu === 'category' && <CategoryTable />}
+          {activeMenu === 'hashtag' && <HashtagTable />}
         </Body>
         <Nav />
       </InnerDiv>

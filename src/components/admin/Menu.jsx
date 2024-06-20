@@ -57,6 +57,12 @@ const Menu = (props) => {
       <MenuItem onClick={() => props.setActiveMenu('banner')}>
         <TextWrapper>배너 관리</TextWrapper>
       </MenuItem>
+      <MenuItem onClick={() => props.setActiveMenu('category')}>
+        <TextWrapper>카테고리 관리</TextWrapper>
+      </MenuItem>
+      <MenuItem onClick={() => props.setActiveMenu('hashtag')}>
+        <TextWrapper>해시태그 관리</TextWrapper>
+      </MenuItem>
       {/* <MenuItem>
         <TextWrapper>통계 보기</TextWrapper>
         <TextWrapper2>즐겨찾기</TextWrapper2>

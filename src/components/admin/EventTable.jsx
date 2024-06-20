@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import EventRow from './EventRow';
-import EventModal from './EventEditModal';
+import EventEditModal from './EventEditModal';
 import EventAddModal from './EventAddModal'; // 추가: EventAddModal import
 import Rectangle200 from '../../assets/img/common/Rectangle200.png';
 
@@ -150,7 +150,7 @@ const EventTable = () => {
           <EventRow key={event.eventId} event={event} onRowClick={handleRowClick} />
         ))}
       </RowContainer>
-      {selectedEvent && <EventModal event={selectedEvent} onClose={closeModal} onSave={handleSaveEvent} />}
+      {selectedEvent && <EventEditModal event={selectedEvent} onClose={closeModal} onSave={handleSaveEvent} />}
       {showAddModal && (
         <EventAddModal
           onClose={closeAddModal}
