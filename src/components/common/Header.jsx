@@ -14,8 +14,6 @@ const Navbar = styled.nav`
   padding: 16px 150px; /* 양옆에 56px, 위아래로 24px */
   background-color: #ffffff;
   position: relative;
-  height: 75px; /* 고정 높이로 설정 */
-
   @media (max-width: 768px) {
     flex-direction: column;
     height: auto; /* 고정 높이 제거 */
