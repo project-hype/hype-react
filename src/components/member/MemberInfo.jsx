@@ -9,7 +9,7 @@ const MemberInfo = ({ member_id }) => {
   useEffect(() => {
     async function fetchMemberInfo() {
       try {
-        const response = await axios.get(`http://localhost:8080/member/${member_id}`);
+        const response = await axios.get(`http://localhost:8080/member/getMemberInfo/${member_id}`);
         setMemberInfo(response.data);
         setLoading(false);
       } catch (error) {

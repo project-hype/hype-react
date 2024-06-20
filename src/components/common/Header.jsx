@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import hypeLogo from '../../assets/img/layout/hypeLogo.png';
+import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import searchIcon from '../../assets/img/layout/searchIcon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
@@ -11,11 +11,9 @@ const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 56px; /* 양옆에 56px, 위아래로 24px */
+  padding: 16px 150px; /* 양옆에 56px, 위아래로 24px */
   background-color: #ffffff;
   position: relative;
-  height: 50px; /* 고정 높이로 설정 */
-
   @media (max-width: 768px) {
     flex-direction: column;
     height: auto; /* 고정 높이 제거 */
@@ -29,7 +27,7 @@ const NavbarLeft = styled.div`
 `;
 
 const HypeLogo = styled.img`
-  width: 130px;
+  width: 140px;
   height: auto;
   cursor: pointer;
 `;
@@ -141,6 +139,13 @@ const NavButton = styled.button`
   }
 `;
 
+const Separator = styled.div`
+  justify-content: center;
+  height: 1px; /* 구분선 높이 */
+  background-color: #dcdcdc;
+  width: 100%; /* 구분선 폭을 메뉴 전체 너비에 맞춤 */
+`;
+
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -192,6 +197,7 @@ const Header = () => {
       .then(() => {
         setIsLoggedIn(false);
         localStorage.clear();
+        navigate('/');
       })
       .catch((error) => {
         console.error('Logout failed!', error);
@@ -207,45 +213,45 @@ const Header = () => {
   };
 
   return (
-    <Navbar>
-      <NavbarLeft>
-        <HypeLogo className="hypeLogo" src={hypeLogo} alt="Home" onClick={handleHomeClick} />
-      </NavbarLeft>
-      <NavbarCenter>
-        <NavbarForm onSubmit={handleSearch}>
-          <SearchContainer>
-            <SearchInput type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-            <SearchButton type="submit">
-              <SearchIcon src={searchIcon} alt="Search" />
-            </SearchButton>
-          </SearchContainer>
-        </NavbarForm>
-      </NavbarCenter>
-      <NavbarRight className="navbar-right">
-        {isLoggedIn ? (
-          <>
-            <NavButton className="nav-button" onClick={handleLogoutClick}>
-              로그아웃
-            </NavButton>
-            <NavButton className="nav-button" onClick={handleMyPageClick}>
-              마이페이지
-            </NavButton>
-          </>
-        ) : (
-          <>
-            <NavButton className="nav-button" onClick={handleLoginClick}>
-              로그인
-            </NavButton>
-            <NavButton className="nav-button" onClick={handleJoinClick}>
-              회원가입
-            </NavButton>
-          </>
-        )}
-        <NavButton className="nav-button">
-          <FontAwesomeIcon icon={faBars} size="2x" />
-        </NavButton>
-      </NavbarRight>
-    </Navbar>
+    <>
+      <Navbar>
+        <NavbarLeft>
+          <HypeLogo className="hypeLogo" src={hypeLogo} alt="Home" onClick={handleHomeClick} />
+        </NavbarLeft>
+        <NavbarCenter>
+          <NavbarForm onSubmit={handleSearch}>
+            <SearchContainer>
+              <SearchInput type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <SearchButton type="submit">
+                <SearchIcon src={searchIcon} alt="Search" />
+              </SearchButton>
+            </SearchContainer>
+          </NavbarForm>
+        </NavbarCenter>
+        <NavbarRight className="navbar-right">
+          {isLoggedIn ? (
+            <>
+              <NavButton className="nav-button" onClick={handleLogoutClick}>
+                로그아웃
+              </NavButton>
+              <NavButton className="nav-button" onClick={handleMyPageClick}>
+                마이페이지
+              </NavButton>
+            </>
+          ) : (
+            <>
+              <NavButton className="nav-button" onClick={handleLoginClick}>
+                로그인
+              </NavButton>
+              <NavButton className="nav-button" onClick={handleJoinClick}>
+                회원가입
+              </NavButton>
+            </>
+          )}
+        </NavbarRight>
+      </Navbar>
+      <Separator />
+    </>
   );
 };
 

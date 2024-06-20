@@ -4,13 +4,14 @@ import styled from 'styled-components';
 const TextWrapper = styled.div``;
 
 const StyledMenu = styled.div`
-  height: 180px; /* 메뉴 전체 높이 */
+  height: fit-content; /* 메뉴 전체 높이 */
   width: 100%; /* 메뉴 전체 폭 */
   display: flex;
-  padding: 72px;
+  padding: 0 72px;
   justify-content: space-around; /* 요소들 사이의 공간을 균등하게 배치 */
   align-items: center; /* 수직 가운데 정렬 */
   box-sizing: border-box; /* padding이 요소의 크기에 포함되도록 설정 */
+  margin-bottom: 24px;
 `;
 
 const MenuItemWrapper = styled.div`
@@ -31,7 +32,7 @@ const TextWrapperStyled = styled.div`
   color: ${(props) => (props.active ? '#ff8c00' : '#595959')};
   position: relative; /* z-index 설정을 위해 필요 */
   z-index: 1; /* TextWrapperStyled가 Separator 위로 올라오도록 설정 */
-  margin-bottom: 10px; /* TextWrapperStyled와 Separator 사이의 간격 설정 */
+  margin-bottom: 16px; /* TextWrapperStyled와 Separator 사이의 간격 설정 */
 `;
 
 const Separator = styled.div`
@@ -55,13 +56,13 @@ const SubMenu = ({ activeTab, onTabChange }) => {
         <TextWrapperStyled active={activeTab === 'myInfo'} onClick={() => handleTabClick('myInfo')}>
           내 정보
         </TextWrapperStyled>
-        <Separator className="separator-myInfo" active={activeTab === 'myInfo'} />
+        <Separator active={activeTab === 'myInfo'} />
       </MenuItemWrapper>
       <MenuItemWrapper>
         <TextWrapperStyled active={activeTab === 'favorites'} onClick={() => handleTabClick('favorites')}>
           즐겨찾기
         </TextWrapperStyled>
-        <Separator className="separator-favorites" active={activeTab === 'favorites'} />
+        <Separator active={activeTab === 'favorites'} />
       </MenuItemWrapper>
     </StyledMenu>
   );
