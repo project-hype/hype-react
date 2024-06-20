@@ -5,6 +5,7 @@ import SearchResults from './components/SearchResults/SearchResults';
 import Main from './pages/MainPage';
 import LogIn from './pages/member/LogInPage';
 import Join from './pages/member/JoinPage';
+import MyPage from './pages/member/MyPage';
 import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AdminMain from './pages/admin/AdminMainPage';
 import axios from 'axios';
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
   { path: '/search', element: <SearchResults /> },
   { path: '/login', element: <LogIn /> },
   { path: '/join', element: <Join /> },
+  { path: '/mypage', element: <MyPage /> },
   { path: '/admin', element: <AdminMain />, loader: checkAdmin },
 ]);
 

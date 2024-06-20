@@ -1,26 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Container,
-  NoticeSection,
-  Asterisk,
-  DescriptionText,
-  InputSection,
-  ButtonContainer,
-  CheckButton,
-} from './styledComponents'; // 스타일 컴포넌트를 import 합니다
+import { InputSection, ButtonContainer } from './styledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
 import CategoryButtonGroup from './CategoryButtonGroup';
 import CitySelect from './CitySelect';
 import BranchSelect from './BranchSelect';
-import RadioButton from './RadioButton';
 import Button from '../common/Button';
 import Modal from '../common/Modal';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 
-// 회원가입 폼 컴포넌트
-const JoinForm = () => {
+const MyPageForm = () => {
   const [form, setForm] = useState({
     loginId: '',
     name: '',
@@ -32,12 +22,11 @@ const JoinForm = () => {
     preferBranchId: '',
     category: [],
   });
-  const [duplicateIdError, setDuplicateIdError] = useState('');
+
   const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [joinError, setJoinError] = useState(false);
-  const navigate = useNavigate();
+  const [updateError, setUpdateError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,20 +37,15 @@ const JoinForm = () => {
       if (name === 'password' || name === 'confirmPassword') {
         if (updatedForm.password !== updatedForm.confirmPassword) {
           setPasswordError('비밀번호가 일치하지 않습니다.');
-          setJoinError(true);
+          setUpdateError(true);
         } else {
           setPasswordError('');
-          setJoinError(false);
+          setUpdateError(false);
         }
       }
 
       return updatedForm;
     });
-
-    // ID 중복 확인 오류 메시지 초기화
-    if (name === 'loginId') {
-      setDuplicateIdError('');
-    }
   };
 
   const handleCategoryClick = (categoryId) => {
@@ -78,21 +62,6 @@ const JoinForm = () => {
     });
   };
 
-  const checkIdAvailability = async () => {
-    await axios
-      .post('http://localhost:8080/member/checkLoginId', { loginId: form.loginId })
-      .then((response) => {
-        if (response.status === 200) {
-          setDuplicateIdError('사용 가능한 아이디입니다.'); // ID가 사용 가능하면 에러 메시지를 비움
-          setJoinError(false);
-        }
-      })
-      .catch((error) => {
-        setDuplicateIdError('중복된 아이디가 있습니다.');
-        setJoinError(true);
-      });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -102,7 +71,7 @@ const JoinForm = () => {
     submitForm.category = submitForm.category.map((id) => ({ categoryId: id }));
 
     await axios
-      .post('http://localhost:8080/member/join', submitForm)
+      .post('http://localhost:8080/member/update', submitForm)
       .then((response) => {
         if (response.status === 200) {
           setShowModal(true);
@@ -111,46 +80,29 @@ const JoinForm = () => {
       .catch((error) => {
         if (error.response || error.response.status === 400) {
           setShowModal(true);
-          setJoinError(true);
+          setUpdateError(true);
         }
       });
   };
 
   const handleConfirm = () => {
     setShowModal(false);
-    setJoinError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
-    if (!joinError) {
-      navigate('/login');
-    }
+    setUpdateError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
   };
 
   return (
     <>
       {showModal && (
         <Modal
-          message={joinError ? '회원가입에 실패했습니다. 다시 시도해주세요.' : '가입해주셔서 감사합니다.'}
+          message={updateError ? '회원정보 수정에 실패했습니다. 다시 시도해주세요.' : '회원정보가 수정되었습니다.'}
           onConfirm={handleConfirm}
         />
       )}
       <form onSubmit={handleSubmit}>
         <InputSection>
-          <InputContainer label="ID" required error={duplicateIdError} divider>
-            <NoticeSection>
-              <Asterisk>*</Asterisk> <DescriptionText>는 필수 입력 사항입니다.</DescriptionText>
-            </NoticeSection>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Input
-                type="text"
-                name="loginId"
-                value={form.loginId}
-                onChange={handleChange}
-                placeholder="ID를 입력하세요"
-                required
-              />
-              <CheckButton onClick={checkIdAvailability}>중복 확인</CheckButton>
-            </div>
+          <InputContainer label="ID" divider>
+            <Input type="text" name="loginId" value={form.loginId} readOnly />
           </InputContainer>
-
           <InputContainer label="비밀번호" required divider>
             <Input
               type="password"
@@ -173,42 +125,16 @@ const JoinForm = () => {
             />
           </InputContainer>
 
-          <InputContainer label="이름" required divider>
-            <Input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="이름을 입력하세요"
-              required
-            />
+          <InputContainer label="이름" divider>
+            <Input type="text" name="name" value={form.name} readOnly />
           </InputContainer>
 
-          <InputContainer label="생년월일" required divider>
-            <Input type="date" name="birthdate" value={form.birthdate} onChange={handleChange} required />
+          <InputContainer label="생년월일" divider>
+            <Input type="date" name="birthdate" value={form.birthdate} readOnly />
           </InputContainer>
 
-          <InputContainer label="성별" required divider>
-            <RadioButton
-              label="남성"
-              type="radio"
-              name="gender"
-              value="M"
-              checked={form.gender === 'M'}
-              onChange={handleChange}
-              required
-            ></RadioButton>
-            <RadioButton
-              label="여성"
-              type="radio"
-              name="gender"
-              value="W"
-              checked={form.gender === 'W'}
-              onChange={handleChange}
-              required
-            >
-              여성
-            </RadioButton>
+          <InputContainer label="성별" divider>
+            <Input type="text" name="gender" value={form.gender} readOnly />
           </InputContainer>
 
           <InputContainer label="지역" required divider>
@@ -225,11 +151,12 @@ const JoinForm = () => {
         </InputSection>
 
         <ButtonContainer>
-          <Button type="submit" text="가입하기" />
+          <Button type="submit" text="수정하기" />
+          <Button type="submit" bgColor="#595959" text="탈퇴하기" />
         </ButtonContainer>
       </form>
     </>
   );
 };
 
-export default JoinForm;
+export default MyPageForm;

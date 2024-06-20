@@ -1,12 +1,12 @@
 import React from 'react';
 import MainLayout from '../../layout/MainLayout';
-import JoinForm from '../../components/member/JoinForm';
+import MyPageForm from '../../components/member/MyPageForm';
 
 function MyPage() {
   return (
     <div>
       <MainLayout />
-      <JoinForm />
+      <MyPageForm />
     </div>
   );
 }
