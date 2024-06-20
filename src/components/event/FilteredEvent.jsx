@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import EventList from './EventList';
@@ -10,13 +9,14 @@ const EventWrapArticle = styled.article`
   margin-right: 150px;
 `;
 
-function FilteredEvent({ selectedDate, selectedBranch, selectedEventTypes }) {
+function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTypes }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const requestBody = {
+          keyword: keyword,
           date: selectedDate,
           branchId: selectedBranch || null,
           eventTypeIdList: selectedEventTypes,
@@ -25,7 +25,6 @@ function FilteredEvent({ selectedDate, selectedBranch, selectedEventTypes }) {
         const response = await axios.post('http://localhost:8080/event/list/filter', requestBody);
         const result = response.data.eventList;
         setData(result);
-        console.log(result);
       } catch (error) {
         console.error(error);
       }

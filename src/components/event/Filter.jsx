@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import '../../assets/scss/common.scss';
 import FilterBranchSelect from './FilterBranchSelect';
 import { FilterButton } from '../common/FilterButton';
 import FilteredEvent from './FilteredEvent';
+import { useLocation } from 'react-router-dom';
 
 const FilterDiv = styled.div`
   height: 200px;
@@ -42,6 +43,9 @@ const DateInput = styled.input`
 `;
 
 function Filter() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const keyword = queryParams.get('keyword');
   const [selectedDate, setSelectedDate] = useState(new Date().toLocaleString('sv').substring(0, 10));
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedEventTypes, setSelectedEventTypes] = useState(['팝업', '전시', '공연', '강좌']);
@@ -105,6 +109,7 @@ function Filter() {
         </FilterColumn>
       </FilterDiv>
       <FilteredEvent
+        keyword={keyword}
         selectedDate={selectedDate}
         selectedBranch={selectedBranch}
         selectedEventTypes={getEventTypeIds()}
