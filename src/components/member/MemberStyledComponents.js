@@ -106,6 +106,8 @@ export const ErrorText = styled.div`
 // 버튼 스타일
 export const ButtonGroup = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
 `;
 
@@ -120,7 +122,7 @@ export const StyledButtonWrapper = styled.div`
   overflow: hidden;
   padding: 10px;
   position: relative;
-  width: 107px;
+  width: 128px;
   cursor: pointer;
   border: ${(props) => (props.selected ? '1px solid #ff8c00;' : '1px solid #E0DED8')}; /* 선택됐을 때의 테두리 색상 */
   margin-top: 16px;
@@ -130,7 +132,7 @@ export const StyledButtonWrapper = styled.div`
 export const StyledButtonText = styled.div`
   color: ${(props) => (props.selected ? '#fff' : '#1E1E1E')};
   font-family: '해피니스 산스 타이틀';
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   text-align: center;
   letter-spacing: 1px;
@@ -163,4 +165,12 @@ export const Divider = styled.div`
   background-color: #e0ded8;
   margin-top: 4px;
   margin-bottom: 16px; /* 구분선 아래에 여백 추가 */
+`;
+
+export const PageTitle = styled.div`
+  color: #1e1e1e;
+  font-family: '해피니스 산스 타이틀';
+  font-size: 40px;
+  text-align: center;
+  margin: 48px;
 `;

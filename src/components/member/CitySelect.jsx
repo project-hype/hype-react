@@ -3,7 +3,6 @@ import { SelectField } from './MemberStyledComponents';
 
 const CitySelect = ({ name, value, onChange, required }) => (
   <SelectField name={name} value={value} onChange={onChange} required={required}>
-    <option value="">-----------------------------------</option>
     <option value="1">서울특별시</option>
     <option value="2">부산광역시</option>
     <option value="3">대구광역시</option>

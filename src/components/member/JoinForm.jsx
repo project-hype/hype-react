@@ -134,7 +134,7 @@ const JoinForm = () => {
       )}
       <form onSubmit={handleSubmit}>
         <InputSection>
-          <InputContainer label="ID" required error={duplicateIdError} divider>
+          <InputContainer label="아이디" required error={duplicateIdError} divider>
             <NoticeSection>
               <Asterisk>*</Asterisk> <DescriptionText>는 필수 입력 사항입니다.</DescriptionText>
             </NoticeSection>
@@ -165,8 +165,8 @@ const JoinForm = () => {
           <InputContainer label="비밀번호 확인" required error={passwordError} divider>
             <Input
               type="password"
-              name="password"
-              value={form.password}
+              name="confirmPassword"
+              value={form.confirmPassword}
               onChange={handleChange}
               placeholder="비밀번호를 다시 입력하세요"
               required
