@@ -16,11 +16,6 @@ const EventWrapper = styled.div`
 
 const Header = styled.header`
   background-color: #f0f5f4;
-  width: 1036px;
-`;
-
-const RowContainer = styled.div`
-  width: 1036px;
 `;
 
 const HeaderRow = styled.div`
@@ -145,11 +140,11 @@ const EventTable = () => {
           </HeaderCell>
         </HeaderRow>
       </Header>
-      <RowContainer>
+      <div>
         {eventData.map((event) => (
           <EventRow key={event.eventId} event={event} onRowClick={handleRowClick} />
         ))}
-      </RowContainer>
+      </div>
       {selectedEvent && <EventEditModal event={selectedEvent} onClose={closeModal} onSave={handleSaveEvent} />}
       {showAddModal && (
         <EventAddModal
