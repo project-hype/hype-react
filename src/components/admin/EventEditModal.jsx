@@ -331,16 +331,13 @@ const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
 
   const handleHashtagClick = async (hashtag) => {
     try {
-      const response = await axios.post('http://localhost:8080/admin/event/event-hashtag', {
-        eventId: editedEvent.eventId,
-        hashtagId: hashtag.hashtagId,
-      });
+      const response = await axios.delete(
+        `http://localhost:8080/admin/event/event-hashtag/${editedEvent.eventId}/${hashtag.hashtagId}`,
+      );
 
       if (response.status === 200) {
-        setEditedEvent({
-          ...editedEvent,
-          hashtags: response.data.eventHashtags,
-        });
+        const response = await axios.get(`http://localhost:8080/admin/event/event-hashtag/list/${event.eventId}`);
+        setHashtagList(response.data.eventHashtagList);
       }
     } catch (error) {
       console.error('Failed to add hashtag to event', error);
@@ -354,10 +351,8 @@ const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
       );
 
       if (response.status === 200) {
-        setEditedEvent({
-          ...editedEvent,
-          hashtags: response.data.eventHashtags,
-        });
+        const response = await axios.get(`http://localhost:8080/admin/event/event-hashtag/list/${event.eventId}`);
+        setHashtagList(response.data.eventHashtagList);
       }
     } catch (error) {
       console.error('Failed to remove hashtag from event', error);
@@ -373,10 +368,8 @@ const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
       });
 
       if (response.status === 200) {
-        setEditedEvent({
-          ...editedEvent,
-          hashtags: response.data.eventHashtags,
-        });
+        const response = await axios.get(`http://localhost:8080/admin/event/event-hashtag/list/${event.eventId}`);
+        setHashtagList(response.data.eventHashtagList);
       }
     } catch (error) {
       console.error('Failed to add hashtag to event', error);
@@ -427,6 +420,17 @@ const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
             ))}
           </CustomSelect>
         </FormField>
+        <HashtagAddContainer>
+          <label>추가할 해시태그</label>
+          <HashtagAddSelect onChange={handleAddHashtag}>
+            <option value="">선택하세요</option>
+            {addHashtagOptions.map((hashtag) => (
+              <option key={hashtag.hashtagId} value={hashtag.hashtagId}>
+                {hashtag.hashtagName}
+              </option>
+            ))}
+          </HashtagAddSelect>
+        </HashtagAddContainer>
         <FormField>
           <label>현재 해시태그</label>
           <HashtagContainer>
@@ -439,17 +443,7 @@ const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
             </HashtagList>
           </HashtagContainer>
         </FormField>
-        <HashtagAddContainer>
-          <label>추가할 해시태그</label>
-          <HashtagAddSelect onChange={handleAddHashtag}>
-            <option value="">선택하세요...</option>
-            {addHashtagOptions.map((hashtag) => (
-              <option key={hashtag.hashtagId} value={hashtag.hashtagId}>
-                {hashtag.hashtagName}
-              </option>
-            ))}
-          </HashtagAddSelect>
-        </HashtagAddContainer>
+
         <FormField>
           <label>시작 날짜</label>
           <input type="date" name="startDate" value={editedEvent.startDate} onChange={handleInputChange} />
