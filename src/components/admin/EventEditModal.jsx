@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import ConfirmDelete from './ConfirmDelete';
 
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -22,8 +23,8 @@ const ModalContent = styled.div`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   width: 60%;
   max-width: 800px;
-  max-height: 80vh; /* 최대 높이 설정 */
-  overflow-y: auto; /* Y축 스크롤 설정 */
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 const FormField = styled.div`
@@ -52,8 +53,8 @@ const FormField = styled.div`
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    height: 120px; /* Increase height for larger textarea */
-    resize: vertical; /* Allow vertical resizing */
+    height: 120px;
+    resize: vertical;
   }
 `;
 
@@ -104,6 +105,57 @@ const ImagePreview = styled.img`
   margin-top: 10px;
 `;
 
+const HashtagContainer = styled.div`
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+`;
+
+const HashtagList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const HashtagItem = styled.div`
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+`;
+
+const HashtagAddContainer = styled.div`
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+`;
+
+const HashtagAddSelect = styled.select`
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #0070b3;
+  }
+`;
+
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -112,12 +164,16 @@ const formatDateString = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-const EventEditModal = ({ event, onClose, onSave }) => {
+const EventEditModal = ({ event, onClose, onSave, onDelete }) => {
   const [editedEvent, setEditedEvent] = useState({ ...event });
   const [eventTypes, setEventTypes] = useState([]);
   const [branches, setBranches] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null); // 이미지 미리 보기 상태
+  const [imagePreview, setImagePreview] = useState(null);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [hashtagList, setHashtagList] = useState([]);
+  const [selectedHashtags, setSelectedHashtags] = useState([]);
+  const [addHashtagOptions, setAddHashtagOptions] = useState([]);
 
   useEffect(() => {
     const fetchEventTypes = async () => {
@@ -147,10 +203,30 @@ const EventEditModal = ({ event, onClose, onSave }) => {
       }
     };
 
+    const fetchHashtags = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/admin/event/event-hashtag/list/${event.eventId}`);
+        setHashtagList(response.data.eventHashtagList);
+      } catch (error) {
+        console.error('Failed to fetch hashtags', error);
+      }
+    };
+
+    const fetchHashtagOptions = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/admin/event/hashtag/list');
+        setAddHashtagOptions(response.data.hashtagList);
+      } catch (error) {
+        console.error('Failed to fetch hashtag options', error);
+      }
+    };
+
     fetchEventTypes();
     fetchBranches();
     fetchCategories();
-  }, []);
+    fetchHashtags();
+    fetchHashtagOptions();
+  }, [event.eventId]);
 
   useEffect(() => {
     if (event.startDate) {
@@ -172,7 +248,8 @@ const EventEditModal = ({ event, onClose, onSave }) => {
       categoryId: event.categoryId || '',
       imageUrl: event.imageUrl,
     }));
-    setImagePreview(event.imageUrl); // 기존 이미지 미리 보기 설정
+    setImagePreview(event.imageUrl);
+    setSelectedHashtags(event.hashtags || []);
   }, [event]);
 
   const handleInputChange = (e) => {
@@ -190,11 +267,11 @@ const EventEditModal = ({ event, onClose, onSave }) => {
       reader.onloadend = () => {
         setEditedEvent({
           ...editedEvent,
-          image: file, // 이미지 파일 설정
+          image: file,
         });
-        setImagePreview(reader.result); // 이미지 미리 보기 설정
+        setImagePreview(reader.result);
       };
-      reader.readAsDataURL(file); // FileReader를 사용하여 이미지 파일을 읽어옴
+      reader.readAsDataURL(file);
     }
   };
 
@@ -202,7 +279,6 @@ const EventEditModal = ({ event, onClose, onSave }) => {
     try {
       const formData = new FormData();
 
-      // JSON 데이터를 문자열로 변환
       const jsonRequest = JSON.stringify({
         eventId: editedEvent.eventId,
         eventTypeId: editedEvent.eventTypeId,
@@ -214,11 +290,12 @@ const EventEditModal = ({ event, onClose, onSave }) => {
         endDate: editedEvent.endDate,
         detailAddress: editedEvent.detailAddress,
         imageUrl: editedEvent.imageUrl,
+        hashtags: selectedHashtags.map((hashtag) => hashtag.hashtagId),
       });
       formData.append('request', new Blob([jsonRequest], { type: 'application/json' }));
-      console.log(editedEvent.image);
-      if (editedEvent.image || editedEvent.image !== 'undefined') {
-        formData.append('file', editedEvent.image); // 이미지 파일
+
+      if (editedEvent.image) {
+        formData.append('file', editedEvent.image);
       }
 
       const response = await axios.put('http://localhost:8080/admin/event', formData, {
@@ -226,6 +303,7 @@ const EventEditModal = ({ event, onClose, onSave }) => {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       if (response.status === 200) {
         onSave(editedEvent);
         onClose();
@@ -234,6 +312,74 @@ const EventEditModal = ({ event, onClose, onSave }) => {
       }
     } catch (error) {
       console.error('Failed to save the event', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/admin/event/${editedEvent.eventId}`);
+      if (response.status === 200) {
+        onDelete(editedEvent.eventId);
+        onClose();
+      } else {
+        console.error('Failed to delete the event');
+      }
+    } catch (error) {
+      console.error('Failed to delete the event', error);
+    }
+  };
+
+  const handleHashtagClick = async (hashtag) => {
+    try {
+      const response = await axios.post('http://localhost:8080/admin/event/event-hashtag', {
+        eventId: editedEvent.eventId,
+        hashtagId: hashtag.hashtagId,
+      });
+
+      if (response.status === 200) {
+        setEditedEvent({
+          ...editedEvent,
+          hashtags: response.data.eventHashtags,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to add hashtag to event', error);
+    }
+  };
+
+  const handleRemoveHashtag = async (hashtagId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/admin/event/event-hashtag/${editedEvent.eventId}/${hashtagId}`,
+      );
+
+      if (response.status === 200) {
+        setEditedEvent({
+          ...editedEvent,
+          hashtags: response.data.eventHashtags,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to remove hashtag from event', error);
+    }
+  };
+
+  const handleAddHashtag = async (e) => {
+    const selectedHashtagId = e.target.value;
+    try {
+      const response = await axios.post('http://localhost:8080/admin/event/event-hashtag', {
+        eventId: editedEvent.eventId,
+        hashtagId: selectedHashtagId,
+      });
+
+      if (response.status === 200) {
+        setEditedEvent({
+          ...editedEvent,
+          hashtags: response.data.eventHashtags,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to add hashtag to event', error);
     }
   };
 
@@ -281,27 +427,70 @@ const EventEditModal = ({ event, onClose, onSave }) => {
             ))}
           </CustomSelect>
         </FormField>
-
         <FormField>
-          <label>내용</label>
-          <textarea name="content" value={editedEvent.content} onChange={handleInputChange} rows={5} />
+          <label>현재 해시태그</label>
+          <HashtagContainer>
+            <HashtagList>
+              {hashtagList.map((hashtag) => (
+                <HashtagItem key={hashtag.hashtagId} onClick={() => handleHashtagClick(hashtag)}>
+                  #{hashtag.hashtagName}
+                </HashtagItem>
+              ))}
+            </HashtagList>
+          </HashtagContainer>
         </FormField>
+        <HashtagAddContainer>
+          <label>추가할 해시태그</label>
+          <HashtagAddSelect onChange={handleAddHashtag}>
+            <option value="">선택하세요...</option>
+            {addHashtagOptions.map((hashtag) => (
+              <option key={hashtag.hashtagId} value={hashtag.hashtagId}>
+                {hashtag.hashtagName}
+              </option>
+            ))}
+          </HashtagAddSelect>
+        </HashtagAddContainer>
         <FormField>
-          <label>시작일</label>
+          <label>시작 날짜</label>
           <input type="date" name="startDate" value={editedEvent.startDate} onChange={handleInputChange} />
         </FormField>
         <FormField>
-          <label>종료일</label>
+          <label>종료 날짜</label>
           <input type="date" name="endDate" value={editedEvent.endDate} onChange={handleInputChange} />
         </FormField>
         <FormField>
-          <label>상세 위치</label>
-          <input type="text" name="detailAddress" value={editedEvent.detailAddress} onChange={handleInputChange} />
+          <label>상세 주소</label>
+          <textarea name="detailAddress" value={editedEvent.detailAddress} onChange={handleInputChange} />
         </FormField>
+
         <ButtonContainer>
-          <Button onClick={handleSave}>수정</Button>
+          <Button onClick={handleSave}>저장</Button>
+          <Button onClick={() => setShowConfirmDelete(true)}>삭제</Button>
           <Button onClick={onClose}>취소</Button>
         </ButtonContainer>
+
+        {/* ConfirmDelete 모달 */}
+        {showConfirmDelete && (
+          <ConfirmDelete
+            isOpen={showConfirmDelete}
+            onConfirm={handleDelete}
+            onCancel={() => setShowConfirmDelete(false)}
+          />
+        )}
+
+        {/* 출력 현재 이벤트의 해시태그 목록 */}
+        {editedEvent.hashtags && (
+          <FormField>
+            <label>현재 해시태그</label>
+            <HashtagList>
+              {editedEvent.hashtags.map((hashtag) => (
+                <HashtagItem key={hashtag.hashtagId} onClick={() => handleRemoveHashtag(hashtag.hashtagId)}>
+                  #{hashtag.hashtagName}
+                </HashtagItem>
+              ))}
+            </HashtagList>
+          </FormField>
+        )}
       </ModalContent>
     </ModalBackdrop>
   );

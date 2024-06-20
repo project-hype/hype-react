@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import AddCategoryModal from './AddCategoryModal';
+import ConfirmDelete from './ConfirmDelete';
+import DeleteButton from '../common/DeleteButton';
+import EditButton from '../common/EditButton';
+import CancelButton from '../common/CancleButton';
+import AddButton from '../common/AddButton';
+import SaveButton from '../common/SaveButton';
 
 // Styled Components
 const CategoryWrapper = styled.div`
@@ -13,11 +19,6 @@ const CategoryWrapper = styled.div`
 
 const Header = styled.header`
   background-color: #f0f5f4;
-  width: 1036px;
-`;
-
-const RowContainer = styled.div`
-  width: 1036px;
 `;
 
 const HeaderRow = styled.div`
@@ -54,59 +55,6 @@ const Input = styled.input`
   box-sizing: border-box; /* Padding and border included in the element's total width and height */
 `;
 
-const EditButton = styled.button`
-  width: 80px;
-  height: 30px;
-  margin-left: 10px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #007bff; /* Blue background */
-  color: white; /* White text */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
-`;
-
-const SaveButton = styled.button`
-  width: 80px;
-  height: 30px;
-  margin-left: 10px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #28a745; /* Green background */
-  color: white; /* White text */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
-`;
-
-const CancelButton = styled.button`
-  width: 60px;
-  height: 30px;
-  margin-left: 10px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #dc3545; /* Red background */
-  color: white; /* White text */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
-`;
-
-const AddButton = styled.button`
-  width: 160px;
-  height: 50px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #007bff; /* Blue background */
-  color: white; /* White text */
-  border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
-`;
-
 // Component
 const CategoryTable = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -114,6 +62,8 @@ const CategoryTable = () => {
   const [editCategoryName, setEditCategoryName] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트될 때 데이터를 가져오기
@@ -194,6 +144,35 @@ const CategoryTable = () => {
       });
   };
 
+  const handleDeleteClick = (category) => {
+    setCategoryToDelete(category);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!categoryToDelete) return;
+
+    axios
+      .delete(`http://localhost:8080/admin/event/category/${categoryToDelete.categoryId}`)
+      .then((response) => {
+        // 데이터를 성공적으로 삭제했을 때
+        console.log(response.data);
+        const updatedData = categoryData.filter((category) => category.categoryId !== categoryToDelete.categoryId);
+        setCategoryData(updatedData);
+        setCategoryToDelete(null);
+        setIsDeleteModalOpen(false);
+      })
+      .catch((error) => {
+        // 요청이 실패했을 때
+        console.error('Error deleting category data:', error);
+      });
+  };
+
+  const handleCancelDelete = () => {
+    setCategoryToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+
   return (
     <CategoryWrapper>
       <Header>
@@ -204,12 +183,15 @@ const CategoryTable = () => {
           <HeaderCell width="416px" hasBorder>
             <TextWrapper>카테고리이름</TextWrapper>
           </HeaderCell>
-          <HeaderCell width="120px" hasBorder>
+          <HeaderCell width="180px" hasBorder>
             <TextWrapper>수정</TextWrapper>
+          </HeaderCell>
+          <HeaderCell width="120px" hasBorder>
+            <TextWrapper>삭제</TextWrapper>
           </HeaderCell>
         </HeaderRow>
       </Header>
-      <RowContainer>
+      <div>
         {categoryData.map((category) => (
           <HeaderRow key={category.categoryId}>
             <HeaderCell width="160px">
@@ -222,22 +204,23 @@ const CategoryTable = () => {
                 <TextWrapper>{category.categoryName}</TextWrapper>
               )}
             </HeaderCell>
-            <HeaderCell width="120px" hasBorder>
+            <HeaderCell width="180px" hasBorder>
               {editCategoryId === category.categoryId ? (
                 <>
-                  <SaveButton onClick={handleSaveClick}>적용</SaveButton>
-                  <CancelButton onClick={handleCancelClick}>취소</CancelButton>
+                  <SaveButton onClick={handleSaveClick} />
+                  <CancelButton onClick={handleCancelClick} />
                 </>
               ) : (
-                <EditButton onClick={() => handleEditClick(category.categoryId, category.categoryName)}>
-                  수정
-                </EditButton>
+                <EditButton onClick={() => handleEditClick(category.categoryId, category.categoryName)} />
               )}
+            </HeaderCell>
+            <HeaderCell width="120px" hasBorder>
+              <DeleteButton onClick={() => handleDeleteClick(category)} />
             </HeaderCell>
           </HeaderRow>
         ))}
-      </RowContainer>
-      <AddButton onClick={handleAddClick}>카테고리 추가</AddButton>
+      </div>
+      <AddButton onClick={handleAddClick} domain="카테고리" />
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={handleCloseAddModal}
@@ -245,6 +228,7 @@ const CategoryTable = () => {
         newCategoryName={newCategoryName}
         setNewCategoryName={(value) => setNewCategoryName(value)}
       />
+      <ConfirmDelete isOpen={isDeleteModalOpen} onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />
     </CategoryWrapper>
   );
 };

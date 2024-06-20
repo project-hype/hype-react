@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import AddButton from '../common/AddButton';
+import AddBannerModal from './AddBannerModal';
 
 // Styled Components
 const BannerWrapper = styled.div`
@@ -13,17 +15,12 @@ const BannerWrapper = styled.div`
 
 const Header = styled.header`
   background-color: #f0f5f4;
-  width: 800px;
-`;
-
-const RowContainer = styled.div`
-  width: 800px;
 `;
 
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #ccc; /* 회색 테두리 색상 */
+  border-bottom: 1px solid #ccc;
   height: 49px;
 `;
 
@@ -33,7 +30,7 @@ const HeaderCell = styled.div`
   justify-content: ${(props) => props.align || 'center'};
   height: 100%;
   width: ${(props) => props.width || '150px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')}; /* 회색 테두리 색상 */
+  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')};
 `;
 
 const TextWrapper = styled.div`
@@ -50,24 +47,10 @@ const DeleteButton = styled.button`
   font-family: 'Happiness Sans-Bold', Helvetica;
   font-size: 14px;
   cursor: pointer;
-  background-color: #dc3545; /* 빨간색 배경 */
-  color: white; /* 흰색 텍스트 */
-  border: none; /* 기본 테두리 제거 */
-  border-radius: 4px; /* 둥근 모서리 */
-`;
-
-const AddButton = styled.button`
-  width: 160px;
-  height: 50px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #007bff; /* 파란색 배경 */
-  color: white; /* 흰색 텍스트 */
-  border: none; /* 기본 테두리 제거 */
-  border-radius: 4px; /* 둥근 모서리 */
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
 `;
 
 const ApplyButton = styled.button`
@@ -78,66 +61,74 @@ const ApplyButton = styled.button`
   font-family: 'Happiness Sans-Bold', Helvetica;
   font-size: 16px;
   cursor: pointer;
-  background-color: #007bff; /* 파란색 배경 */
-  color: white; /* 흰색 텍스트 */
-  border: none; /* 기본 테두리 제거 */
-  border-radius: 4px; /* 둥근 모서리 */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
 `;
 
-// Component
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+`;
+
 const BannerTable = () => {
   const [bannerList, setBannerList] = useState([]);
-  const [newBannerTitle, setNewBannerTitle] = useState('');
   const [isApplyButtonVisible, setIsApplyButtonVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    fetchBannerList(); // 컴포넌트가 마운트될 때 배너 리스트 가져오기
+    fetchBannerList();
   }, []);
 
+  // Fetch banner list from the server
   const fetchBannerList = () => {
     axios
       .get('http://localhost:8080/event/list/banner')
       .then((response) => {
-        // 데이터를 성공적으로 받아왔을 때
-        console.log(response.data); // 받아온 데이터 확인 (개발 중에 유용함)
-        // 데이터를 업데이트하고 orderPriority 기준으로 정렬
         const sortedBannerList = response.data.eventList.sort((a, b) => a.orderPriority - b.orderPriority);
         setBannerList(sortedBannerList);
       })
       .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error fetching banner list:', error);
+        console.error('Failed to fetch banner list:', error);
       });
   };
 
-  const handleAddBanner = () => {
+  // Handle adding a new banner
+  const handleAddBanner = (eventId, orderPriority) => {
     axios
-      .post('http://localhost:8080/event/add/banner', {
-        title: newBannerTitle,
-        orderPriority: bannerList.length + 1, // 현재 배너 개수보다 1 큰 우선순위로 설정
+      .post('http://localhost:8080/admin/event/banner', {
+        eventId: eventId,
+        orderPriority: orderPriority,
       })
       .then((response) => {
-        fetchBannerList(); // 데이터 다시 불러오기
-        setNewBannerTitle(''); // 입력 필드 초기화
+        fetchBannerList(); // Refresh banner list
+        setShowModal(false); // Close modal after adding
       })
       .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error adding new banner:', error);
+        console.error('Failed to add new banner:', error);
       });
   };
 
+  // Handle deleting a banner
   const handleDeleteBanner = (eventId) => {
     axios
-      .delete(`http://localhost:8080/event/delete/banner/${eventId}`)
+      .delete(`http://localhost:8080/admin/event/banner/${eventId}`)
       .then((response) => {
-        fetchBannerList(); // 데이터 다시 불러오기
+        fetchBannerList(); // Refresh banner list
       })
       .catch((error) => {
-        // 요청이 실패했을 때
-        console.error(`Error deleting banner with ID ${eventId}:`, error);
+        console.error(`Failed to delete banner with ID ${eventId}:`, error);
       });
   };
 
+  // Handle drag and drop end event
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
@@ -149,69 +140,88 @@ const BannerTable = () => {
 
     const updatedList = items.map((item, index) => ({
       ...item,
-      orderPriority: index + 1, // 순서 업데이트
+      orderPriority: index + 1,
     }));
 
     setBannerList(updatedList);
-    setIsApplyButtonVisible(true); // 정렬 적용 버튼을 보이게 설정
+    setIsApplyButtonVisible(true); // Show apply button after reordering
   };
 
+  // Handle applying order changes
   const applyOrderChanges = () => {
     axios
-      .post('http://localhost:8080/admin/event/banner/order', {
-        eventList: bannerList.map((banner) => ({
+      .put('http://localhost:8080/admin/event/banner/order', {
+        bannerList: bannerList.map((banner) => ({
           eventId: banner.eventId,
           orderPriority: banner.orderPriority,
         })),
       })
       .then((response) => {
-        setIsApplyButtonVisible(false); // 정렬 적용 버튼 감추기
-        fetchBannerList(); // 데이터 다시 불러오기
+        setIsApplyButtonVisible(false); // Hide apply button after applying changes
+        fetchBannerList(); // Refresh banner list
       })
       .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error applying banner order:', error);
+        console.error('Failed to apply banner order changes:', error);
       });
+  };
+
+  // Toggle modal visibility
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  // Handle event selection in the modal
+  const handleEventSelect = (event) => {
+    setSelectedEvent(event);
+    handleAddBanner(event.eventId, bannerList.length + 1); // Add new banner with the next order priority
+  };
+
+  // Close modal
+  const handleCancelModal = () => {
+    setSelectedEvent(null);
+    setShowModal(false);
   };
 
   return (
     <BannerWrapper>
+      <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다</p>
       <Header>
         <HeaderRow>
           <HeaderCell width="100px">
+            <TextWrapper>노출 순서</TextWrapper>
+          </HeaderCell>
+          <HeaderCell width="100px" hasBorder>
             <TextWrapper>행사 번호</TextWrapper>
           </HeaderCell>
-          <HeaderCell width="300px">
+          <HeaderCell width="500px" hasBorder>
             <TextWrapper>행사 제목</TextWrapper>
           </HeaderCell>
-          <HeaderCell width="100px">
-            <TextWrapper>정렬 순서</TextWrapper>
-          </HeaderCell>
-          <HeaderCell width="100px" align="left" hasBorder>
-            <TextWrapper>삭제</TextWrapper>
+          <HeaderCell width="150px" hasBorder>
+            <TextWrapper>배너에서 제외</TextWrapper>
           </HeaderCell>
         </HeaderRow>
       </Header>
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
-            <RowContainer {...provided.droppableProps} ref={provided.innerRef}>
+            <div {...provided.droppableProps} ref={provided.innerRef}>
               {bannerList.map((banner, index) => (
-                <Draggable key={banner.eventId} draggableId={banner.eventId.toString()} index={index}>
+                <Draggable key={banner.eventId.toString()} draggableId={banner.eventId.toString()} index={index}>
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                       <HeaderRow>
                         <HeaderCell width="100px">
-                          <TextWrapper>{banner.eventId}</TextWrapper>
-                        </HeaderCell>
-                        <HeaderCell width="300px">
-                          <TextWrapper>{banner.title}</TextWrapper>
-                        </HeaderCell>
-                        <HeaderCell width="100px">
                           <TextWrapper>{banner.orderPriority}</TextWrapper>
                         </HeaderCell>
-                        <HeaderCell width="100px" align="left" hasBorder>
-                          <DeleteButton onClick={() => handleDeleteBanner(banner.eventId)}>삭제</DeleteButton>
+                        <HeaderCell width="100px" hasBorder>
+                          <TextWrapper>{banner.eventId}</TextWrapper>
+                        </HeaderCell>
+                        <HeaderCell width="500px" hasBorder>
+                          <TextWrapper>{banner.title}</TextWrapper>
+                        </HeaderCell>
+                        <HeaderCell width="150px" hasBorder>
+                          <DeleteButton onClick={() => handleDeleteBanner(banner.eventId)}>제외</DeleteButton>
                         </HeaderCell>
                       </HeaderRow>
                     </div>
@@ -219,12 +229,21 @@ const BannerTable = () => {
                 </Draggable>
               ))}
               {provided.placeholder}
-            </RowContainer>
+            </div>
           )}
         </Droppable>
       </DragDropContext>
+
       {isApplyButtonVisible && <ApplyButton onClick={applyOrderChanges}>정렬 적용</ApplyButton>}
-      <AddButton onClick={handleAddBanner}>새 배너 추가</AddButton>
+
+      <AddButton onClick={toggleModal} domain="배너 " />
+
+      {showModal && (
+        <>
+          <Backdrop onClick={handleCancelModal} />
+          <AddBannerModal onClose={handleCancelModal} onEventSelect={handleEventSelect} />
+        </>
+      )}
     </BannerWrapper>
   );
 };
