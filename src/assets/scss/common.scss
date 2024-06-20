@@ -54,6 +54,7 @@ article.main-article {
   text-align: right;
   padding-top: 20px;
 }
+
 .key-text {
   color: $fontcolor-point;
 }
@@ -262,13 +263,11 @@ ol {
 //main PopupBanner
 .popupbanner-inner {
   width: 100%;
-  max-width: 960px;
   height: fit-content;
   padding-left: 20px;
 
   .slick-list {
     width: 100%;
-    max-width: 960px;
     height: fit-content;
     margin: 0 auto;
 
@@ -329,16 +328,6 @@ ol {
           li {
             list-style: none;
           }
-
-          li.event-type {
-            font-size: 10px;
-            opacity: 0.6;
-            font-weight: 600;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            column-gap: 3px;
-          }
         }
       }
     }
@@ -353,7 +342,7 @@ ol {
   margin-top: 40px;
   overflow: hidden;
   padding-bottom: $mg4;
-  border-bottom: 1px solid $hd-lightgray;
+  // border-bottom: 1px solid $hd-lightgray;
 
   ul {
     display: flex;
@@ -387,6 +376,16 @@ ol {
         p {
           font-size: $fs-h2;
           color: $fontcolor-gray;
+        }
+
+        .event-datea {
+          font-size: 5px;
+          opacity: 0.6;
+          font-weight: 600;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          column-gap: 3px;
         }
       }
 
@@ -473,7 +472,6 @@ ol {
     box-sizing: border-box;
     > li {
       padding: 30px 0;
-      // width: 50%;
       border-bottom: 1px solid $line-weak;
       div {
         display: grid;
@@ -481,7 +479,6 @@ ol {
         grid-template-rows: 1fr 0.1fr 0.3fr;
         column-gap: 10px;
         padding: 0 20px;
-        width: 49%;
 
         .popup-bookmark {
           display: flex;
@@ -495,11 +492,11 @@ ol {
         }
         .event-img {
           border-radius: 8px;
-          border: 1px solid $line-veryweak;
+          border: 1px solid $hd-lightgray;
           grid-row-start: 1;
           grid-row-end: 4;
-          width: 140px;
-          height: 140px;
+          width: 160px;
+          height: 160px;
           object-fit: cover;
         }
 
@@ -540,17 +537,6 @@ ol {
             background: none;
             font-weight: $fw3;
           }
-        }
-
-        .event-date {
-          grid-column-start: 2;
-          grid-column-end: 5;
-          grid-row-start: 3;
-          grid-row-end: 4;
-          text-align: right;
-          word-break: keep-all;
-          padding-top: 0;
-          align-self: end;
         }
       }
     }
@@ -604,5 +590,59 @@ ol {
   .calendar-popup-list > ul > li {
     width: 49%;
     border-bottom: 0;
+  }
+}
+
+@media all and (min-width: 481px) {
+  .inquiry-wrap {
+    ul {
+      li {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .text-form-inner {
+    p {
+      .report-date-wrap {
+        column-gap: 20px;
+
+        li {
+          width: auto;
+        }
+      }
+    }
+  }
+
+  .calendar-popup-list {
+    > ul {
+      > li {
+        div {
+          grid-template-columns: 0.3fr 1fr 0.2fr;
+        }
+      }
+    }
+  }
+
+  .layer-edit-inner {
+    form {
+      div {
+        div {
+          button {
+            padding: 0 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+//미디어쿼리 태블릿 사이즈
+@media all and (max-width: 780px) {
+  .gradiant {
+    &::after {
+      background-size: cover;
+    }
   }
 }

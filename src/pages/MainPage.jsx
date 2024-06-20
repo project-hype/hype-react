@@ -9,7 +9,7 @@ function MainPage() {
   return (
     <div class="container">
       <MainLayout />
-      <article class="main-article">
+      <article class="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
         <div>
           <Banner />
         </div>

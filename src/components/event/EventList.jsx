@@ -83,6 +83,7 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
                   icon={likeStatus[event.eventId] ? faHeart : faRegularHeart}
                   style={{ color: likeStatus[event.eventId] ? 'red' : 'gray', cursor: 'pointer' }}
                   onClick={(e) => toggleFavorite(event.eventId, e)}
+                  size="2x"
                 />
               </div>
             </div>

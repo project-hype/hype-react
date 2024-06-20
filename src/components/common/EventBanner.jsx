@@ -1,7 +1,7 @@
+import styled from 'styled-components';
 import '../../assets/scss/common.scss';
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -59,20 +59,6 @@ function EventBanner({ title, type }) {
   //     }
   //   }
   // };
-
-  const addToFavorite = async (eventId, e) => {
-    console.log('addToFavorite 버튼');
-    e.stopPropagation();
-    try {
-      const response = await axios.post('http://localhost:8080/event/addFav', {
-        memberId: '3',
-        eventId: eventId,
-      });
-      console.log('Added to favorite:', response.data);
-    } catch (error) {
-      console.error('Error adding to favorite:', error);
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
