@@ -5,11 +5,14 @@ import Main from './pages/MainPage';
 import LogIn from './pages/member/LogInPage';
 import Join from './pages/member/JoinPage';
 import MyPage from './pages/member/MyPage';
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AdminMain from './pages/admin/AdminMainPage';
+import LogInForm from './components/member/LogInForm';
+import Detail from './pages/event/DetailPage';
+import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { checkAdmin } from './auth';
+import { RecoilRoot } from 'recoil';
 import SearchPage from './pages/event/SearchPage';
 
 // const CommonRouter = () => {
@@ -33,22 +36,16 @@ const router = createBrowserRouter([
   { path: '/login', element: <LogIn /> },
   { path: '/join', element: <Join /> },
   { path: '/mypage', element: <MyPage /> },
-  { path: '/admin', element: <AdminMain />, loader: checkAdmin },
+  { path: '/admin', element: <AdminMain /> },
+  { path: '/event/:eventId', element: <Detail /> },
 ]);
 
 function App() {
-  useEffect(() => {
-    // 서버에서 렌더링된 HTML 문서에서 CSRF 토큰을 가져오는 로직
-    const csrfTokenMeta = document.querySelector("meta[name='_csrf']");
-
-    // CSRF 토큰이 존재하는지 확인 후 요청 헤더에 추가
-    if (csrfTokenMeta) {
-      const csrfToken = csrfTokenMeta.content;
-      axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
-    }
-  }, []);
-
-  return <RouterProvider router={router} />;
+  return (
+    <RecoilRoot>
+      <RouterProvider router={router} />
+    </RecoilRoot>
+  );
 }
 
 export default App;
