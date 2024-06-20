@@ -174,7 +174,7 @@ const Header = () => {
     try {
       // const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
       // setSearchResults(response.data);
-      navigate('/search');
+      navigate(`/search?keyword=${searchQuery}`);
     } catch (error) {
       console.error('There was an error fetching the search results!', error);
     }
