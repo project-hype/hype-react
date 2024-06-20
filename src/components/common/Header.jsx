@@ -250,9 +250,6 @@ const Header = () => {
               </NavButton>
             </>
           )}
-          <NavButton className="nav-button">
-            <FontAwesomeIcon icon={faBars} size="2x" />
-          </NavButton>
         </NavbarRight>
       </Navbar>
       <Separator />

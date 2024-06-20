@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import axiosInstance from '../../axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { userState } from '../../state/authState'; // Recoil 상태 import
 import Button from '../common/Button';
 import Modal from '../common/Modal';
 
@@ -11,7 +13,8 @@ const StyledForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; // 전체 화면 높이
+  height: fit-content; // 전체 화면 높이
+  margin-top: 80px;
 `;
 
 const HypeLogo = styled.img`
@@ -79,6 +82,7 @@ function LogInForm({ onLogIn }) {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [loginError, setLoginError] = useState(false); // 로그인 실패 상태 추가
+  const [user, setUser] = useRecoilState(userState); // Recoil 상태 사용
   const navigate = useNavigate();
 
   const handleChangeUsername = useCallback((e) => {
@@ -98,8 +102,12 @@ function LogInForm({ onLogIn }) {
         password: password,
       });
       if (res.status === 200) {
-        localStorage.setItem('isAdmin', res.data.isAdmin);
-        if (localStorage.getItem('isAdmin') === '1') {
+        setUser({
+          isLoggedIn: true,
+          userInfo: res.data,
+          isAdmin: res.data.isAdmin === 1,
+        });
+        if (res.data.isAdmin === 1) {
           navigate('/admin');
           return;
         }
