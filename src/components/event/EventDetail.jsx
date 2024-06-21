@@ -9,6 +9,8 @@ import StarInput from './StarInput';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
+import StarRatings from 'react-star-ratings';
+import EventBanner from './EventBanner';
 
 const Base = styled.section`
   display: flex;
@@ -49,6 +51,7 @@ const EventDetail = ({}) => {
   const [rating, setRating] = useState(0);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
+  const averageScore = data.averageScore ? data.averageScore : 0;
 
   const handleClickRating = async (value) => {
     setRating(value);
@@ -72,6 +75,10 @@ const EventDetail = ({}) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleHashtagClick = (hashtag) => {
+    navigate(`/search?keyword=${hashtag}`);
+  };
 
   const toggleFavorite = async () => {
     try {
@@ -128,6 +135,16 @@ const EventDetail = ({}) => {
     }
   };
 
+  const likeEvents = async ({ eventId }) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/event/list/like/${eventId}`);
+      console.log('유사한 이벤트들:', response.data);
+      // 필요 시 여기서 추가적인 처리 (예: 별점 작성 후 데이터를 다시 불러오기)
+    } catch (error) {
+      console.error('이벤트 불러오기 실패:', error);
+    }
+  };
+
   return (
     <article className="article-wrap">
       <div className="StyledArticle">
@@ -163,7 +180,7 @@ const EventDetail = ({}) => {
           <div className="hashtag">
             {data.hashtags &&
               data.hashtags.map((hashtag, index) => (
-                <div className="item" key={index}>
+                <div className="item" key={index} onClick={() => handleHashtagClick(hashtag)}>
                   <div className="text-wrapper-3">{hashtag}</div>
                 </div>
               ))}
@@ -197,12 +214,10 @@ const EventDetail = ({}) => {
           <div className="container">
             <div className="review-statistics">
               <div className="text-wrapper">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</div>
-              <div className="overlap-group">
-                <p>여기에 별점 보여주기</p>
-                {/* <StarOutputRating value={5} isHalf={false} /> */}
-
-                <img className="mask-group" alt="Mask group" src="image.png" />
-              </div>
+              {/* <div className="overlap-group">
+                {data.averageScore ? data.averageScore : 0}
+                <StarRatings rating={data.averageScore} starRatedColor="#1e9d8b" name="rating" />
+              </div> */}
               {/* <div className="overlap">
               <div className="rectangle" />
             </div>
@@ -214,7 +229,12 @@ const EventDetail = ({}) => {
             <div className="rectangle-3" />
             <div className="rectangle-4" />
             <img className="stars" alt="Stars" src="stars.png" /> */}
-              <div className="text-wrapper-11">{data.averageScore ? data.averageScore : 0}</div>
+              <div className="text-wrapper-11">
+                <p>
+                  {averageScore}
+                  <StarRatings rating={averageScore} starRatedColor="#1e9d8b" name="rating" />
+                </p>
+              </div>
             </div>
             <div className="review-detail">
               <div className="container-2">
@@ -244,7 +264,9 @@ const EventDetail = ({}) => {
             </Base>
           </div>
         </div>
+        <div></div>
       </div>
+      <EventBanner type={`like/${eventId}`} />
     </article>
   );
 };

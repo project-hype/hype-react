@@ -1676,7 +1676,6 @@ ol {
   .text-wrapper-4,
   .text-wrapper-5 {
     color: #000000;
-    font-family: 'Happiness Sans-Bold', Helvetica;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.36px;
@@ -1963,4 +1962,12 @@ ol {
     top: 15px;
     width: 120px;
   }
+}
+
+.item {
+  cursor: pointer; /* 기본 마우스 포인터 스타일 */
+}
+
+.item:hover {
+  cursor: pointer; /* hover 상태에서 포인터 스타일 변경 */
 }

@@ -3,11 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
+import { faStar, faLocationDot, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 
 const StyledLink = styled(Link)`
@@ -123,7 +122,7 @@ const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
               <div className="event-favorite">
                 <FontAwesomeIcon
                   className="favorite-icon"
-                  icon={likeStatus[event.eventId] ? faStar : faRegularStar}
+                  icon={likeStatus[event.eventId] ? faBookmark : faRegularBookmark}
                   style={{ color: likeStatus[event.eventId] ? '#ff8c00' : 'gray', cursor: 'pointer' }}
                   onClick={(e) => toggleFavorite(event.eventId, e)}
                   size="2x"
