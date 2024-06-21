@@ -6,6 +6,9 @@ import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import searchIcon from '../../assets/img/layout/searchIcon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userState } from '../../state/authState';
+import { checkSession } from '../../state/authState';
 
 const Navbar = styled.nav`
   display: flex;
@@ -149,18 +152,18 @@ const Separator = styled.div`
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useRecoilState(userState);
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/member/session', { withCredentials: true });
+        const response = await axios.get('http://localhost:8080/member/checkSession', { withCredentials: true });
         if (response.status === 200) {
-          setIsLoggedIn(true);
+          setUser({ ...user, isLoggedIn: true });
         }
       } catch (error) {
-        setIsLoggedIn(false);
+        setUser({ ...user, isLoggedIn: false });
       }
     };
 
@@ -172,14 +175,13 @@ const Header = () => {
     try {
       // const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
       // setSearchResults(response.data);
-      navigate('/search');
+      navigate(`/search?keyword=${searchQuery}`);
     } catch (error) {
       console.error('There was an error fetching the search results!', error);
     }
   };
 
   const handleHomeClick = () => {
-    console.log('Home button clicked');
     navigate('/');
   };
 
@@ -195,9 +197,10 @@ const Header = () => {
     axios
       .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
       .then(() => {
-        setIsLoggedIn(false);
+        setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
         localStorage.clear();
         navigate('/');
+        return;
       })
       .catch((error) => {
         console.error('Logout failed!', error);
@@ -229,7 +232,7 @@ const Header = () => {
           </NavbarForm>
         </NavbarCenter>
         <NavbarRight className="navbar-right">
-          {isLoggedIn ? (
+          {user.isLoggedIn ? (
             <>
               <NavButton className="nav-button" onClick={handleLogoutClick}>
                 로그아웃

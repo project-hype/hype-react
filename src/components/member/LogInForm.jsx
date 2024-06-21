@@ -13,7 +13,7 @@ const StyledForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: fit-content; // 전체 화면 높이
+  height: 80vh; // 전체 화면 높이
   margin-top: 80px;
 `;
 
@@ -77,7 +77,7 @@ const SignUpPrompt = styled.div`
   text-align: center;
 `;
 
-function LogInForm({ onLogIn }) {
+function LogInForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -96,30 +96,33 @@ function LogInForm({ onLogIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axiosInstance.post('http://localhost:8080/member/login', {
-        username: username,
+    await axiosInstance
+      .post('http://localhost:8080/member/login', {
+        loginId: username,
         password: password,
-      });
-      if (res.status === 200) {
-        setUser({
-          isLoggedIn: true,
-          userInfo: res.data,
-          isAdmin: res.data.isAdmin === 1,
-        });
-        if (res.data.isAdmin === 1) {
-          navigate('/admin');
-          return;
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setUser({
+            isLoggedIn: true,
+            userInfo: response.data,
+            isAdmin: response.data.isAdmin === 1,
+          });
+          if (response.data.isAdmin === 1) {
+            navigate('/admin');
+            return;
+          }
+          navigate('/');
+          console.log(user.userInfo);
         }
-        navigate('/');
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setShowModal(true);
-        setLoginError(true); // HTTP 401 에러일 경우 로그인 실패 상태를 true로 설정
-      }
-      //console.log(error);
-    }
+      })
+      .catch((error) => {
+        if (error.response || error.response.status === 401) {
+          setShowModal(true);
+          setLoginError(true); // HTTP 401 에러일 경우 로그인 실패 상태를 true로 설정
+        }
+        //console.log(error);
+      });
   };
 
   const handleHomeClick = () => {

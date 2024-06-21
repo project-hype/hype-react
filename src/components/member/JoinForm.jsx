@@ -212,11 +212,11 @@ const JoinForm = () => {
           </InputContainer>
 
           <InputContainer label="지역" required divider>
-            <CitySelect></CitySelect>
+            <CitySelect name="cityId" value={form.cityId} onChange={handleChange} />
           </InputContainer>
 
           <InputContainer label="자주 가는 지점" divider>
-            <BranchSelect></BranchSelect>
+            <BranchSelect name="preferBranchId" value={form.preferBranchId} onChange={handleChange} />
           </InputContainer>
 
           <InputContainer label="관심카테고리">

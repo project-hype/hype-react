@@ -25,6 +25,7 @@
     "react-slick": "^0.30.2",
     "react-star-ratings": "^2.3.0",
     "recoil": "^0.7.7",
+    "recoil-persist": "^5.1.0",
     "redux": "^5.0.1",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11",

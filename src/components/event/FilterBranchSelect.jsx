@@ -1,9 +1,9 @@
 import React from 'react';
-import { SelectField } from './MemberStyledComponents';
+import { SelectField } from '../member/MemberStyledComponents';
 
-const BranchSelect = ({ name, value, onChange }) => (
+const FilterBranchSelect = ({ name, value, onChange }) => (
   <SelectField name={name} value={value} onChange={onChange}>
-    <option value="">자주 가는 지점을 선택하세요</option>
+    <option value="">전체</option>
     <option value="1">더현대 서울</option>
     <option value="2">압구정본점</option>
     <option value="3">무역센터점</option>
@@ -23,4 +23,4 @@ const BranchSelect = ({ name, value, onChange }) => (
   </SelectField>
 );
 
-export default BranchSelect;
+export default FilterBranchSelect;
