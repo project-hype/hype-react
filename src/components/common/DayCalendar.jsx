@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import EventList from '../event/EventList';
 import axios from 'axios';
 import '../../assets/scss/common.scss';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
 
 const CalendarList = styled.div`
   width: 100%;
@@ -78,22 +80,27 @@ function DayCalendar() {
   const [baseDayjs, setBaseDayjs] = useState(getInitialDays(today));
   const [selectedDay, setSelectedDay] = useState(today);
   const [data, setData] = useState([]);
+  const user = useRecoilValue(userState);
 
   const getStoresByDate = (date) => {
     setSelectedDay(dayjs(date));
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    let fetchData = async () => {
       try {
+        let memberId = '';
+        if (user.isLoggedIn) {
+          memberId = user.userInfo.memberId;
+        }
         const response = await axios.get(
-          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=3`,
+          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=${memberId}`,
         );
         const result = response.data.eventList;
         setData(result);
-        console.log(result);
+        // console.log(result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
