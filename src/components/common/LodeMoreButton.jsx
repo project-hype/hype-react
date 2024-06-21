@@ -19,6 +19,7 @@ const StyledButton = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 30px;
 `;
 
 const LoadMoreButton = ({ onClick }) => {
