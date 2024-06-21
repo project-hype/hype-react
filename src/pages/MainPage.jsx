@@ -6,6 +6,7 @@ import DayCalendar from '../components/common/DayCalendar';
 import { userState } from '../state/authState';
 import { useRecoilValue } from 'recoil';
 import '../assets/scss/common.scss';
+import { PageTitle } from '../components/member/MemberStyledComponents';
 
 function MainPage() {
   const [isLoaded, setIsLoaded] = useState(false);
