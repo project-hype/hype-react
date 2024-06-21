@@ -5,8 +5,9 @@ import LogInForm from '../../components/member/LogInForm';
 function LoginPage() {
   return (
     <div>
-      <MainLayout />
-      <LogInForm />
+      <MainLayout>
+        <LogInForm />
+      </MainLayout>
     </div>
   );
 }

@@ -28,11 +28,12 @@ function MyPage() {
     <div>
       {user.userInfo && (
         <>
-          <MainLayout />
-          <PageTitle>마이페이지</PageTitle>
-          <SubMenu onTabChange={handleTabChange} activeTab={activeTab} />
-          {activeTab === 'myInfo' && <MyPageForm />}
-          {activeTab === 'favorites' && <FavoriteEventList />}
+          <MainLayout>
+            <PageTitle>마이페이지</PageTitle>
+            <SubMenu onTabChange={handleTabChange} activeTab={activeTab} />
+            {activeTab === 'myInfo' && <MyPageForm />}
+            {activeTab === 'favorites' && <FavoriteEventList />}
+          </MainLayout>
         </>
       )}
     </div>
