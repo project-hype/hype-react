@@ -4,9 +4,6 @@ import styled from 'styled-components';
 const MenuWrapper = styled.div`
   align-items: flex-start;
   align-self: stretch;
-  border-color: var(--popplycokrboulder);
-  border-right-style: solid;
-  border-right-width: 1px;
   display: flex;
   flex-direction: column;
   gap: 56px;
