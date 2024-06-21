@@ -5,6 +5,7 @@ import FilterBranchSelect from './FilterBranchSelect';
 import { FilterButton } from '../common/FilterButton';
 import FilteredEvent from './FilteredEvent';
 import { useLocation } from 'react-router-dom';
+import LoadMoreButton from '../common/LodeMoreButton';
 
 const FilterDiv = styled.div`
   height: 200px;
@@ -46,7 +47,7 @@ function Filter() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get('keyword');
-  const [selectedDate, setSelectedDate] = useState(new Date().toLocaleString('sv').substring(0, 10));
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedEventTypes, setSelectedEventTypes] = useState(['팝업', '전시', '공연', '강좌']);
 
