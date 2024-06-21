@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faEye, faStar, faLocationDot, faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faStar, faLocationDot, faHeart as faSolidHeart, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faRegularHeart, faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import StarInput from './StarInput';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
@@ -41,35 +41,28 @@ const RatingField = styled.fieldset`
     color: orange;
   }
 `;
-const FavoriteIcon = styled(FontAwesomeIcon)`
-  cursor: pointer;
-  color: ${({ isFavorite }) => (isFavorite ? 'red' : 'lightgray')};
-  transition: color 0.2s;
 
-  &:hover {
-    color: ${({ isFavorite }) => (isFavorite ? 'darkred' : 'gray')};
-  }
-`;
 const EventDetail = ({}) => {
   const { eventId } = useParams();
-  const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
+  const [likeStatus, setLikeStatus] = useState(false); // 즐겨찾기 상태를 저장할 객체
   const [data, setData] = useState({});
   const [rating, setRating] = useState(0);
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
 
   const handleClickRating = async (value) => {
     setRating(value);
-    console.log(value);
     await submitScore({ eventId, score: value });
     fetchData();
   };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=1`);
-      const result = response.data.event;
-      setLikeStatus(result[0].isFavorite); // Initialize favorite status
+      const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
 
+      const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=${memberId}`);
+      const result = response.data.event;
+      setLikeStatus(result[0].favorite); // Initialize favorite status
       setData(result[0]);
     } catch (error) {
       console.log(error);
@@ -80,11 +73,15 @@ const EventDetail = ({}) => {
     fetchData();
   }, []);
 
-  const toggleFavorite = async (eventId) => {
+  const toggleFavorite = async () => {
     try {
-      const isFavorite = likeStatus[eventId];
+      if (!user.isLoggedIn) {
+        navigate('/login');
+        return;
+      }
+      const isFavorite = likeStatus;
       let response;
-      console.log(!isFavorite + eventId);
+      console.log(!isFavorite);
 
       if (isFavorite) {
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
@@ -94,19 +91,18 @@ const EventDetail = ({}) => {
             eventId: eventId,
           },
         });
+        fetchData();
       } else {
         // 즐겨찾기 추가 API 호출
         response = await axios.post('http://localhost:8080/event/addFav', {
           memberId: user.userInfo.memberId,
           eventId: eventId,
         });
+        fetchData();
       }
 
       // 즐겨찾기 상태 업데이트
-      setLikeStatus({
-        ...likeStatus,
-        [eventId]: !isFavorite, // 해당 이벤트의 즐겨찾기 상태 반전
-      });
+      setLikeStatus(!isFavorite);
 
       console.log('Toggled favorite:', response.data);
     } catch (error) {
@@ -116,6 +112,10 @@ const EventDetail = ({}) => {
 
   const submitScore = async ({ eventId, score }) => {
     try {
+      if (!user.isLoggedIn) {
+        navigate('/login');
+        return;
+      }
       const response = await axios.post('http://localhost:8080/event/starScore', {
         memberId: user.userInfo.memberId,
         eventId: eventId,
@@ -130,73 +130,80 @@ const EventDetail = ({}) => {
 
   return (
     <article className="article-wrap">
-      <div class="StyledArticle">
-        <div class="title">
-          <div clsas="StyledImage">
-            <div class="container">
-              <img class="rectangle" alt="Rectangle" src={data.imageUrl} />
+      <div className="StyledArticle">
+        <div className="title">
+          <div className="StyledImage">
+            <div className="container">
+              <img className="rectangle" alt="image" src={data.imageUrl} />
             </div>
           </div>
-          <div class="text-wrapper">{data.title}</div>
-          <FavoriteIcon
-            icon={likeStatus ? faSolidHeart : faRegularHeart}
-            isFavorite={likeStatus}
-            onClick={toggleFavorite}
-          />
-
-          <div class="count">
-            <div class="view">
+          <div className="text-wrapper">
+            {data.title}
+            <FontAwesomeIcon
+              className="favorite"
+              icon={likeStatus ? faBookmark : faRegularBookmark}
+              style={{ color: likeStatus ? '#ff8c00' : 'gray', cursor: 'pointer', float: 'right' }}
+              onClick={toggleFavorite}
+              size="2x"
+            />
+          </div>
+          <div className="count">
+            <div className="view">
               <FontAwesomeIcon icon={faEye} />
-              <div class="text-wrapper-2">{data.viewCount}</div>
+              <div className="text-wrapper-2">{data.viewCount}</div>
             </div>
-            <div class="score">
+            <div className="score">
               <FontAwesomeIcon icon={faStar} />
-              <div class="text-wrapper-2">{data.favoriteCount}</div>
+              <div className="text-wrapper-2">{data.favoriteCount}</div>
             </div>
           </div>
         </div>
-        <div class="detail">
-          <div class="hashtag">
+
+        <div className="detail">
+          <div className="hashtag">
             {data.hashtags &&
               data.hashtags.map((hashtag, index) => (
-                <div class="item" key={index}>
-                  <div class="text-wrapper-3">{hashtag}</div>
+                <div className="item" key={index}>
+                  <div className="text-wrapper-3">{hashtag}</div>
                 </div>
               ))}
           </div>
-          <div class="period-location">
-            <div class="period">
-              <div class="text-wrapper-6">기간</div>
-              <div class="text-wrapper-7">
+          <div className="period-location">
+            <div className="period">
+              <div className="text-wrapper-6">분류</div>
+              <div className="text-wrapper-7">
+                {data.eventTypeName} / {data.categoryName}
+              </div>
+            </div>
+            <div className="period">
+              <div className="text-wrapper-6">기간</div>
+              <div className="text-wrapper-7">
                 {data.startDate} ~ {data.endDate}
               </div>
             </div>
-            <div class="location">
-              <div class="text-wrapper-6">장소</div>
-              <div class="text-wrapper-8">
+            <div className="location">
+              <div className="text-wrapper-6">장소</div>
+              <div className="text-wrapper-8">
                 {data.cityName} {data.address} {data.branchName} {data.detail_address}
               </div>
             </div>
           </div>
-          <div class="description">
-            <p class="p">행사 안내</p>
-            <p class="text-wrapper-10">{data.content}</p>
-
-            <div class="frame">
-              <p class="text-wrapper-10">{data.content}</p>
-            </div>
+          <div className="description">
+            <p className="p">행사 안내</p>
+            <p className="text-wrapper-10">{data.content}</p>
           </div>
         </div>
-      </div>
-      <div class="review">
-        <div className="container">
-          <div className="review-statistics">
-            <div className="text-wrapper">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</div>
-            <div className="overlap-group">
-              <p>여기에 별점 보여주기</p>
-              <img className="mask-group" alt="Mask group" src="image.png" />
-            </div>
-            <div className="overlap">
+        <div className="review">
+          <div className="container">
+            <div className="review-statistics">
+              <div className="text-wrapper">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</div>
+              <div className="overlap-group">
+                <p>여기에 별점 보여주기</p>
+                {/* <StarOutputRating value={5} isHalf={false} /> */}
+
+                <img className="mask-group" alt="Mask group" src="image.png" />
+              </div>
+              {/* <div className="overlap">
               <div className="rectangle" />
             </div>
             <div className="overlap-2">
@@ -206,36 +213,35 @@ const EventDetail = ({}) => {
             </div>
             <div className="rectangle-3" />
             <div className="rectangle-4" />
-            <img className="stars" alt="Stars" src="stars.png" />
-            <div className="text-wrapper-11">{data.averageScore ? data.averageScore : 0}</div>
-          </div>
-          <div className="review-detail">
-            <div className="container-2">
-              <div className="container-3"></div>
-              <div className="horizontal-border">
-                <div className="container-4">
-                  <div className="div-wrapper">
-                    <div className="text-wrapper-13">클릭해서 별점을 매겨주세요!</div>
+            <img className="stars" alt="Stars" src="stars.png" /> */}
+              <div className="text-wrapper-11">{data.averageScore ? data.averageScore : 0}</div>
+            </div>
+            <div className="review-detail">
+              <div className="container-2">
+                <div className="horizontal-border">
+                  <div className="container-4">
+                    <div className="div-wrapper">
+                      <div className="text-wrapper-13">클릭해서 별점을 매겨주세요!</div>
+                    </div>
                   </div>
-                  <Base>
-                    <Name>별점</Name>
-                    <RatingField>
-                      <StarInput onClickRating={handleClickRating} value={5} isHalf={false} />
-                      <StarInput onClickRating={handleClickRating} value={4.5} isHalf={true} />
-                      <StarInput onClickRating={handleClickRating} value={4} isHalf={false} />
-                      <StarInput onClickRating={handleClickRating} value={3.5} isHalf={true} />
-                      <StarInput onClickRating={handleClickRating} value={3} isHalf={false} />
-                      <StarInput onClickRating={handleClickRating} value={2.5} isHalf={true} />
-                      <StarInput onClickRating={handleClickRating} value={2} isHalf={false} />
-                      <StarInput onClickRating={handleClickRating} value={1.5} isHalf={true} />
-                      <StarInput onClickRating={handleClickRating} value={1} isHalf={false} />
-                      <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} />
-                    </RatingField>
-                    <RatingValue>{rating}</RatingValue>
-                  </Base>
                 </div>
               </div>
             </div>
+            <Base>
+              <RatingField>
+                <StarInput onClickRating={handleClickRating} value={5} isHalf={false} />
+                <StarInput onClickRating={handleClickRating} value={4.5} isHalf={true} />
+                <StarInput onClickRating={handleClickRating} value={4} isHalf={false} />
+                <StarInput onClickRating={handleClickRating} value={3.5} isHalf={true} />
+                <StarInput onClickRating={handleClickRating} value={3} isHalf={false} />
+                <StarInput onClickRating={handleClickRating} value={2.5} isHalf={true} />
+                <StarInput onClickRating={handleClickRating} value={2} isHalf={false} />
+                <StarInput onClickRating={handleClickRating} value={1.5} isHalf={true} />
+                <StarInput onClickRating={handleClickRating} value={1} isHalf={false} />
+                <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} />
+              </RatingField>
+              <RatingValue>{rating}</RatingValue>
+            </Base>
           </div>
         </div>
       </div>

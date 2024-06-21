@@ -28,7 +28,7 @@ function MainPage() {
           {user.isLoggedIn ? (
             <EventBanner title={`${userName}님의 취향 저격 행사✨🔫`} type={'top'} />
           ) : (
-            <EventBanner title={'HYPE Pick 행사 추천✨'} type={'top'} />
+            <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
           )}
           <DayCalendar />
         </article>
