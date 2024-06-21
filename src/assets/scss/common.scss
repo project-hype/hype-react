@@ -27,20 +27,6 @@ article.main-article {
   object-fit: cover;
 }
 
-.event-list-name {
-  display: flex; // 요소를 가로로 나열
-  align-items: center;
-  column-gap: 8px;
-  font-size: $fs-h1;
-  font-weight: $fw2;
-  margin-bottom: 10px;
-  p {
-    word-break: break-all;
-    padding: 0;
-    margin: 0;
-  }
-}
-
 .event-name {
   font-size: $fs-h2;
   font-weight: $fw2;
@@ -50,7 +36,7 @@ article.main-article {
   }
 }
 .event-branch {
-  font-size: 18px;
+  font-size: $fs-c1;
   font-family: '해피니스 산스 볼드';
   color: #767676;
   opacity: 0.6;

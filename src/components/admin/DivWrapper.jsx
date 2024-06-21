@@ -31,7 +31,7 @@ const Body = styled.div`
   padding: 0px 72px;
   position: absolute;
   top: 113px;
-  width: 1440px;
+  width: 100%;
 `;
 
 const DivWrapper = () => {

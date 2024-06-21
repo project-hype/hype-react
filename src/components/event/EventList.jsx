@@ -25,19 +25,6 @@ const EventTitle = styled.div`
   font-family: '해피니스 산스 타이틀';
 `;
 
-const EventType = styled.div`
-  width: 20px;
-  height: fit-content;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 35px;
-  display: flex;
-  justify-content: center;
-  padding: px;
-  border: 1px solid #e0ded8;
-  font-size: 14px;
-`;
-
 const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
   const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
   const navigate = useNavigate();
@@ -104,14 +91,13 @@ const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
               <div className="event-details">
                 <StyledLink to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
                   <ul>
-                    <li className="event-list-name">
-                      <EventType>{event.eventTypeName}</EventType>
+                    <li className="event-name">
                       <p>{event.title}</p>
                     </li>
                     <li className="event-branch">
                       <FontAwesomeIcon icon={faLocationDot} /> {event.branchName}
                     </li>
-                    <li className="event-type"></li>
+                    <li className="event-type">{event.eventTypeName}</li>
                     <li>
                       <p className="event-date">
                         {event.startDate} ~ {event.endDate}

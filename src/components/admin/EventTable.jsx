@@ -44,6 +44,13 @@ const TextWrapper = styled.div`
   white-space: nowrap;
 `;
 
+const Title = styled.div`
+  color: #1e1e1e;
+  font-family: '해피니스 산스 타이틀';
+  font-size: 32px;
+  text-align: center;
+`;
+
 // Component
 const EventTable = () => {
   const [eventData, setEventData] = useState([]);
@@ -119,6 +126,7 @@ const EventTable = () => {
 
   return (
     <EventWrapper>
+      <Title>행사 관리</Title>
       <AddButton onClick={openAddModal} domain="행사" />
       <Header>
         <HeaderRow>

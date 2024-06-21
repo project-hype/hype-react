@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import hypeLogo from '../../assets/img/layout/hypeLogo.png';
+import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
+import { Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { userState } from '../../state/authState';
 
 const NavContainer = styled.div`
   -webkit-backdrop-filter: blur(5px) brightness(100%);
@@ -15,11 +19,17 @@ const NavContainer = styled.div`
   top: 0;
 `;
 
+const Separator = styled.div`
+  justify-content: center;
+  height: 1px; /* 구분선 높이 */
+  background-color: #dcdcdc;
+  width: 100%; /* 구분선 폭을 메뉴 전체 너비에 맞춤 */
+`;
+
 const Logo = styled.img`
-  height: 65px;
-  object-fit: cover;
-  position: relative;
-  width: 130px;
+  width: 140px;
+  height: auto;
+  cursor: pointer;
 `;
 
 const Menu2 = styled.div`
@@ -42,13 +52,57 @@ const TextWrapper14 = styled.div`
   width: fit-content;
 `;
 
+const NavButton = styled.button`
+  font-family: '해피니스 산스 타이틀';
+  font-size: 22px;
+  margin-left: 10px;
+  padding: 5px 10px;
+  background: none;
+  color: #595959;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #ff8c00;
+  }
+
+  &:hover .icon {
+    color: #ff8c00;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+`;
+
 const Nav = () => {
+  const [user, setUser] = useRecoilState(userState);
+  const navigate = useNavigate();
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
+  const handleLogoutClick = () => {
+    axios
+      .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
+      .then(() => {
+        setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
+        localStorage.clear();
+        navigate('/');
+        return;
+      })
+      .catch((error) => {
+        console.error('Logout failed!', error);
+      });
+  };
   return (
     <NavContainer>
-      <Logo src={hypeLogo} alt="logo" />
-      <Menu2>
-        <TextWrapper14>로그아웃</TextWrapper14>
-      </Menu2>
+      <Logo className="hypeLogo" src={hypeLogo} alt="Home" onClick={handleHomeClick} />
+      <NavButton className="nav-button" onClick={handleLogoutClick}>
+        로그아웃
+      </NavButton>
     </NavContainer>
   );
 };
