@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../state/authState';
 import styled from 'styled-components';
 import FavoriteEvent from './FavoriteEvent';
+import EventCell from './EventCell';
 
 const EventWrapArticle = styled.article`
   height: 100vh; // 전체 화면 높이
@@ -81,8 +82,8 @@ const FavoriteEventList = () => {
   return (
     <EventWrapArticle>
       <article>
-        <div className="calendar-popup-list">
-          <FavoriteEvent events={data} toggleFavorite={toggleFavorite} />
+        <div>
+          <EventCell events={data} toggleFavorite={toggleFavorite} />
         </div>
       </article>
     </EventWrapArticle>

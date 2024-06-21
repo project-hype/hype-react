@@ -8,10 +8,13 @@ const StyledEditButton = styled.button`
   font-family: 'Happiness Sans-Bold', Helvetica;
   font-size: 14px;
   cursor: pointer;
-  background-color: #007bff; /* Blue background */
+  background-color: #ff8c00; /* Blue background */
   color: white; /* White text */
   border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
+  border-radius: 10px;
+  &:hover {
+    background-color: #eaeaea;
+  }
 `;
 
 const EditButton = ({ onClick }) => {

@@ -44,13 +44,16 @@ const DeleteButton = styled.button`
   width: 120px;
   height: 30px;
   margin-left: 10px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
+  font-family: '해피니스 산스 볼드', Helvetica;
   font-size: 14px;
   cursor: pointer;
-  background-color: #dc3545;
+  background-color: #ff8c00;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
+  &:hover {
+    background-color: #eaeaea;
+  }
 `;
 
 const ApplyButton = styled.button`
@@ -58,13 +61,13 @@ const ApplyButton = styled.button`
   height: 50px;
   margin-top: 20px;
   margin-bottom: 20px;
-  font-family: 'Happiness Sans-Bold', Helvetica;
+  font-family: '해피니스 산스 볼드', Helvetica;
   font-size: 16px;
   cursor: pointer;
-  background-color: #007bff;
+  background-color: #1e9d8b;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
 `;
 
 const Backdrop = styled.div`
@@ -75,6 +78,14 @@ const Backdrop = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
+`;
+
+const Title = styled.div`
+  color: #1e1e1e;
+  font-family: '해피니스 산스 타이틀';
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 24px;
 `;
 
 const BannerTable = () => {
@@ -184,6 +195,7 @@ const BannerTable = () => {
 
   return (
     <BannerWrapper>
+      <Title>배너 관리</Title>
       <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다</p>
       <Header>
         <HeaderRow>

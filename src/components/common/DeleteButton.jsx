@@ -8,10 +8,14 @@ const StyledDeleteButton = styled.button`
   font-family: 'Happiness Sans-Bold', Helvetica;
   font-size: 14px;
   cursor: pointer;
-  background-color: #dc3545; /* Red background */
-  color: white; /* White text */
+  background-color: #eaeaea; /* Red background */
+  color: #595959; /* White text */
   border: none; /* Remove default border */
-  border-radius: 4px; /* Rounded corners */
+  border-radius: 10px;
+
+  &:hover {
+    background-color: #eaeaea;
+  }
 `;
 
 const DeleteButton = ({ onClick }) => {

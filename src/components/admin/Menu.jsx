@@ -27,7 +27,7 @@ const MenuItem = styled.div`
 
 const TextWrapper = styled.div`
   color: #000000;
-  font-family: 'Happiness Sans-Title', Helvetica;
+  font-family: '해피니스 산스 타이틀', Helvetica;
   font-size: 24px;
   font-weight: 400;
   letter-spacing: 0;
@@ -35,11 +35,14 @@ const TextWrapper = styled.div`
   margin-top: -1px;
   position: relative;
   width: fit-content;
+  &:hover {
+    color: #ff8c00;
+  }
 `;
 
 const TextWrapper2 = styled.div`
   color: #000000;
-  font-family: 'Happiness Sans-Regular', Helvetica;
+  font-family: '해피니스 산스 레귤러', Helvetica;
   font-size: 18px;
   font-weight: 400;
   letter-spacing: 0;

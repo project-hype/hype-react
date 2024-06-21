@@ -55,6 +55,14 @@ const Input = styled.input`
   box-sizing: border-box; /* Padding and border included in the element's total width and height */
 `;
 
+const Title = styled.div`
+  color: #1e1e1e;
+  font-family: '해피니스 산스 타이틀';
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 32px;
+`;
+
 // Component
 const HashtagTable = () => {
   const [hashtagData, setHashtagData] = useState([]);
@@ -175,6 +183,7 @@ const HashtagTable = () => {
 
   return (
     <HashtagWrapper>
+      <Title>해시태그 관리</Title>
       <Header>
         <HeaderRow>
           <HeaderCell width="160px">
