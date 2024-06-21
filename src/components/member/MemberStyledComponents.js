@@ -25,7 +25,7 @@ export const InputSection = styled.div`
 export const InputContainer = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
   border: none;
 `;
 
@@ -72,6 +72,7 @@ export const RadioGroup = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  flex-direction: row;
 `;
 
 export const RadioButtonLabel = styled.label`
@@ -85,11 +86,13 @@ export const RadioButtonLabel = styled.label`
 
 export const RadioButtonInput = styled.input`
   margin-right: 5px;
+  width: 16px;
+  height: 16px;
 `;
 
 export const ButtonContainer = styled.div`
   margin-top: 72px;
-  margin-bottom: 56px;
+  margin-bottom: 72px;
   display: flex;
   justify-content: center;
   gap: 48px;
@@ -173,4 +176,17 @@ export const PageTitle = styled.div`
   font-size: 40px;
   text-align: center;
   margin: 48px;
+`;
+
+export const BirthdateInput = styled.input.attrs({ className: 'birthdate-input' })`
+  width: 30%; /* 원하는 크기로 설정 */
+  padding: 10px;
+  font-family: '해피니스 산스 레귤러';
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  &:focus {
+    outline: none;
+  }
 `;

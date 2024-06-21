@@ -15,6 +15,7 @@ const StyledForm = styled.form`
   justify-content: center;
   height: 80vh; // 전체 화면 높이
   margin-top: 80px;
+  margin-bottom: 80px;
 `;
 
 const HypeLogo = styled.img`
@@ -54,7 +55,7 @@ const Input = styled.input`
   border: none;
   width: 90%;
   height: 50%;
-  font-size: 15px;
+  font-size: 16px;
   padding: 10px;
   &:focus {
     outline: none;

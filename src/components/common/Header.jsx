@@ -14,7 +14,7 @@ const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 150px; /* 양옆에 56px, 위아래로 24px */
+  padding: 16px 150px;
   background-color: #ffffff;
   position: relative;
   @media (max-width: 768px) {

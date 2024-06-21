@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Container,
   NoticeSection,
   Asterisk,
   DescriptionText,
   InputSection,
   ButtonContainer,
   CheckButton,
+  RadioGroup,
+  BirthdateInput,
 } from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
@@ -185,30 +186,37 @@ const JoinForm = () => {
           </InputContainer>
 
           <InputContainer label="생년월일" required divider>
-            <Input type="date" name="birthdate" value={form.birthdate} onChange={handleChange} required />
+            <BirthdateInput
+              className="birthdate-input"
+              type="date"
+              name="birthdate"
+              value={form.birthdate}
+              onChange={handleChange}
+              required
+            />
           </InputContainer>
 
           <InputContainer label="성별" required divider>
-            <RadioButton
-              label="남성"
-              type="radio"
-              name="gender"
-              value="M"
-              checked={form.gender === 'M'}
-              onChange={handleChange}
-              required
-            ></RadioButton>
-            <RadioButton
-              label="여성"
-              type="radio"
-              name="gender"
-              value="W"
-              checked={form.gender === 'W'}
-              onChange={handleChange}
-              required
-            >
-              여성
-            </RadioButton>
+            <RadioGroup>
+              <RadioButton
+                label="남성"
+                type="radio"
+                name="gender"
+                value="M"
+                checked={form.gender === 'M'}
+                onChange={handleChange}
+                required
+              />
+              <RadioButton
+                label="여성"
+                type="radio"
+                name="gender"
+                value="W"
+                checked={form.gender === 'W'}
+                onChange={handleChange}
+                required
+              />
+            </RadioGroup>
           </InputContainer>
 
           <InputContainer label="지역" required divider>
