@@ -7,6 +7,13 @@ import 'slick-carousel/slick/slick-theme.css';
 import '../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+
+const InfoContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  margin-top: 8px; /* 원하는 위치로 조정 */
+`;
 
 function Banner() {
   const [data, setData] = useState([]);
@@ -100,14 +107,17 @@ function Banner() {
                 <span className="slide-tit">
                   {event.title.length >= 20 ? event.title.substr(0, 20) + '...' : event.title}
                 </span>
-                <span className="slide-type">{event.eventTypeName}</span>
+
                 <p className="slide-date">
                   {event.startDate} ~ {event.endDate}
                 </p>
-                <p className="slide-location">
-                  <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
-                  {event.branchName}
-                </p>
+                <span className="slide-type">
+                  <span className="slide-type">{event.eventTypeName} | </span>
+                  <p className="slide-location">
+                    <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
+                    {event.branchName}
+                  </p>
+                </span>
               </div>
             </div>
           </div>
