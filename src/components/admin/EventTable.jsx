@@ -7,6 +7,7 @@ import EventAddModal from './EventAddModal';
 import ConfirmDelete from './ConfirmDelete';
 import Rectangle200 from '../../assets/img/common/Rectangle200.png';
 import AddButton from '../common/AddButton';
+import LoadMoreButton from '../common/LodeMoreButton';
 
 // Styled Components
 const EventWrapper = styled.div`
@@ -43,24 +44,6 @@ const TextWrapper = styled.div`
   white-space: nowrap;
 `;
 
-const LoadMoreContainer = styled.div`
-  margin-top: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const LoadMoreButton = styled.div`
-  background-image: url(${Rectangle200});
-  background-size: 100% 100%;
-  height: 34px;
-  width: 122px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 // Component
 const EventTable = () => {
   const [eventData, setEventData] = useState([]);
@@ -68,6 +51,7 @@ const EventTable = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [isNextEventExist, setIsNextEventExist] = useState(true);
 
   useEffect(() => {
     fetchData(page);
@@ -78,6 +62,7 @@ const EventTable = () => {
       .get(`http://localhost:8080/admin/event/list?page=${pageNum}&amount=10`)
       .then((response) => {
         setEventData([...eventData, ...response.data.eventList]);
+        setIsNextEventExist(response.data.nextEventExist);
       })
       .catch((error) => {
         console.error('Error fetching event data:', error);
@@ -177,9 +162,7 @@ const EventTable = () => {
         />
       )}
       <ConfirmDelete isOpen={confirmDeleteOpen} onConfirm={handleDeleteEvent} onCancel={handleCancelDelete} />
-      <LoadMoreContainer>
-        <LoadMoreButton onClick={handleLoadMore}>더보기</LoadMoreButton>
-      </LoadMoreContainer>
+      {isNextEventExist && <LoadMoreButton onClick={handleLoadMore} />}
     </EventWrapper>
   );
 };
