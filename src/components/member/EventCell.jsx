@@ -19,15 +19,13 @@ const StyledLink = styled(Link)`
 
 const EventContainer = styled.div`
   display: flex;
-  width: 600px;
+  width: 480px;
   height: fit-content;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
+  border: 1px solid #eaeaea;
   border-radius: 8px;
-  overflow: hidden;
-  padding: 0px;
   justify-content: center;
   align-item: center;
+  padding: 16px;
 `;
 
 const EventImage = styled.img`
@@ -41,14 +39,14 @@ const EventImage = styled.img`
 const EventInfo = styled.div`
   flex-direction: column;
   flex: 1;
-  padding: 0px 16px;
+  padding-left: 16px;
 `;
 
 const InfoRow = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
 `;
 
 const EventType = styled.div`
@@ -56,14 +54,14 @@ const EventType = styled.div`
   background-color: #fff;
   border-radius: 35px;
   border: 1px solid #e0ded8;
-  font-size: 14px;
+  font-size: 16px;
   margin-right: 16px;
 `;
 
 const EventTitle = styled.div`
   font-size: 24px;
   font-family: '해피니스 산스 타이틀';
-  margin-bottom: 5px;
+  margin-bottom: 16px;
 `;
 
 const EventDates = styled.div`
@@ -77,20 +75,35 @@ const BookmarkIcon = styled(FontAwesomeIcon)`
   color: ${(props) => (props.active ? '#ff8c00' : 'gray')};
 `;
 
+const EmptyContent = styled.div`
+  display: flex;
+  height: 40vh;
+  align-items: center;
+  font-size: 16px;
+  color: gray;
+`;
+
+const EventGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 40px;
+  column-gap: 56px;
+`;
+
 const EventCell = ({ events, toggleFavorite }) => {
   return (
-    <ul>
+    <>
       {events.length > 0 ? (
-        events.map((event, index) => (
-          <li key={index}>
-            <EventContainer>
-              <StyledLink to={`/event/${event.eventId}`}>
+        <EventGrid>
+          {events.map((event) => (
+            <EventContainer key={event.eventId}>
+              <StyledLink to={`/event/${event}.eventId}`}>
                 <EventImage src={event.imageUrl} />
               </StyledLink>
               <EventInfo>
                 <InfoRow>
-                  <li>{event.eventTypeName} |</li>
-                  <div style={{ marginRight: '10px' }}>
+                  <div>{event.eventTypeName} |</div>
+                  <div>
                     <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
                     {event.branchName}
                   </div>
@@ -107,12 +120,14 @@ const EventCell = ({ events, toggleFavorite }) => {
                 </EventDates>
               </EventInfo>
             </EventContainer>
-          </li>
-        ))
+          ))}
+        </EventGrid>
       ) : (
-        <div>이벤트가 없습니다.</div>
+        <EmptyContent>
+          <p>즐겨찾기한 이벤트가 없습니다.</p>
+        </EmptyContent>
       )}
-    </ul>
+    </>
   );
 };
 

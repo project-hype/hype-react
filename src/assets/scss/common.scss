@@ -384,8 +384,8 @@ ol {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         background: $hd-lightgray;
         cursor: pointer;
@@ -412,8 +412,8 @@ ol {
       }
 
       div.calendar-list-box-select {
-        width: 80px;
-        height: 80px;
+        width: 64px;
+        height: 64px;
         background: $hd-green;
 
         span {

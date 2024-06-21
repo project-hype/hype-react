@@ -138,6 +138,7 @@ function DayCalendar() {
         <div class="moreview">
           <Link to={'/event'}>전체보기</Link>
         </div>
+
         <EventList events={data} />
       </div>
     </>
