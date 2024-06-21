@@ -7,7 +7,6 @@ import { faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
-import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 
