@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
 import { faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
 
-const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter }) => {
+const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
   const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
+  const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     // 초기 즐겨찾기 상태 설정
@@ -20,6 +24,10 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
 
   const toggleFavorite = async (eventId) => {
     try {
+      if (!user.isLoggedIn) {
+        navigate('/login');
+        return;
+      }
       const isFavorite = likeStatus[eventId];
       let response;
       console.log(!isFavorite + eventId);
@@ -28,14 +36,14 @@ const EventList = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter 
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
         response = await axios.delete('http://localhost:8080/event/deleteFav', {
           data: {
-            memberId: '3',
+            memberId: user.userInfo.memberId,
             eventId: eventId,
           },
         });
       } else {
         // 즐겨찾기 추가 API 호출
         response = await axios.post('http://localhost:8080/event/addFav', {
-          memberId: '3',
+          memberId: user.userInfo.memberId,
           eventId: eventId,
         });
       }

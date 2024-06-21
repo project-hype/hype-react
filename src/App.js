@@ -14,6 +14,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { checkAdmin } from './auth';
 import { RecoilRoot } from 'recoil';
+import StarRating from './components/event/StarRating';
 
 const router = createBrowserRouter([
   { path: '/', element: <Main /> },
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
   { path: '/mypage', element: <MyPage /> },
   { path: '/admin', element: <AdminMain /> },
   { path: '/event/:eventId', element: <Detail /> },
+  { path: '/star', element: <StarRating /> },
 ]);
 
 function App() {

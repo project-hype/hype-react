@@ -3,349 +3,82 @@ import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faEye, faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faStar, faLocationDot, faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
-import styled from 'styled-components';
+import StarInput from './StarInput';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
+import styled from '@emotion/styled';
 
-const StyledAticle = styled.div`
-  align-items: flex-start;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-
-  & .title {
-    align-items: flex-start;
-    display: inline-flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    padding: 0px 256px;
-    position: relative;
-
-    & .group {
-      height: 123px;
-      position: relative;
-      width: 928px;
-
-      & .titlte {
-        height: 123px;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 577px;
-
-        & .text-wrapper {
-          color: var(--collection-1-HD-black);
-          font-family: 'Happiness Sans-Title', Helvetica;
-          font-size: 80px;
-          font-weight: 400;
-          height: 123px;
-          left: 0;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: -4px;
-          width: 928px;
-        }
-      }
-
-      & .image {
-        height: 123px;
-        left: 882px;
-        position: absolute;
-        top: 0;
-        width: 46px;
-      }
-    }
-
-    & .view {
-      height: 46px;
-      position: relative;
-      width: 170px;
-
-      & .div {
-        align-items: center;
-        display: inline-flex;
-        gap: 8px;
-        left: 0;
-        position: absolute;
-        top: 8px;
-
-        & .mdi-eye {
-          height: 24px;
-          position: relative;
-          width: 24px;
-        }
-
-        & .text-wrapper-2 {
-          color: var(--popplycokrboulder);
-          font-family: 'Happiness Sans-Title', Helvetica;
-          font-size: 24px;
-          font-weight: 400;
-          letter-spacing: 0;
-          line-height: normal;
-          margin-top: -1px;
-          position: relative;
-          width: fit-content;
-        }
-      }
-
-      & .view-2 {
-        align-items: center;
-        display: inline-flex;
-        gap: 8px;
-        left: 101px;
-        position: absolute;
-        top: 8px;
-
-        & .img {
-          flex: 0 0 auto;
-          position: relative;
-        }
-      }
-    }
-  }
-
-  & .detail {
-    align-items: flex-start;
-    display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    gap: 24px;
-    padding: 0px 256px;
-    position: relative;
-    width: 1440px;
-
-    & .hashtag {
-      align-items: center;
-      align-self: stretch;
-      display: flex;
-      flex: 0 0 auto;
-      flex-wrap: wrap;
-      gap: 0px 10px;
-      position: relative;
-      width: 100%;
-
-      & .item {
-        align-items: center;
-        border: 1px solid;
-        border-color: var(--popplycokrmine-shaft);
-        border-radius: 20px;
-        display: inline-flex;
-        flex: 0 0 auto;
-        flex-direction: column;
-        padding: 9px 13px;
-        position: relative;
-
-        & .text-wrapper-3 {
-          color: var(--collection-1-HD-black);
-          font-family: var(--popply-co-kr-roboto-regular-13-13-font-family);
-          font-size: var(--popply-co-kr-roboto-regular-13-13-font-size);
-          font-style: var(--popply-co-kr-roboto-regular-13-13-font-style);
-          font-weight: var(--popply-co-kr-roboto-regular-13-13-font-weight);
-          letter-spacing: var(--popply-co-kr-roboto-regular-13-13-letter-spacing);
-          line-height: var(--popply-co-kr-roboto-regular-13-13-line-height);
-          margin-top: -1px;
-          position: relative;
-          text-align: center;
-          white-space: nowrap;
-          width: fit-content;
-        }
-
-        & .text-wrapper-4 {
-          color: var(--collection-1-HD-black);
-          font-family: var(--popply-co-kr-roboto-regular-13-23-font-family);
-          font-size: var(--popply-co-kr-roboto-regular-13-23-font-size);
-          font-style: var(--popply-co-kr-roboto-regular-13-23-font-style);
-          font-weight: var(--popply-co-kr-roboto-regular-13-23-font-weight);
-          letter-spacing: var(--popply-co-kr-roboto-regular-13-23-letter-spacing);
-          line-height: var(--popply-co-kr-roboto-regular-13-23-line-height);
-          margin-top: -1px;
-          position: relative;
-          text-align: center;
-          width: fit-content;
-        }
-
-        & .text-wrapper-5 {
-          color: var(--collection-1-HD-black);
-          font-family: var(--popply-co-kr-roboto-regular-14-font-family);
-          font-size: var(--popply-co-kr-roboto-regular-14-font-size);
-          font-style: var(--popply-co-kr-roboto-regular-14-font-style);
-          font-weight: var(--popply-co-kr-roboto-regular-14-font-weight);
-          letter-spacing: var(--popply-co-kr-roboto-regular-14-letter-spacing);
-          line-height: var(--popply-co-kr-roboto-regular-14-line-height);
-          margin-top: -1px;
-          position: relative;
-          text-align: center;
-          white-space: nowrap;
-          width: fit-content;
-        }
-      }
-    }
-
-    & .period-location {
-      align-items: flex-start;
-      align-self: stretch;
-      display: flex;
-      flex: 0 0 auto;
-      flex-direction: column;
-      gap: 16px;
-      padding: 1px 0px;
-      position: relative;
-      width: 100%;
-
-      & .period {
-        height: 38px;
-        position: relative;
-        width: 319px;
-
-        & .text-wrapper-6 {
-          color: #595959;
-          font-family: 'Happiness Sans-Bold', Helvetica;
-          font-size: 30px;
-          font-weight: 700;
-          height: 38px;
-          left: 0;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: 0;
-        }
-
-        & .text-wrapper-7 {
-          color: #000000;
-          font-family: 'Happiness Sans-Title', Helvetica;
-          font-size: 30px;
-          font-weight: 400;
-          height: 38px;
-          left: 77px;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: 0;
-        }
-      }
-
-      & .location {
-        height: 38px;
-        position: relative;
-        width: 369px;
-
-        & .text-wrapper-6 {
-          color: #595959;
-          font-family: 'Happiness Sans-Bold', Helvetica;
-          font-size: 30px;
-          font-weight: 700;
-          height: 38px;
-          left: 0;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: 0;
-        }
-
-        & .text-wrapper-8 {
-          color: #000000;
-          font-family: 'Happiness Sans-Title', Helvetica;
-          font-size: 30px;
-          font-weight: 400;
-          height: 38px;
-          left: 77px;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: 0;
-        }
-      }
-    }
-
-    & .description {
-      align-self: stretch;
-      height: 683px;
-      margin-right: -2px;
-      position: relative;
-      width: 100%;
-
-      & .p {
-        color: #000000;
-        font-family: 'Happiness Sans-Bold', Helvetica;
-        font-size: 48px;
-        font-weight: 700;
-        height: 139px;
-        left: 0;
-        letter-spacing: 0;
-        line-height: normal;
-        position: absolute;
-        top: 0;
-        width: 928px;
-
-        & .span {
-          color: #000000;
-          font-family: 'Happiness Sans-Bold', Helvetica;
-          font-size: 48px;
-          font-weight: 700;
-          letter-spacing: 0;
-        }
-
-        & .text-wrapper-9 {
-          font-size: 32.9px;
-        }
-      }
-
-      & .frame {
-        background-color: #eeeeee;
-        height: 507px;
-        left: 0;
-        position: absolute;
-        top: 176px;
-        width: 928px;
-
-        & .text-wrapper-10 {
-          color: #000000;
-          font-family: 'Happiness Sans-Regular', Helvetica;
-          font-size: 30px;
-          font-weight: 400;
-          height: 507px;
-          left: 0;
-          letter-spacing: 0;
-          line-height: normal;
-          position: absolute;
-          top: -1px;
-          width: 928px;
-        }
-      }
-    }
-  }
+const Base = styled.section`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
+const Name = styled.span`
+  font-size: 1.4rem;
+  line-height: 100%;
+`;
+
+const RatingValue = styled.span`
+  font-size: 1.2rem;
+  line-height: 100%;
+`;
+
+const RatingField = styled.fieldset`
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  border: none;
+  transform: translateY(2px);
+
+  input:checked ~ label,
+  labeL:hover,
+  labeL:hover ~ label {
+    transition: 0.2s;
+    color: orange;
+  }
+`;
+const FavoriteIcon = styled(FontAwesomeIcon)`
+  cursor: pointer;
+  color: ${({ isFavorite }) => (isFavorite ? 'red' : 'lightgray')};
+  transition: color 0.2s;
+
+  &:hover {
+    color: ${({ isFavorite }) => (isFavorite ? 'darkred' : 'gray')};
+  }
+`;
 const EventDetail = ({}) => {
   const { eventId } = useParams();
   const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
+  const [rating, setRating] = useState(0);
+  const user = useRecoilValue(userState);
+
+  const handleClickRating = async (value) => {
+    setRating(value);
+    console.log(value);
+    await submitScore({ eventId, score: value });
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=1`);
+      const result = response.data.event;
+      setLikeStatus(result[0].isFavorite); // Initialize favorite status
+
+      setData(result[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=1`);
-        const result = response.data.eventList;
-        setData(result);
-        console.log(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     fetchData();
   }, []);
-
-  //   useEffect(() => {
-  //     // 초기 즐겨찾기 상태 설정
-  //     const status = {};
-  //     events.forEach((event) => {
-  //       status[event.eventId] = event.favorite; // 이벤트의 즐겨찾기 상태를 설정
-  //     });
-  //     setLikeStatus(status);
-  //   }, [eventId]);
 
   const toggleFavorite = async (eventId) => {
     try {
@@ -357,14 +90,14 @@ const EventDetail = ({}) => {
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
         response = await axios.delete('http://localhost:8080/event/deleteFav', {
           data: {
-            memberId: '3',
+            memberId: user.userInfo.memberId,
             eventId: eventId,
           },
         });
       } else {
         // 즐겨찾기 추가 API 호출
         response = await axios.post('http://localhost:8080/event/addFav', {
-          memberId: '3',
+          memberId: user.userInfo.memberId,
           eventId: eventId,
         });
       }
@@ -381,98 +114,132 @@ const EventDetail = ({}) => {
     }
   };
 
+  const submitScore = async ({ eventId, score }) => {
+    try {
+      const response = await axios.post('http://localhost:8080/event/starScore', {
+        memberId: user.userInfo.memberId,
+        eventId: eventId,
+        score: score,
+      });
+      console.log('별점 작성 성공:', response.data);
+      // 필요 시 여기서 추가적인 처리 (예: 별점 작성 후 데이터를 다시 불러오기)
+    } catch (error) {
+      console.error('별점 작성 중 오류 발생:', error);
+    }
+  };
+
   return (
-    <StyledAticle>
-      {data.map((event) => (
-        <>
-          <div className="title">
-            <div className="group">
-              <div className="titlte">
-                <div className="text-wrapper">{event.title}</div>
-              </div>
-              <img className="image" alt="Image" src={event.imageUrl} />
+    <article className="article-wrap">
+      <div class="StyledArticle">
+        <div class="title">
+          <div clsas="StyledImage">
+            <div class="container">
+              <img class="rectangle" alt="Rectangle" src={data.imageUrl} />
             </div>
-            <div className="view">
-              <div className="div">
-                <FontAwesomeIcon icon={faEye} />
-                <div className="text-wrapper-2">{event.viewCount}</div>
+          </div>
+          <div class="text-wrapper">{data.title}</div>
+          <FavoriteIcon
+            icon={likeStatus ? faSolidHeart : faRegularHeart}
+            isFavorite={likeStatus}
+            onClick={toggleFavorite}
+          />
+
+          <div class="count">
+            <div class="view">
+              <FontAwesomeIcon icon={faEye} />
+              <div class="text-wrapper-2">{data.viewCount}</div>
+            </div>
+            <div class="score">
+              <FontAwesomeIcon icon={faStar} />
+              <div class="text-wrapper-2">{data.favoriteCount}</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail">
+          <div class="hashtag">
+            {data.hashtags &&
+              data.hashtags.map((hashtag, index) => (
+                <div class="item" key={index}>
+                  <div class="text-wrapper-3">{hashtag}</div>
+                </div>
+              ))}
+          </div>
+          <div class="period-location">
+            <div class="period">
+              <div class="text-wrapper-6">기간</div>
+              <div class="text-wrapper-7">
+                {data.startDate} ~ {data.endDate}
               </div>
-              <div className="view-2">
-                <FontAwesomeIcon icon={faStar} />
-                <div className="text-wrapper-2">{event.favoriteCount}</div>
+            </div>
+            <div class="location">
+              <div class="text-wrapper-6">장소</div>
+              <div class="text-wrapper-8">
+                {data.cityName} {data.address} {data.branchName} {data.detail_address}
               </div>
             </div>
           </div>
-          <div className="detail">
-            <div className="hashtag">
-              <div className="item">
-                <div className="text-wrapper-3">산리오</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-3">헬로키티</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-4">전시</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-3">동대문디자인플라자</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-5">DDP</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-4">굿즈</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-3">이벤트</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-3">얼리버드</div>
-              </div>
-              <div className="item">
-                <div className="text-wrapper-4">티켓</div>
-              </div>
+          <div class="description">
+            <p class="p">행사 안내</p>
+            <p class="text-wrapper-10">{data.content}</p>
+
+            <div class="frame">
+              <p class="text-wrapper-10">{data.content}</p>
             </div>
-            <div className="period-location">
-              <div className="period">
-                <div className="text-wrapper-6">기간</div>
-                <div className="text-wrapper-7">24.06.05 - 06.16</div>
-              </div>
-              <div className="location">
-                <div className="text-wrapper-6">장소</div>
-                <div className="text-wrapper-8">더현대 1층 팝업 스토어</div>
-              </div>
+          </div>
+        </div>
+      </div>
+      <div class="review">
+        <div className="container">
+          <div className="review-statistics">
+            <div className="text-wrapper">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</div>
+            <div className="overlap-group">
+              <p>여기에 별점 보여주기</p>
+              <img className="mask-group" alt="Mask group" src="image.png" />
             </div>
-            <div className="description">
-              <p className="p">
-                <span className="span">
-                  “일상의 피로에서 떠나요&#34;
-                  <br />
-                </span>
-                <span className="text-wrapper-9">
-                  <br />
-                  여행에 필요한 상품을 저렴하게 준비해보는 건 어떨까요?
-                </span>
-              </p>
-              <div className="frame">
-                <p className="text-wrapper-10">
-                  여행 가려면 캐리어도 필요하고 뭣도 필요하고 카메라도 필요하고 옷도 필요하고 어쩌고 저쩌고
-                </p>
+            <div className="overlap">
+              <div className="rectangle" />
+            </div>
+            <div className="overlap-2">
+              <div className="rectangle-2" />
+              <img className="img" alt="Mask group" src="mask-group.png" />
+              <img className="mask-group-2" alt="Mask group" src="mask-group-2.png" />
+            </div>
+            <div className="rectangle-3" />
+            <div className="rectangle-4" />
+            <img className="stars" alt="Stars" src="stars.png" />
+            <div className="text-wrapper-11">{data.averageScore ? data.averageScore : 0}</div>
+          </div>
+          <div className="review-detail">
+            <div className="container-2">
+              <div className="container-3"></div>
+              <div className="horizontal-border">
+                <div className="container-4">
+                  <div className="div-wrapper">
+                    <div className="text-wrapper-13">클릭해서 별점을 매겨주세요!</div>
+                  </div>
+                  <Base>
+                    <Name>별점</Name>
+                    <RatingField>
+                      <StarInput onClickRating={handleClickRating} value={5} isHalf={false} />
+                      <StarInput onClickRating={handleClickRating} value={4.5} isHalf={true} />
+                      <StarInput onClickRating={handleClickRating} value={4} isHalf={false} />
+                      <StarInput onClickRating={handleClickRating} value={3.5} isHalf={true} />
+                      <StarInput onClickRating={handleClickRating} value={3} isHalf={false} />
+                      <StarInput onClickRating={handleClickRating} value={2.5} isHalf={true} />
+                      <StarInput onClickRating={handleClickRating} value={2} isHalf={false} />
+                      <StarInput onClickRating={handleClickRating} value={1.5} isHalf={true} />
+                      <StarInput onClickRating={handleClickRating} value={1} isHalf={false} />
+                      <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} />
+                    </RatingField>
+                    <RatingValue>{rating}</RatingValue>
+                  </Base>
+                </div>
               </div>
             </div>
           </div>
-        </>
-      ))}
-    </StyledAticle>
-    // <div>
-    //   {data.map((event) => (
-    //     <div key={event.eventId}>
-    //       <h1>{event.title}</h1>
-    //       <img src={event.imageUrl} alt={data.title} />
-    //       <p>{event.content}</p>
-    //     </div>
-    //   ))}
-    // </div>
+        </div>
+      </div>
+    </article>
   );
 };
 export default EventDetail;

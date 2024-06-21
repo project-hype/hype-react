@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -10,6 +10,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 function Banner() {
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   const [dragging, setDragging] = useState(false);
 
@@ -25,7 +26,7 @@ function Banner() {
       e.stopPropagation();
       return;
     } else {
-      window.location.href = `/event/${eventId}`;
+      navigate(`/event/${eventId}`);
     }
   };
   const slickRef = useRef(null);
@@ -96,15 +97,17 @@ function Banner() {
                 <img src={event.imageUrl} />
               </div>
               <div>
-                <p className="slide-tit">{event.title}</p>
-                <p>
+                <span className="slide-tit">
+                  {event.title.length >= 20 ? event.title.substr(0, 20) + '...' : event.title}
+                </span>
+                <span className="slide-type">{event.eventTypeName}</span>
+                <p className="slide-date">
                   {event.startDate} ~ {event.endDate}
                 </p>
-                <p>
-                  <FontAwesomeIcon icon={faLocationDot} />
+                <p className="slide-location">
+                  <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
                   {event.branchName}
                 </p>
-                <p>{event.eventTypeName}</p>
               </div>
             </div>
           </div>

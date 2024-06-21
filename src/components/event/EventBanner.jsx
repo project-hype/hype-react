@@ -5,13 +5,17 @@ import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
 
 function EventBanner({ title, type }) {
+  const navigate = useNavigate();
+  const user = useRecoilValue(userState);
   const [data, setData] = useState([]);
   const [dragging, setDragging] = useState(false);
   const handleBeforeChange = useCallback(() => {
@@ -26,7 +30,7 @@ function EventBanner({ title, type }) {
       e.stopPropagation();
       return;
     } else {
-      window.location.href = `/event/${eventId}`;
+      navigate(`/event/${eventId}`);
     }
   };
 
@@ -38,7 +42,7 @@ function EventBanner({ title, type }) {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3.3,
+    slidesToShow: 3.5,
     slidesToScroll: 1,
     swipeToSlide: true,
     arrows: false,
@@ -47,23 +51,14 @@ function EventBanner({ title, type }) {
     afterChange: handleAfterChange,
   };
 
-  // const bookmarkClick = async (isClick, eventId) => {
-  //   if (!myInfo) {
-  //     window.location.href = `/login`;
-  //   } else {
-  //     setActiveIndex(eventId);
-  //     if (eventId.includes(eventId)) {
-  //       likeEventSetter(likeEvent.filter((item) => item !== eventId));
-  //     } else {
-  //       likeEventSetter([...new Set([...likeEvent, eventId])]);
-  //     }
-  //   }
-  // };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=3`);
+        let memberId = '';
+        if (user.isLoggedIn) {
+          memberId = user.userInfo.memberId;
+        }
+        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=${memberId}`);
         const result = response.data.eventList;
         setData(result);
         // console.log(result);
