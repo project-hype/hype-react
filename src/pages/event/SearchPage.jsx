@@ -13,9 +13,10 @@ function SearchPage() {
 
   return (
     <div className="container">
-      <MainLayout />
-      <PageTitle>{preText}검색 결과</PageTitle>
-      <Filter />
+      <MainLayout>
+        <PageTitle>{preText}검색 결과</PageTitle>
+        <Filter />
+      </MainLayout>
     </div>
   );
 }

@@ -6,9 +6,10 @@ import { PageTitle } from '../../components/member/MemberStyledComponents';
 function JoinPage() {
   return (
     <div>
-      <MainLayout />
-      <PageTitle>회원가입</PageTitle>
-      <JoinForm />
+      <MainLayout>
+        <PageTitle>회원가입</PageTitle>
+        <JoinForm />
+      </MainLayout>
     </div>
   );
 }

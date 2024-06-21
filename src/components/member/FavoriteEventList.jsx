@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import FavoriteEvent from './FavoriteEvent';
 
 const EventWrapArticle = styled.article`
+  height: 100vh; // 전체 화면 높이
   margin-left: 150px;
   margin-right: 150px;
 `;
