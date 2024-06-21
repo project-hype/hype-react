@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import EventList from '../event/EventList';
 import '../../assets/scss/common.scss';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../state/authState';
 import styled from 'styled-components';
+import FavoriteEvent from './FavoriteEvent';
 
 const EventWrapArticle = styled.article`
   margin-left: 150px;
@@ -81,7 +81,7 @@ const FavoriteEventList = () => {
     <EventWrapArticle>
       <article>
         <div className="calendar-popup-list">
-          <EventList events={data} toggleFavorite={toggleFavorite} />
+          <FavoriteEvent events={data} toggleFavorite={toggleFavorite} />
         </div>
       </article>
     </EventWrapArticle>
