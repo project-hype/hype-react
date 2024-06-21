@@ -7,6 +7,7 @@ import axios from 'axios';
 import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
+import { PageTitle } from '../member/MemberStyledComponents';
 
 const CalendarList = styled.div`
   width: 100%;
@@ -68,6 +69,15 @@ const P = styled.p`
   margin: 0;
 `;
 
+const Title = styled.div`
+  font-size: 32px;
+  font-family: '해피니스 산스 타이틀';
+  font-weight 700;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 32px;
+`;
+
 const MoreView = styled.div`
   display: flex;
   flex-direction: row;
@@ -110,6 +120,7 @@ function DayCalendar() {
   return (
     <>
       <div class="calendar-list">
+        <Title>날짜별 행사 📅</Title>
         <ul>
           {baseDayjs.map((day, index) => (
             <li key={index} onClick={() => getStoresByDate(day)}>

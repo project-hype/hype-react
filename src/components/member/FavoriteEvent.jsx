@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faStar, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faRegularStar } from '@fortawesome/free-regular-svg-icons';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 const StyledLink = styled(Link)`
@@ -16,6 +18,19 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const EventType = styled.div`
+  width: 20px;
+  height: fit-content;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 35px;
+  display: flex;
+  justify-content: center;
+  padding: px;
+  border: 1px solid #e0ded8;
+  font-size: 14px;
+`;
+
 const FavoriteEvent = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSetter, toggleFavorite }) => {
   return (
     <ul>
@@ -23,29 +38,34 @@ const FavoriteEvent = ({ events, myInfo, setActiveIndex, likeEvent, likeEventSet
         events.map((event, index) => (
           <li key={index}>
             <div>
-              <StyledLink to={`/event/${event.eventId}`} className="event-img-wrap">
-                <img src={event.imageUrl} className="event-img" />
-              </StyledLink>
-              <StyledLink to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
-                <ul>
-                  <li className="event-name">
-                    <p>{event.title}</p>
-                  </li>
-                  <li className="event-branch">
-                    <FontAwesomeIcon icon={faLocationDot} /> {event.branchName}
-                  </li>
-                  <li className="event-type">{event.eventTypeName}</li>
-                  <li>
-                    <p className="event-date">
-                      {event.startDate}~{event.endDate}
-                    </p>
-                  </li>
-                </ul>
-              </StyledLink>
               <div>
+                <StyledLink to={`/event/${event.eventId}`} className="event-img-wrap">
+                  <img src={event.imageUrl} className="event-img" />
+                </StyledLink>
+              </div>
+              <div className="event-details">
+                <StyledLink to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
+                  <ul>
+                    <li className="event-list-name">
+                      <EventType>{event.eventTypeName}</EventType>
+                      <p>{event.title}</p>
+                    </li>
+                    <li className="event-branch">
+                      <FontAwesomeIcon icon={faLocationDot} /> {event.branchName}
+                    </li>
+                    <li className="event-type"></li>
+                    <li>
+                      <p className="event-date">
+                        {event.startDate} ~ {event.endDate}
+                      </p>
+                    </li>
+                  </ul>
+                </StyledLink>
+              </div>
+              <div className="event-favorite">
                 <FontAwesomeIcon
-                  icon={event.favorite ? faHeart : faRegularHeart}
-                  style={{ color: event.favorite ? 'red' : 'gray', cursor: 'pointer' }}
+                  icon={event.favorite ? faStar : faRegularStar}
+                  style={{ color: event.favorite ? '#ff8c00' : 'gray', cursor: 'pointer' }}
                   onClick={() => toggleFavorite(event.eventId)}
                   size="2x"
                 />
