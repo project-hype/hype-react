@@ -27,6 +27,8 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  /* axios 기본 설정 */
+  axios.defaults.withCredentials = true;
   return (
     <RecoilRoot>
       <RouterProvider router={router} />
