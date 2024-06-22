@@ -23,7 +23,7 @@ function DetailPage() {
     return (
       <div class="container">
         <MainLayout>
-          <article class="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
+          <article class="main-article" style={{ marginLeft: '250px', marginRight: '250px' }}>
             <EventDetail eventId={eventId} />
             <EventBanner title={'비슷한 행사도 있어요 👀✨'} type={`like/${eventId}`} />
           </article>
