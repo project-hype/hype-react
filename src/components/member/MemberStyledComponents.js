@@ -109,7 +109,6 @@ export const ErrorText = styled.div`
 // 버튼 스타일
 export const ButtonGroup = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
 `;
@@ -125,7 +124,7 @@ export const StyledButtonWrapper = styled.div`
   overflow: hidden;
   padding: 10px;
   position: relative;
-  width: 128px;
+  width: 116px;
   cursor: pointer;
   border: ${(props) => (props.selected ? '1px solid #ff8c00;' : '1px solid #E0DED8')}; /* 선택됐을 때의 테두리 색상 */
   margin-top: 16px;

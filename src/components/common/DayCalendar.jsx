@@ -2,7 +2,8 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import EventList from '../event/EventList';
+// import EventList from '../event/EventList';
+import EventList2 from '../event/EventList2';
 import axios from 'axios';
 import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';
@@ -138,7 +139,8 @@ function DayCalendar() {
         <div class="moreview">
           <Link to={'/event'}>전체보기</Link>
         </div>
-        <EventList events={data} />
+
+        <EventList2 events={data} />
       </div>
     </>
   );

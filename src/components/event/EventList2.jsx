@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import { faBookmark, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
+import { userState } from '../../state/authState';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -18,12 +22,11 @@ const EventContainer = styled.div`
   display: flex;
   width: 480px;
   height: 200px;
-  height: fit-content;
   border: 1px solid #eaeaea;
   border-radius: 8px;
   justify-content: center;
-  align-item: center;
-  padding: 16px;
+  align-items: center;
+  padding: 0px 16px;
 `;
 
 const EventImage = styled.img`
@@ -79,14 +82,61 @@ const EventGrid = styled.div`
   column-gap: 56px;
 `;
 
-const EventCell = ({ events, toggleFavorite }) => {
+const EventList2 = ({ events, likeEvent }) => {
+  const [likeStatus, setLikeStatus] = useState({});
+  const user = useRecoilValue(userState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const initialLikeStatus = {};
+    events.forEach((event) => {
+      initialLikeStatus[event.eventId] = event.favorite;
+    });
+    setLikeStatus(initialLikeStatus);
+  }, [events]);
+
+  const toggleFavorite = async (eventId) => {
+    try {
+      if (!user.isLoggedIn) {
+        navigate('/login');
+        return;
+      }
+
+      const isFavorite = likeStatus[eventId];
+      let response;
+
+      if (isFavorite) {
+        response = await axios.delete('http://localhost:8080/event/deleteFav', {
+          data: {
+            memberId: user.userInfo.memberId,
+            eventId: eventId,
+          },
+        });
+      } else {
+        response = await axios.post('http://localhost:8080/event/addFav', {
+          memberId: user.userInfo.memberId,
+          eventId: eventId,
+        });
+      }
+
+      setLikeStatus((prevStatus) => ({
+        ...prevStatus,
+        [eventId]: !isFavorite,
+      }));
+
+      console.log('Toggled favorite:', response.data);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
   return (
     <>
       {events.length > 0 ? (
         <EventGrid>
           {events.map((event) => (
             <EventContainer key={event.eventId}>
-              <StyledLink to={`/event/${event}.eventId}`}>
+              <StyledLink to={`/event/${event.eventId}`}>
                 <EventImage src={event.imageUrl} />
               </StyledLink>
               <EventInfo>
@@ -97,8 +147,8 @@ const EventCell = ({ events, toggleFavorite }) => {
                     {event.branchName}
                   </div>
                   <BookmarkIcon
-                    icon={event.favorite ? faBookmark : faRegularBookmark}
-                    style={{ color: event.favorite ? '#ff8c00' : 'gray', cursor: 'pointer' }}
+                    icon={likeStatus[event.eventId] ? faBookmark : faRegularBookmark}
+                    active={likeStatus[event.eventId]}
                     onClick={() => toggleFavorite(event.eventId)}
                     size="2x"
                   />
@@ -113,11 +163,11 @@ const EventCell = ({ events, toggleFavorite }) => {
         </EventGrid>
       ) : (
         <EmptyContent>
-          <p>즐겨찾기한 이벤트가 없습니다.</p>
+          <p>해당 날짜에 이벤트가 없습니다.</p>
         </EmptyContent>
       )}
     </>
   );
 };
 
-export default EventCell;
+export default EventList2;

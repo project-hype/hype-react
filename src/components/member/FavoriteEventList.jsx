@@ -8,15 +8,18 @@ import FavoriteEvent from './FavoriteEvent';
 import EventCell from './EventCell';
 
 const EventWrapArticle = styled.article`
-  height: 100vh; // 전체 화면 높이
-  margin-left: 150px;
-  margin-right: 150px;
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+  margin-bottom: 80px;
 `;
 
 const FavoriteEventList = () => {
   const user = useRecoilValue(userState);
   const [data, setData] = useState([]);
-  const [favoriteEvents, setFavoriteEvents] = useState([]);
 
   useEffect(() => {
     const fetchFavoriteEvents = async () => {
@@ -81,11 +84,7 @@ const FavoriteEventList = () => {
 
   return (
     <EventWrapArticle>
-      <article>
-        <div>
-          <EventCell events={data} toggleFavorite={toggleFavorite} />
-        </div>
-      </article>
+      <EventCell events={data} toggleFavorite={toggleFavorite} />
     </EventWrapArticle>
   );
 };
