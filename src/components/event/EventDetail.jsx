@@ -44,45 +44,23 @@ const RatingField = styled.fieldset`
   }
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const ReviewHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ReviewCount = styled.p`
-  font-size: 1.2rem;
-  color: #333;
-`;
-
-const RatingContainer = styledc.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-`;
-
 const EventDetail = ({ eventId }) => {
   const [likeStatus, setLikeStatus] = useState(false); // 즐겨찾기 상태를 저장할 객체
   const [data, setData] = useState({});
   const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const averageScore = data.averageScore ? data.averageScore : 0;
 
   const handleClickRating = async (value) => {
     setRating(value);
-    await submitScore({ eventId, score: value });
+    let action = 'INSERT';
+    if (value === 0) {
+      action = 'DELETE';
+    } else if (data.myScore) {
+      action = 'UPDATE';
+    }
+    await submitScore({ eventId, score: value, action });
     fetchData();
   };
 
@@ -144,19 +122,19 @@ const EventDetail = ({ eventId }) => {
     }
   };
 
-  const submitScore = async ({ eventId, score }) => {
+  const submitScore = async ({ eventId, score, action }) => {
     try {
       if (!user.isLoggedIn) {
         navigate('/login');
         return;
       }
-      const response = await axios.post('http://localhost:8080/event/starScore', {
+      const response = await axios.post('http://localhost:8080/event/score', {
         memberId: user.userInfo.memberId,
         eventId: eventId,
         score: score,
+        action: action,
       });
       console.log('별점 작성 성공:', response.data);
-      // 필요 시 여기서 추가적인 처리 (예: 별점 작성 후 데이터를 다시 불러오기)
     } catch (error) {
       console.error('별점 작성 중 오류 발생:', error);
     }

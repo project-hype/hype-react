@@ -42,12 +42,6 @@ const StarInput = ({ onClickRating, value, isHalf, selectedRating }) => {
   };
 
   return (
-    // <>
-    //   <Input type="radio" name="rating" id={`star${value}`} value={value} />
-    //   <Label onClick={handleClickRatingInput} isHalf={isHalf} htmlFor={`star${value}`}>
-    //     {isHalf ? <FaStarHalf /> : <FaStar />}
-    //   </Label>
-    // </>
     <>
       <Input type="radio" name="rating" id={`star${value}`} value={value} />
       <Label
