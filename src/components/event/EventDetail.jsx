@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faEye, faStar, faLocationDot, faHeart as faSolidHeart, faBookmark } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faRegularHeart, faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import StarInput from './StarInput';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
-import EventBanner from './EventBanner';
+import styledc from 'styled-components';
 
 const Base = styled.section`
   display: flex;
@@ -44,11 +44,38 @@ const RatingField = styled.fieldset`
   }
 `;
 
-const EventDetail = ({}) => {
-  const { eventId } = useParams();
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
+
+const ReviewHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const ReviewCount = styled.p`
+  font-size: 1.2rem;
+  color: #333;
+`;
+
+const RatingContainer = styledc.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const EventDetail = ({ eventId }) => {
   const [likeStatus, setLikeStatus] = useState(false); // 즐겨찾기 상태를 저장할 객체
   const [data, setData] = useState({});
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const averageScore = data.averageScore ? data.averageScore : 0;
@@ -62,11 +89,11 @@ const EventDetail = ({}) => {
   const fetchData = async () => {
     try {
       const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
-
       const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=${memberId}`);
       const result = response.data.event;
       setLikeStatus(result[0].favorite); // Initialize favorite status
       setData(result[0]);
+      setRating(result[0].myScore ? result[0].myScore : 0);
     } catch (error) {
       console.log(error);
     }
@@ -135,23 +162,13 @@ const EventDetail = ({}) => {
     }
   };
 
-  const likeEvents = async ({ eventId }) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/event/list/like/${eventId}`);
-      console.log('유사한 이벤트들:', response.data);
-      // 필요 시 여기서 추가적인 처리 (예: 별점 작성 후 데이터를 다시 불러오기)
-    } catch (error) {
-      console.error('이벤트 불러오기 실패:', error);
-    }
-  };
-
   return (
     <article className="article-wrap">
       <div className="StyledArticle">
         <div className="title">
           <div className="StyledImage">
             <div className="container">
-              <img className="rectangle" alt="image" src={data.imageUrl} />
+              <img className="rectangle" src={data.imageUrl} />
             </div>
           </div>
           <div className="text-wrapper">
@@ -165,12 +182,12 @@ const EventDetail = ({}) => {
             />
           </div>
           <div className="count">
-            <div className="view">
+            <div className="view-count">
               <FontAwesomeIcon icon={faEye} />
               <div className="text-wrapper-2">{data.viewCount}</div>
             </div>
-            <div className="score">
-              <FontAwesomeIcon icon={faStar} />
+            <div className="favorite-count">
+              <FontAwesomeIcon icon={faBookmark} />
               <div className="text-wrapper-2">{data.favoriteCount}</div>
             </div>
           </div>
@@ -189,7 +206,7 @@ const EventDetail = ({}) => {
             <div className="period">
               <div className="text-wrapper-6">분류</div>
               <div className="text-wrapper-7">
-                {data.eventTypeName} / {data.categoryName}
+                {data.eventTypeName} | {data.categoryName}
               </div>
             </div>
             <div className="period">
@@ -210,63 +227,44 @@ const EventDetail = ({}) => {
             <p className="text-wrapper-10">{data.content}</p>
           </div>
         </div>
-        <div className="review">
-          <div className="container">
-            <div className="review-statistics">
-              <div className="text-wrapper">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</div>
-              {/* <div className="overlap-group">
-                {data.averageScore ? data.averageScore : 0}
-                <StarRatings rating={data.averageScore} starRatedColor="#1e9d8b" name="rating" />
-              </div> */}
-              {/* <div className="overlap">
-              <div className="rectangle" />
+        <div className="score">
+          <div className="total-score">
+            <div style={{ height: '40%' }}>
+              <p className="average-score">{averageScore}</p>
             </div>
-            <div className="overlap-2">
-              <div className="rectangle-2" />
-              <img className="img" alt="Mask group" src="mask-group.png" />
-              <img className="mask-group-2" alt="Mask group" src="mask-group-2.png" />
+            <div>
+              <StarRatings
+                rating={averageScore}
+                starRatedColor="#1e9d8b"
+                class="rating"
+                starDimension="40px"
+                starSpacing="5px"
+              />
+              <p className="total-count">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</p>
             </div>
-            <div className="rectangle-3" />
-            <div className="rectangle-4" />
-            <img className="stars" alt="Stars" src="stars.png" /> */}
-              <div className="text-wrapper-11">
-                <p>
-                  {averageScore}
-                  <StarRatings rating={averageScore} starRatedColor="#1e9d8b" name="rating" />
-                </p>
-              </div>
+          </div>
+          <div className="my-score">
+            <p>클릭해서 별점을 달아주세요!</p>
+            <div>
+              <Base>
+                <RatingField>
+                  <StarInput onClickRating={handleClickRating} value={5} isHalf={false} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={4.5} isHalf={true} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={4} isHalf={false} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={3.5} isHalf={true} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={3} isHalf={false} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={2.5} isHalf={true} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={2} isHalf={false} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={1.5} isHalf={true} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={1} isHalf={false} selectedRating={rating} />
+                  <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} selectedRating={rating} />
+                </RatingField>
+                <RatingValue>{rating}</RatingValue>
+              </Base>
             </div>
-            <div className="review-detail">
-              <div className="container-2">
-                <div className="horizontal-border">
-                  <div className="container-4">
-                    <div className="div-wrapper">
-                      <div className="text-wrapper-13">클릭해서 별점을 매겨주세요!</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <Base>
-              <RatingField>
-                <StarInput onClickRating={handleClickRating} value={5} isHalf={false} />
-                <StarInput onClickRating={handleClickRating} value={4.5} isHalf={true} />
-                <StarInput onClickRating={handleClickRating} value={4} isHalf={false} />
-                <StarInput onClickRating={handleClickRating} value={3.5} isHalf={true} />
-                <StarInput onClickRating={handleClickRating} value={3} isHalf={false} />
-                <StarInput onClickRating={handleClickRating} value={2.5} isHalf={true} />
-                <StarInput onClickRating={handleClickRating} value={2} isHalf={false} />
-                <StarInput onClickRating={handleClickRating} value={1.5} isHalf={true} />
-                <StarInput onClickRating={handleClickRating} value={1} isHalf={false} />
-                <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} />
-              </RatingField>
-              <RatingValue>{rating}</RatingValue>
-            </Base>
           </div>
         </div>
-        <div></div>
       </div>
-      <EventBanner type={`like/${eventId}`} />
     </article>
   );
 };

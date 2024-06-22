@@ -7,6 +7,7 @@ import { userState } from '../state/authState';
 import { useRecoilValue } from 'recoil';
 import '../assets/scss/common.scss';
 import { PageTitle } from '../components/member/MemberStyledComponents';
+import Loading from '../components/common/Loading';
 
 function MainPage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -14,29 +15,37 @@ function MainPage() {
   const userName = user?.isLoggedIn ? user.userInfo.name.substr(1) : '';
 
   useEffect(() => {
-    setIsLoaded(true);
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  return (
-    <MainLayout>
-      <div class="container">
-        <article class="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
-          <div>
-            <Banner />
-          </div>
-          <article class="article-wrap">
-            <EventBanner title={'이번 주 핫한 곳은?🔥'} type={'top'} />
-            {user.isLoggedIn ? (
-              <EventBanner title={`${userName}님의 취향 저격 행사✨🔫`} type={'top'} />
-            ) : (
-              <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
-            )}
-            <DayCalendar />
+  if (!isLoaded) {
+    return <Loading />;
+  } else {
+    return (
+      <MainLayout>
+        <div class="container">
+          <article class="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
+            <div>
+              <Banner />
+            </div>
+            <article class="article-wrap">
+              <EventBanner title={'이번 주 핫한 곳은?🔥'} type={'top'} />
+              {user.isLoggedIn ? (
+                <EventBanner title={`${userName}님의 취향 저격 행사✨🔫`} type={'top'} />
+              ) : (
+                <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
+              )}
+              <DayCalendar />
+            </article>
           </article>
-        </article>
-      </div>
-    </MainLayout>
-  );
+        </div>
+      </MainLayout>
+    );
+  }
 }
 
 export default MainPage;

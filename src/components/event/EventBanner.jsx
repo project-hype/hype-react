@@ -8,10 +8,19 @@ import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
+
+const StyledLink = styled(Link)`
+  width: 100%;
+  text-decoration: none; /* 기본 밑줄 제거 */
+  color: inherit; /* 부모의 색상 상속 */
+  &:hover,
+  &:focus {
+    color: inherit; /* hover와 focus 상태에서도 부모의 색상 유지 */
+  }
+`;
 
 function EventBanner({ title, type }) {
   const navigate = useNavigate();
@@ -30,7 +39,7 @@ function EventBanner({ title, type }) {
       e.stopPropagation();
       return;
     } else {
-      navigate(`/event/${eventId}`);
+      window.location.href = `/event/${eventId}`;
     }
   };
 
@@ -70,16 +79,20 @@ function EventBanner({ title, type }) {
     fetchData();
   }, [type]);
 
+  if (!data || data.length === 0) {
+    return <div className="popupbanner-wrap"></div>;
+  }
+
   return (
     <>
       <div className="popupbanner-wrap">
         <header>
           <h2 className="popupbanner-tit">{title}</h2>
           <div className="moreview">
-            <Link to={`/search/`}>더보기</Link>
+            <StyledLink to={`/search/`}>더보기</StyledLink>
           </div>
         </header>
-        <div class="popupbanner-inner">
+        <div className="popupbanner-inner">
           <Slider {...settings}>
             {data.map((event) => (
               <div key={event.eventId} className="popupbanner-list">

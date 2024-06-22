@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/scss/common.scss';
 import axios from 'axios';
-import { faStar, faLocationDot, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';

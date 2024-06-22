@@ -9,7 +9,7 @@ const Input = styled.input`
 const Label = styled.label`
   cursor: pointer;
   font-size: 1.5rem;
-  color: lightgray;
+  color: ${({ isSelected }) => (isSelected ? 'orange' : 'lightgray')};
 
   ${({ isHalf }) =>
     isHalf &&
@@ -36,15 +36,26 @@ const Label = styled.label`
     `}
 `;
 
-const StarInput = ({ onClickRating, value, isHalf }) => {
+const StarInput = ({ onClickRating, value, isHalf, selectedRating }) => {
   const handleClickRatingInput = () => {
     onClickRating(value);
   };
 
   return (
+    // <>
+    //   <Input type="radio" name="rating" id={`star${value}`} value={value} />
+    //   <Label onClick={handleClickRatingInput} isHalf={isHalf} htmlFor={`star${value}`}>
+    //     {isHalf ? <FaStarHalf /> : <FaStar />}
+    //   </Label>
+    // </>
     <>
       <Input type="radio" name="rating" id={`star${value}`} value={value} />
-      <Label onClick={handleClickRatingInput} isHalf={isHalf} htmlFor={`star${value}`}>
+      <Label
+        onClick={handleClickRatingInput}
+        isHalf={isHalf}
+        htmlFor={`star${value}`}
+        isSelected={selectedRating >= value}
+      >
         {isHalf ? <FaStarHalf /> : <FaStar />}
       </Label>
     </>
