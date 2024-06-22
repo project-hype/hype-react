@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import EventList from './EventList';
+import EventList2 from './EventList2';
 import '../../assets/scss/common.scss';
 import styled from 'styled-components';
 import LoadMoreButton from '../common/LodeMoreButton';
@@ -60,7 +60,7 @@ function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTyp
       <EventWrapArticle>
         <article>
           <div className="calendar-popup-list">
-            <EventList events={data} />
+            <EventList2 events={data} />
           </div>
         </article>
       </EventWrapArticle>
