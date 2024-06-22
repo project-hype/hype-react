@@ -22,8 +22,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-function EventBanner({ title, type }) {
-  const navigate = useNavigate();
+function EventBanner({ title, type, slideCount }) {
   const user = useRecoilValue(userState);
   const [data, setData] = useState([]);
   const [dragging, setDragging] = useState(false);
@@ -51,7 +50,7 @@ function EventBanner({ title, type }) {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3.5,
+    slidesToShow: slideCount,
     slidesToScroll: 1,
     swipeToSlide: true,
     arrows: false,

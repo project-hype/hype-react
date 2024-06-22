@@ -48,6 +48,7 @@ const EventDetail = ({ eventId }) => {
   const [data, setData] = useState({});
   const [content, setContent] = useState(null);
   const [rating, setRating] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const averageScore = data.averageScore ? data.averageScore : 0;
@@ -70,7 +71,8 @@ const EventDetail = ({ eventId }) => {
       const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=${memberId}`);
       const result = response.data.event;
       setContent(result[0].content.replace(/\\r\\n|\\n|\\r/gm, '<br />'));
-      setLikeStatus(result[0].favorite); // Initialize favorite status
+      setLikeStatus(result[0].favorite);
+      setLikeCount(result[0].favoriteCount);
       setData(result[0]);
       setRating(result[0].myScore ? result[0].myScore : 0);
     } catch (error) {
@@ -104,14 +106,15 @@ const EventDetail = ({ eventId }) => {
             eventId: eventId,
           },
         });
-        fetchData();
+
+        setLikeCount((prevCount) => prevCount - 1);
       } else {
         // 즐겨찾기 추가 API 호출
         response = await axios.post('http://localhost:8080/event/addFav', {
           memberId: user.userInfo.memberId,
           eventId: eventId,
         });
-        fetchData();
+        setLikeCount((prevCount) => prevCount + 1);
       }
 
       // 즐겨찾기 상태 업데이트
@@ -167,7 +170,7 @@ const EventDetail = ({ eventId }) => {
             </div>
             <div className="favorite-count">
               <FontAwesomeIcon icon={faBookmark} />
-              <div className="text-wrapper-2">{data.favoriteCount}</div>
+              <div className="text-wrapper-2">{likeCount}</div>
             </div>
           </div>
         </div>

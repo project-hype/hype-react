@@ -25,7 +25,7 @@ function DetailPage() {
         <MainLayout>
           <article class="main-article" style={{ marginLeft: '250px', marginRight: '250px' }}>
             <EventDetail eventId={eventId} />
-            <EventBanner title={'비슷한 행사도 있어요 👀✨'} type={`like/${eventId}`} />
+            <EventBanner title={'비슷한 행사도 있어요 👀✨'} type={`like/${eventId}`} slideCount={'3.2'} />
           </article>
         </MainLayout>
       </div>
