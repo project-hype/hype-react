@@ -85,13 +85,7 @@ article.main-article {
     }
   }
 }
-// .bookmark-wrap {
-//   position: relative;
-//   display: block;
-//   height: fit-content;
-//   padding: 10px;
-//   z-index: 10;
-// }
+
 .bg {
   display: none;
   width: 100%;
@@ -125,6 +119,7 @@ article.main-article {
         transform: translateY(-50%);
         cursor: pointer;
         padding: 10px;
+        z-index: 10;
       }
     }
   }
@@ -231,9 +226,6 @@ ol {
       font-weight: $fw2;
       word-break: keep-all;
     }
-
-    div.span-slider-type {
-    }
     span.slide-type {
       font-size: 18px;
       font-weight: $fw4;
@@ -326,7 +318,7 @@ ol {
         img.popup-img {
           width: 280px;
           height: 280px;
-          border-radius: 8px;
+          border-radius: 8px !important;
           display: block;
           top: 0;
         }
@@ -352,7 +344,7 @@ ol {
           bottom: 8px;
           z-index: 10;
           color: white;
-          text-shadow: 0px 0px 10px $hd-black;
+          text-shadow: 0px 0px 8px $hd-black;
           padding-left: 8px;
 
           li {

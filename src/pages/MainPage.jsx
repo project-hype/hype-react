@@ -32,11 +32,11 @@ function MainPage() {
               <Banner />
             </div>
             <article class="article-wrap">
-              <EventBanner title={'이번 주 핫한 곳은?🔥'} type={'top'} />
+              <EventBanner title={'지금 핫한 곳은?🔥'} type={'top'} slideCount={'3.5'} />
               {user.isLoggedIn ? (
-                <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'top'} />
+                <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'top'} slideCount={'3.5'} />
               ) : (
-                <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
+                <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} slideCount={'3.5'} />
               )}
               <DayCalendar />
             </article>
