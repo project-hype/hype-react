@@ -15,8 +15,10 @@ function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTyp
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [isNextEventExist, setIsNextEventExist] = useState(false);
+  const [prePage, setPrePage] = useState(page);
 
   const handleLoadMore = () => {
+    setPrePage(page);
     setPage(page + 1);
   };
 
@@ -47,11 +49,14 @@ function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTyp
   };
 
   useEffect(() => {
+    setPrePage(1);
     setPage(1);
+
     fetchData(false);
   }, [keyword, selectedDate, selectedBranch, selectedEventTypes]);
 
   useEffect(() => {
+    if (page === 1 && prePage === 1) return;
     fetchData(true);
   }, [page]);
 
