@@ -28,7 +28,7 @@ article.main-article {
 }
 
 .event-name {
-  font-size: $fs-h2;
+  font-size: 18px;
   font-weight: $fw2;
 
   p {
@@ -164,6 +164,7 @@ ol {
   width: 100%;
   height: auto;
   position: relative;
+  left: 0px;
 
   .slide-img-wrap {
     width: 100%;
@@ -181,6 +182,7 @@ ol {
       height: 100%;
       position: absolute;
       background-size: cover;
+      object-fit: cover;
       left: 0;
       top: 0;
       opacity: 0.8;
@@ -195,10 +197,10 @@ ol {
   }
 
   div {
-    width: 100%;
+    width: 546px;
     height: auto;
     position: absolute;
-    left: 20px;
+    left: 24px;
     bottom: 60px;
     z-index: 10;
 
@@ -209,12 +211,12 @@ ol {
       align-items: center;
       justify-content: flex-start;
       column-gap: 1px;
-      font-size: $fs-b2;
+      font-size: $fs-b1;
       font-weight: $fw4;
       font-family: '해피니스 산스 타이틀';
       color: white;
       text-shadow: 0px 0px 8px $hd-black;
-      // padding-bottom: 5px;
+      padding-left: 2px;
 
       img {
         display: block;
@@ -230,8 +232,10 @@ ol {
       word-break: keep-all;
     }
 
+    div.span-slider-type {
+    }
     span.slide-type {
-      font-size: $fs-b2;
+      font-size: 18px;
       font-weight: $fw4;
       font-family: '해피니스 산스 타이틀';
       color: white;
@@ -241,10 +245,13 @@ ol {
   }
   p.slide-date {
     font-size: 20px;
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 
   p.slide-location {
-    font-size: 17px;
+    font-size: 18px;
+    margin: 0px;
   }
 }
 
@@ -318,7 +325,7 @@ ol {
 
         img.popup-img {
           width: 280px;
-          height: 260px;
+          height: 280px;
           border-radius: 8px;
           display: block;
           top: 0;
@@ -339,14 +346,21 @@ ol {
         }
 
         &-info {
+          width: 272px;
           position: absolute;
-          left: -25px;
-          bottom: 20px;
+          left: 0px;
+          bottom: 8px;
           z-index: 10;
           color: white;
+          text-shadow: 0px 0px 10px $hd-black;
+          padding-left: 8px;
 
           li {
+            margin: 8px;
             list-style: none;
+            p {
+              margin: 0px;
+            }
           }
         }
       }

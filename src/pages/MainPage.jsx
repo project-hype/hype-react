@@ -6,13 +6,12 @@ import DayCalendar from '../components/common/DayCalendar';
 import { userState } from '../state/authState';
 import { useRecoilValue } from 'recoil';
 import '../assets/scss/common.scss';
-import { PageTitle } from '../components/member/MemberStyledComponents';
 import Loading from '../components/common/Loading';
 
 function MainPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const user = useRecoilValue(userState);
-  const userName = user?.isLoggedIn ? user.userInfo.name.substr(1) : '';
+  const userName = user.isLoggedIn && user.userInfo ? user.userInfo.name.substr(1) : '';
 
   useEffect(() => {
     const timer = setTimeout(() => {

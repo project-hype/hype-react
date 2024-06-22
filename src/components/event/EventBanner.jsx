@@ -105,6 +105,7 @@ function EventBanner({ title, type }) {
                   <img src={event.imageUrl} class="popup-img" />
                 </div>
                 <ul class="popupbanner-list-info">
+                  <li class="event-type">{event.eventTypeName}</li>
                   <li class="event-name">
                     <p>{event.title}</p>
                   </li>
@@ -113,7 +114,6 @@ function EventBanner({ title, type }) {
                       <FontAwesomeIcon icon={faLocationDot} /> {event.branchName}
                     </p>
                   </li>
-                  <li class="event-type">{event.eventTypeName}</li>
                 </ul>
               </div>
             ))}

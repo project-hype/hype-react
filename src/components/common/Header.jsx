@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import searchIcon from '../../assets/img/layout/searchIcon.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
-import { checkSession } from '../../state/authState';
 
 const Navbar = styled.nav`
   display: flex;
@@ -149,26 +146,11 @@ const Separator = styled.div`
   width: 100%; /* 구분선 폭을 메뉴 전체 너비에 맞춤 */
 `;
 
-const Header = () => {
+const Header = ({ isLoggedIn }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [user, setUser] = useRecoilState(userState);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/member/checkSession', { withCredentials: true });
-        if (response.status === 200) {
-          setUser({ ...user, isLoggedIn: true });
-        }
-      } catch (error) {
-        setUser({ ...user, isLoggedIn: false });
-      }
-    };
-
-    checkSession();
-  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -199,6 +181,7 @@ const Header = () => {
       .then(() => {
         setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
         localStorage.clear();
+        sessionStorage.clear();
         navigate('/');
         return;
       })
@@ -232,7 +215,7 @@ const Header = () => {
           </NavbarForm>
         </NavbarCenter>
         <NavbarRight className="navbar-right">
-          {user.isLoggedIn ? (
+          {isLoggedIn ? (
             <>
               <NavButton className="nav-button" onClick={handleLogoutClick}>
                 로그아웃

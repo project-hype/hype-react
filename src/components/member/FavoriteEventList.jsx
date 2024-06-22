@@ -8,7 +8,8 @@ import FavoriteEvent from './FavoriteEvent';
 import EventCell from './EventCell';
 
 const EventWrapArticle = styled.article`
-  height: fit-content;
+  height: 100%;
+  min-height: 50vh;
   width: 100%;
   display: flex;
   flex-direction: column;
