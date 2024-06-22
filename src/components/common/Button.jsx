@@ -12,7 +12,7 @@ const ButtonWrapper = styled.button`
   padding: 10px;
   width: 142px;
   cursor: pointer;
-  background-color: ${(props) => props.bgColor || '#1e9d8b'};
+  background-color: ${(props) => props.bgcolor || '#1e9d8b'};
 `;
 
 const ButtonText = styled.div`
@@ -24,9 +24,9 @@ const ButtonText = styled.div`
   letter-spacing: 1px;
 `;
 
-const Button = ({ text, bgColor, onClick }) => {
+const Button = ({ text, bgcolor, onClick }) => {
   return (
-    <ButtonWrapper bgColor={bgColor} onClick={onClick}>
+    <ButtonWrapper bgcolor={bgcolor} onClick={onClick}>
       <ButtonText>{text}</ButtonText>
     </ButtonWrapper>
   );

@@ -27,7 +27,8 @@ const MyPageForm = () => {
 
   const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [updateError, setUpdateError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
@@ -80,12 +81,44 @@ const MyPageForm = () => {
     });
   };
 
+  // const handleCategoryClick = (categoryId) => {
+  //   if (selectedCategories.includes(categoryId)) {
+  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
+  //   } else {
+  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
+  //   }
+  //   setForm((prevForm) => {
+  //     const category = prevForm.category.includes(categoryId)
+  //       ? prevForm.category.filter((id) => id !== categoryId)
+  //       : [...prevForm.category, categoryId];
+  //     return { ...prevForm, category };
+  //   });
+  // };
+
+  // const handleCategoryClick = (categoryId) => {
+  //   if (!selectedCategories) {
+  //     setSelectedCategories([categoryId]);
+  //   } else if (selectedCategories.includes(categoryId)) {
+  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
+  //   } else {
+  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
+  //   }
+
+  //   setForm((prevForm) => {
+  //     const category = prevForm.category.includes(categoryId)
+  //       ? prevForm.category.filter((id) => id !== categoryId)
+  //       : [...prevForm.category, categoryId];
+  //     return { ...prevForm, category };
+  //   });
+  // };
+
   const handleCategoryClick = (categoryId) => {
-    if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
-    } else {
-      setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
-    }
+    const newSelectedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [...selectedCategories, categoryId];
+
+    setSelectedCategories(newSelectedCategories);
+
     setForm((prevForm) => {
       const category = prevForm.category.includes(categoryId)
         ? prevForm.category.filter((id) => id !== categoryId)
@@ -98,7 +131,7 @@ const MyPageForm = () => {
     e.preventDefault();
 
     // form 데이터에서 null 값인 category 필드를 제외하고 유효한 값들만 필터링
-    const validCategories = form.category.filter((cat) => cat !== null);
+    const validCategories = form.category ? form.category.filter((cat) => cat !== null) : [];
 
     const submitForm = {
       memberId: user.userInfo.memberId,
@@ -112,52 +145,51 @@ const MyPageForm = () => {
       .put('http://localhost:8080/member/update', submitForm)
       .then((response) => {
         if (response.status === 200) {
-          setShowModal(true);
+          setShowUpdateModal(true);
           setForm({ password: '', confirmPassword: '' });
         }
       })
       .catch((error) => {
         if (error.response || error.response.status === 400) {
-          setShowModal(true);
+          setShowUpdateModal(true);
           setUpdateError(true);
         }
       });
   };
 
-  const handleConfirm = () => {
-    setShowModal(false);
+  const handleUpdateConfirm = () => {
+    setShowUpdateModal(false);
     setUpdateError(false);
   };
 
   const handleDelete = async (e) => {
-    await axios
-      .delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`)
-      .then((response) => {
-        if (response.status === 200) {
-          // 상태 업데이트
-          resetUserState();
-          setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
-          localStorage.clear();
-          sessionStorage.clear(); // 세션 정보 삭제
-          setShowModal(false);
-          navigate('/');
-        }
-      })
-      .catch((error) => {
-        if (error.response || error.response.status === 400) {
-          setDeleteError(true);
-          setShowModal(true);
-        }
-      });
+    try {
+      const response = await axios.delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`);
+
+      if (response && response.status === 200) {
+        // 성공적인 응답 처리
+        resetUserState();
+        localStorage.clear();
+        sessionStorage.clear();
+        setShowDeleteModal(false);
+        navigate('/');
+      } else {
+        console.error('삭제 요청이 실패하였습니다.');
+        // 실패 처리
+      }
+    } catch (error) {
+      console.error('삭제 요청 중 오류 발생:', error.message);
+      // 오류 처리
+    }
   };
 
   const handleConfirmDelete = () => {
     setIsConfirmDelete(true);
-    setShowModal(true);
+    setShowDeleteModal(true);
   };
 
   const handleConfirmModal = () => {
-    setShowModal(false);
+    setShowDeleteModal(false);
     setIsConfirmDelete(false);
     if (!deleteError) {
       navigate('/');
@@ -166,17 +198,17 @@ const MyPageForm = () => {
 
   return (
     <>
-      {showModal && (
+      {showUpdateModal && (
         <Modal
           message={updateError ? '회원정보 수정에 실패했습니다. 다시 시도해주세요.' : '회원정보가 수정되었습니다.'}
-          onConfirm={handleConfirm}
+          onConfirm={handleUpdateConfirm}
         />
       )}
-      {showModal && (
+      {showDeleteModal && (
         <Modal
           message={deleteError ? '회원 탈퇴에 실패했습니다. 다시 시도해주세요.' : '정말로 탈퇴하시겠습니까?'}
           onConfirm={deleteError ? handleConfirmModal : handleDelete}
-          onCancel={deleteError ? null : () => setShowModal(false)}
+          onCancel={deleteError ? null : () => setShowDeleteModal(false)}
         />
       )}
       <form onSubmit={handleSubmit}>
@@ -233,7 +265,7 @@ const MyPageForm = () => {
 
         <ButtonContainer>
           <Button type="submit" text="수정하기" />
-          <Button type="button" bgColor="#595959" text="탈퇴하기" onClick={handleConfirmDelete} />
+          <Button type="button" bgcolor="#595959" text="탈퇴하기" onClick={handleConfirmDelete} />
         </ButtonContainer>
       </form>
     </>

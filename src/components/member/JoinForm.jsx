@@ -38,6 +38,7 @@ const JoinForm = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [joinError, setJoinError] = useState(false);
+  const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 아이디 여부 상태 추가
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -62,6 +63,7 @@ const JoinForm = () => {
     // ID 중복 확인 오류 메시지 초기화
     if (name === 'loginId') {
       setDuplicateIdError('');
+      setIsIdAvailable(false); // 아이디가 변경될 때 중복 여부 상태 초기화
     }
   };
 
@@ -85,11 +87,13 @@ const JoinForm = () => {
       .then((response) => {
         if (response.status === 200) {
           setDuplicateIdError('사용 가능한 아이디입니다.'); // ID가 사용 가능하면 에러 메시지를 비움
+          setIsIdAvailable(true); // 사용 가능한 아이디일 때 상태 변경
           setJoinError(false);
         }
       })
       .catch((error) => {
         setDuplicateIdError('중복된 아이디가 있습니다.');
+        setIsIdAvailable(false); // 중복된 아이디일 때 상태 변경
         setJoinError(true);
       });
   };
@@ -97,6 +101,11 @@ const JoinForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 중복 확인을 거치지 않고 가입 시도 방지
+    if (!isIdAvailable) {
+      setDuplicateIdError('아이디 중복을 확인해주세요.');
+      return;
+    }
     // confirmPassword를 제외한 form 데이터 생성
     const { confirmPassword, ...submitForm } = form;
     // category 배열 형식으로 전달

@@ -153,7 +153,7 @@ const EventList2 = ({ events, likeEvent }) => {
                     size="2x"
                   />
                 </InfoRow>
-                <EventTitle>{event.title}</EventTitle>
+                <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 14) + '...' : event.title}</EventTitle>
                 <EventDates>
                   {event.startDate} ~ {event.endDate}
                 </EventDates>
@@ -162,9 +162,7 @@ const EventList2 = ({ events, likeEvent }) => {
           ))}
         </EventGrid>
       ) : (
-        <EmptyContent>
-          <p>해당 날짜에 이벤트가 없습니다.</p>
-        </EmptyContent>
+        <EmptyContent />
       )}
     </>
   );

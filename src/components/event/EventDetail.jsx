@@ -10,6 +10,7 @@ import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
+import styledc from 'styled-components';
 
 const Base = styled.section`
   display: flex;
