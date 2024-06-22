@@ -48,8 +48,8 @@ const Modal = ({ message, onConfirm, onCancel }) => {
       <ModalWrapper>
         <Message>{message}</Message>
         <ButtonContainer>
-          <Button text="확인" bgColor="#FF8C00" onClick={onConfirm} />
-          {onCancel && <Button text="취소" bgColor="#E0DED8" onClick={onCancel}></Button>}
+          <Button text="확인" bgcolor="#FF8C00" onClick={onConfirm} />
+          {onCancel && <Button text="취소" bgcolor="#E0DED8" onClick={onCancel}></Button>}
         </ButtonContainer>
       </ModalWrapper>
     </>

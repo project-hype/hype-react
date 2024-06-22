@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CategoryButton from './CategoryButton';
 import { ButtonGroup } from './MemberStyledComponents';
 
-const CategoryButtonGroup = ({ selectedCategories, handleCategoryClick }) => (
+const CategoryButtonGroup = ({ selectedCategories = [], handleCategoryClick }) => (
   <ButtonGroup>
     {categories.map((category) => (
       <CategoryButton

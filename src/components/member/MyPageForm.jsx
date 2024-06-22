@@ -81,12 +81,44 @@ const MyPageForm = () => {
     });
   };
 
+  // const handleCategoryClick = (categoryId) => {
+  //   if (selectedCategories.includes(categoryId)) {
+  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
+  //   } else {
+  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
+  //   }
+  //   setForm((prevForm) => {
+  //     const category = prevForm.category.includes(categoryId)
+  //       ? prevForm.category.filter((id) => id !== categoryId)
+  //       : [...prevForm.category, categoryId];
+  //     return { ...prevForm, category };
+  //   });
+  // };
+
+  // const handleCategoryClick = (categoryId) => {
+  //   if (!selectedCategories) {
+  //     setSelectedCategories([categoryId]);
+  //   } else if (selectedCategories.includes(categoryId)) {
+  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
+  //   } else {
+  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
+  //   }
+
+  //   setForm((prevForm) => {
+  //     const category = prevForm.category.includes(categoryId)
+  //       ? prevForm.category.filter((id) => id !== categoryId)
+  //       : [...prevForm.category, categoryId];
+  //     return { ...prevForm, category };
+  //   });
+  // };
+
   const handleCategoryClick = (categoryId) => {
-    if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
-    } else {
-      setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
-    }
+    const newSelectedCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter((id) => id !== categoryId)
+      : [...selectedCategories, categoryId];
+
+    setSelectedCategories(newSelectedCategories);
+
     setForm((prevForm) => {
       const category = prevForm.category.includes(categoryId)
         ? prevForm.category.filter((id) => id !== categoryId)
@@ -130,27 +162,6 @@ const MyPageForm = () => {
     setUpdateError(false);
   };
 
-  // const handleDelete = async (e) => {
-  //   await axios
-  //     .delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`)
-  //     .then((response) => {
-  //       if (response && response.status === 200) {
-  //         // 상태 업데이트
-  //         resetUserState();
-  //         //setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
-  //         // localStorage.clear();
-  //         // sessionStorage.clear(); // 세션 정보 삭제
-  //         showDeleteModal(false);
-  //         navigate('/');
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       if (error.response || error.response.status === 400) {
-  //         setDeleteError(true);
-  //         setShowDeleteModal(true);
-  //       }
-  //     });
-  // };
   const handleDelete = async (e) => {
     try {
       const response = await axios.delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`);
@@ -254,7 +265,7 @@ const MyPageForm = () => {
 
         <ButtonContainer>
           <Button type="submit" text="수정하기" />
-          <Button type="button" bgColor="#595959" text="탈퇴하기" onClick={handleConfirmDelete} />
+          <Button type="button" bgcolor="#595959" text="탈퇴하기" onClick={handleConfirmDelete} />
         </ButtonContainer>
       </form>
     </>

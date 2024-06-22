@@ -107,17 +107,14 @@ function Banner() {
                 <span className="slide-tit">
                   {event.title.length >= 20 ? event.title.substr(0, 20) + '...' : event.title}
                 </span>
-
+                <span className="slide-type"> | {event.eventTypeName} </span>
                 <p className="slide-date">
                   {event.startDate} ~ {event.endDate}
                 </p>
-                <span className="slide-type">
-                  <span className="slide-type">{event.eventTypeName} | </span>
-                  <p className="slide-location">
-                    <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
-                    {event.branchName}
-                  </p>
-                </span>
+                <p className="slide-location">
+                  <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
+                  {event.branchName}
+                </p>
               </div>
             </div>
           </div>
