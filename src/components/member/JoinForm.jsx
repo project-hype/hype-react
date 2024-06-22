@@ -37,6 +37,7 @@ const JoinForm = () => {
   const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   const [joinError, setJoinError] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 아이디 여부 상태 추가
   const navigate = useNavigate();
@@ -103,7 +104,9 @@ const JoinForm = () => {
 
     // 중복 확인을 거치지 않고 가입 시도 방지
     if (!isIdAvailable) {
-      setDuplicateIdError('아이디 중복을 확인해주세요.');
+      setJoinError(true);
+      setModalMessage('아이디 중복을 확인해주세요.');
+      setShowModal(true);
       return;
     }
     // confirmPassword를 제외한 form 데이터 생성

@@ -10,6 +10,8 @@ const MenuWrapper = styled.div`
   padding: 56px 0px;
   position: relative;
   width: 190px;
+  border-right: 1px solid #dcdcdc;
+  height: fit-container;
 `;
 
 const MenuItem = styled.div`
