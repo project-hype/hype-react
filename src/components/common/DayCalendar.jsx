@@ -8,59 +8,58 @@ import axios from 'axios';
 import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
-import { PageTitle } from '../member/MemberStyledComponents';
 
-const CalendarList = styled.div`
-  width: 100%;
-  height: auto;
-  padding: 0 20px;
-  margin-top: 40px;
-  overflow: hidden;
-  padding-bottom: 40px;
-  border-bottom: 1px solid lightgray;
-`;
+// const CalendarList = styled.div`
+//   width: 100%;
+//   height: auto;
+//   padding: 0 20px;
+//   margin-top: 40px;
+//   overflow: hidden;
+//   padding-bottom: 40px;
+//   border-bottom: 1px solid lightgray;
+// `;
 
-const Ul = styled.ul`
-  display: flex;
-  flex-direction: row;
-  column-gap: 2.5%;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-x: scroll;
-  overflow: hidden;
-`;
+// const Ul = styled.ul`
+//   display: flex;
+//   flex-direction: row;
+//   column-gap: 2.5%;
+//   align-items: center;
+//   justify-content: flex-start;
+//   overflow-x: scroll;
+//   overflow: hidden;
+// `;
 
-const Li = styled.li`
-  list-style: none;
-`;
+// const Li = styled.li`
+//   list-style: none;
+// `;
 
-const CalendarListBox = styled.div`
-  font-size: 13px;
-  border-radius: 50%;
-  background: #e0ded8;
-  cursor: pointer;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+// const CalendarListBox = styled.div`
+//   font-size: 13px;
+//   border-radius: 50%;
+//   background: #e0ded8;
+//   cursor: pointer;
+//   width: 60px;
+//   height: 60px;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
 
-  &.calendar-list-box-select {
-    background: #1e9d8b;
-  }
-`;
+//   &.calendar-list-box-select {
+//     background: #1e9d8b;
+//   }
+// `;
 
-const Span = styled.span`
-  display: none;
+// const Span = styled.span`
+//   display: none;
 
-  &.calendar-list-box-select {
-    font-weight: 600;
-    color: #fff;
-    display: block;
-    font-size: 10px;
-  }
-`;
+//   &.calendar-list-box-select {
+//     font-weight: 600;
+//     color: #fff;
+//     display: block;
+//     font-size: 10px;
+//   }
+// `;
 
 const P = styled.p`
   font-size: 16px;
@@ -79,12 +78,12 @@ const Title = styled.div`
   margin-bottom: 32px;
 `;
 
-const MoreView = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 15px 20px 10px;
-}`;
+// const MoreView = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+//   padding: 15px 20px 10px;
+// }`;
 
 function DayCalendar() {
   const today = dayjs();

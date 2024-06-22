@@ -11,7 +11,7 @@ import Loading from '../components/common/Loading';
 function MainPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const user = useRecoilValue(userState);
-  const userName = user.isLoggedIn && user.userInfo ? user.userInfo.name.substr(1) : '';
+  const username = user.isLoggedIn && user.userInfo && user.userInfo.name ? user.userInfo.name.substr(1) : '';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,7 +34,7 @@ function MainPage() {
             <article class="article-wrap">
               <EventBanner title={'이번 주 핫한 곳은?🔥'} type={'top'} />
               {user.isLoggedIn ? (
-                <EventBanner title={`${userName}님의 취향 저격 행사✨🔫`} type={'top'} />
+                <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'top'} />
               ) : (
                 <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
               )}

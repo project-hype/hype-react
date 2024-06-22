@@ -81,37 +81,6 @@ const MyPageForm = () => {
     });
   };
 
-  // const handleCategoryClick = (categoryId) => {
-  //   if (selectedCategories.includes(categoryId)) {
-  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
-  //   } else {
-  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
-  //   }
-  //   setForm((prevForm) => {
-  //     const category = prevForm.category.includes(categoryId)
-  //       ? prevForm.category.filter((id) => id !== categoryId)
-  //       : [...prevForm.category, categoryId];
-  //     return { ...prevForm, category };
-  //   });
-  // };
-
-  // const handleCategoryClick = (categoryId) => {
-  //   if (!selectedCategories) {
-  //     setSelectedCategories([categoryId]);
-  //   } else if (selectedCategories.includes(categoryId)) {
-  //     setSelectedCategories(selectedCategories.filter((id) => id !== categoryId)); // 이미 선택된 버튼이면 제거
-  //   } else {
-  //     setSelectedCategories([...selectedCategories, categoryId]); // 새로 선택된 버튼이면 추가
-  //   }
-
-  //   setForm((prevForm) => {
-  //     const category = prevForm.category.includes(categoryId)
-  //       ? prevForm.category.filter((id) => id !== categoryId)
-  //       : [...prevForm.category, categoryId];
-  //     return { ...prevForm, category };
-  //   });
-  // };
-
   const handleCategoryClick = (categoryId) => {
     const newSelectedCategories = selectedCategories.includes(categoryId)
       ? selectedCategories.filter((id) => id !== categoryId)
@@ -146,7 +115,7 @@ const MyPageForm = () => {
       .then((response) => {
         if (response.status === 200) {
           setShowUpdateModal(true);
-          setForm({ password: '', confirmPassword: '' });
+          setForm({ password: '', confirmPassword: '', category: selectedCategories, cityId: form.cityId });
         }
       })
       .catch((error) => {
