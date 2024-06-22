@@ -12,13 +12,12 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 
-const StyledLink = styled(Link)`
-  width: 100%;
-  text-decoration: none; /* 기본 밑줄 제거 */
-  color: inherit; /* 부모의 색상 상속 */
+const MoreButton = styled(Link)`
+  text-decoration: none !important;
+  color: inherit;
   &:hover,
   &:focus {
-    color: inherit; /* hover와 focus 상태에서도 부모의 색상 유지 */
+    color: #ff8c00 !important;
   }
 `;
 
@@ -88,7 +87,7 @@ function EventBanner({ title, type, slideCount }) {
         <header>
           <h2 className="popupbanner-tit">{title}</h2>
           <div className="moreview">
-            <StyledLink to={`/search/`}>더보기</StyledLink>
+            <MoreButton to={`/search/`}>더보기</MoreButton>
           </div>
         </header>
         <div className="popupbanner-inner">

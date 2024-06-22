@@ -26,12 +26,12 @@ function MainPage() {
   } else {
     return (
       <MainLayout>
-        <div class="container">
-          <article class="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
+        <div className="container">
+          <article className="main-article" style={{ marginLeft: '150px', marginRight: '150px' }}>
             <div>
               <Banner />
             </div>
-            <article class="article-wrap">
+            <article className="article-wrap">
               <EventBanner title={'지금 핫한 곳은?🔥'} type={'top'} slideCount={'3.5'} />
               {user.isLoggedIn ? (
                 <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'top'} slideCount={'3.5'} />

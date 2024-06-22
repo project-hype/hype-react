@@ -78,6 +78,8 @@ const SearchInput = styled.input`
   border: none;
   background-color: transparent;
   border-radius: 20px 0 0 20px;
+  box-shadow: none;
+  outline: none;
 
   @media (max-width: 768px) {
     border-radius: 20px;

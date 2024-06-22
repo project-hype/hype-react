@@ -8,6 +8,7 @@ import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../common/Modal';
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -84,6 +85,7 @@ const EventGrid = styled.div`
 
 const EventList2 = ({ events, likeEvent }) => {
   const [likeStatus, setLikeStatus] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
 
@@ -98,7 +100,7 @@ const EventList2 = ({ events, likeEvent }) => {
   const toggleFavorite = async (eventId) => {
     try {
       if (!user.isLoggedIn) {
-        navigate('/login');
+        setIsModalOpen(true);
         return;
       }
 
@@ -129,7 +131,13 @@ const EventList2 = ({ events, likeEvent }) => {
       console.error('Error toggling favorite:', error);
     }
   };
+  const handleConfirm = () => {
+    navigate('/login');
+  };
 
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       {events.length > 0 ? (
@@ -166,6 +174,7 @@ const EventList2 = ({ events, likeEvent }) => {
       ) : (
         <EmptyContent />
       )}
+      {isModalOpen && <Modal message="로그인이 필요합니다." onConfirm={handleConfirm} />}
     </>
   );
 };

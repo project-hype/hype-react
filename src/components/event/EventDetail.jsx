@@ -10,22 +10,26 @@ import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
-import styledc from 'styled-components';
+import Modal from '../common/Modal';
+const StarWrapper = styled.div`
+  .star-ratings {
+    position: relative;
+    display: inline-block;
 
+    .star-container {
+      position: relative;
+      display: inline-block;
+
+      .star {
+        clip-path: circle(50% at 50% 50%);
+      }
+    }
+  }
+`;
 const Base = styled.section`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
-
-const Name = styled.span`
-  font-size: 1.4rem;
-  line-height: 100%;
-`;
-
-const RatingValue = styled.span`
-  font-size: 1.2rem;
-  line-height: 100%;
 `;
 
 const RatingField = styled.fieldset`
@@ -45,11 +49,12 @@ const RatingField = styled.fieldset`
 `;
 
 const EventDetail = ({ eventId }) => {
-  const [likeStatus, setLikeStatus] = useState(false); // 즐겨찾기 상태를 저장할 객체
+  const [likeStatus, setLikeStatus] = useState(false);
   const [data, setData] = useState({});
   const [content, setContent] = useState(null);
   const [rating, setRating] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const averageScore = data.averageScore ? data.averageScore : 0;
@@ -92,7 +97,7 @@ const EventDetail = ({ eventId }) => {
   const toggleFavorite = async () => {
     try {
       if (!user.isLoggedIn) {
-        navigate('/login');
+        setIsModalOpen(true);
         return;
       }
       const isFavorite = likeStatus;
@@ -130,7 +135,7 @@ const EventDetail = ({ eventId }) => {
   const submitScore = async ({ eventId, score, action }) => {
     try {
       if (!user.isLoggedIn) {
-        navigate('/login');
+        setIsModalOpen(true);
         return;
       }
       const response = await axios.post('http://localhost:8080/event/score', {
@@ -143,6 +148,10 @@ const EventDetail = ({ eventId }) => {
     } catch (error) {
       console.error('별점 작성 중 오류 발생:', error);
     }
+  };
+
+  const handleConfirm = () => {
+    navigate('/login');
   };
 
   return (
@@ -214,16 +223,18 @@ const EventDetail = ({ eventId }) => {
         </div>
         <div className="score">
           <div className="total-score">
-            <div style={{ height: '40%' }}>
+            <div className="number">
               <p className="average-score">{averageScore}</p>
             </div>
-            <div>
+            <div className="icon">
               <StarRatings
                 rating={averageScore}
                 starRatedColor="#1e9d8b"
                 class="rating"
-                starDimension="40px"
+                starDimension="60px"
                 starSpacing="5px"
+                svgIconPath="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"
+                svgIconViewBox="0 0 576 512"
               />
               <p className="total-count">총 {data.scores ? data.scores.length : 0}명이 별점을 달았습니다.</p>
             </div>
@@ -250,6 +261,7 @@ const EventDetail = ({ eventId }) => {
           </div>
         </div>
       </div>
+      {isModalOpen && <Modal message="로그인이 필요합니다." onConfirm={handleConfirm} />}
     </article>
   );
 };
