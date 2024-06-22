@@ -10,7 +10,6 @@ import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
-import styledc from 'styled-components';
 
 const Base = styled.section`
   display: flex;
@@ -47,6 +46,7 @@ const RatingField = styled.fieldset`
 const EventDetail = ({ eventId }) => {
   const [likeStatus, setLikeStatus] = useState(false); // 즐겨찾기 상태를 저장할 객체
   const [data, setData] = useState({});
+  const [content, setContent] = useState(null);
   const [rating, setRating] = useState(0);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
@@ -69,6 +69,7 @@ const EventDetail = ({ eventId }) => {
       const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
       const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=${memberId}`);
       const result = response.data.event;
+      setContent(result[0].content.replace(/\\r\\n|\\n|\\r/gm, '<br />'));
       setLikeStatus(result[0].favorite); // Initialize favorite status
       setData(result[0]);
       setRating(result[0].myScore ? result[0].myScore : 0);
@@ -202,7 +203,9 @@ const EventDetail = ({ eventId }) => {
           </div>
           <div className="description">
             <p className="p">행사 안내</p>
-            <p className="text-wrapper-10">{data.content}</p>
+            <p className="text-wrapper-10" style={{ whiteSpace: 'pre-wrap' }}>
+              {content}
+            </p>
           </div>
         </div>
         <div className="score">
@@ -237,7 +240,7 @@ const EventDetail = ({ eventId }) => {
                   <StarInput onClickRating={handleClickRating} value={1} isHalf={false} selectedRating={rating} />
                   <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} selectedRating={rating} />
                 </RatingField>
-                <RatingValue>{rating}</RatingValue>
+                {/* <RatingValue>{rating}</RatingValue> */}
               </Base>
             </div>
           </div>
