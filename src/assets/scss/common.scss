@@ -226,9 +226,6 @@ ol {
       font-weight: $fw2;
       word-break: keep-all;
     }
-
-    div.span-slider-type {
-    }
     span.slide-type {
       font-size: 18px;
       font-weight: $fw4;
@@ -347,7 +344,7 @@ ol {
           bottom: 8px;
           z-index: 10;
           color: white;
-          text-shadow: 0px 0px 10px $hd-black;
+          text-shadow: 0px 0px 8px $hd-black;
           padding-left: 8px;
 
           li {
@@ -377,11 +374,12 @@ ol {
   ul {
     display: flex;
     flex-direction: row;
-    column-gap: 2.5%;
+    column-gap: 2%;
     align-items: center;
     justify-content: flex-start;
     justify-content: center;
     overflow-x: scroll;
+    padding-left: 0px;
 
     &::-webkit-scrollbar {
       display: none;
@@ -393,8 +391,8 @@ ol {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 56px;
-        height: 56px;
+        width: 58px;
+        height: 58px;
         border-radius: 50%;
         background: $hd-lightgray;
         cursor: pointer;
@@ -421,8 +419,8 @@ ol {
       }
 
       div.calendar-list-box-select {
-        width: 64px;
-        height: 64px;
+        width: 70px;
+        height: 70px;
         background: $hd-green;
 
         span {

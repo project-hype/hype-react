@@ -20,7 +20,7 @@ const StyledLink = styled(Link)`
 
 const EventContainer = styled.div`
   display: flex;
-  width: 480px;
+  width: 500px;
   height: 200px;
   border: 1px solid #eaeaea;
   border-radius: 8px;
@@ -79,7 +79,7 @@ const EventGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   row-gap: 40px;
-  column-gap: 56px;
+  column-gap: 40px;
 `;
 
 const EventList2 = ({ events, likeEvent }) => {
@@ -153,10 +153,12 @@ const EventList2 = ({ events, likeEvent }) => {
                     size="2x"
                   />
                 </InfoRow>
-                <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 14) + '...' : event.title}</EventTitle>
-                <EventDates>
-                  {event.startDate} ~ {event.endDate}
-                </EventDates>
+                <StyledLink to={`/event/${event.eventId}`}>
+                  <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 14) + '...' : event.title}</EventTitle>
+                  <EventDates>
+                    {event.startDate} ~ {event.endDate}
+                  </EventDates>
+                </StyledLink>
               </EventInfo>
             </EventContainer>
           ))}
