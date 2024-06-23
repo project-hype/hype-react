@@ -106,7 +106,6 @@ const JoinForm = () => {
     if (!isIdAvailable) {
       setModalMessage('아이디 중복을 확인해주세요.');
       setShowModal(true);
-      setShowModal(false);
       return;
     }
 

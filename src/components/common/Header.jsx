@@ -166,15 +166,15 @@ const Header = ({ isLoggedIn }) => {
   };
 
   const handleHomeClick = () => {
-    navigate('/');
+    window.location.href = `/`;
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    window.location.href = `/login`;
   };
 
   const handleJoinClick = () => {
-    navigate('/join');
+    window.location.href = `/join`;
   };
 
   const handleLogoutClick = () => {
@@ -193,11 +193,11 @@ const Header = ({ isLoggedIn }) => {
   };
 
   const handleMyPageClick = () => {
-    navigate('/mypage');
+    window.location.href = `/mypage`;
   };
 
   const handleConfirm = () => {
-    navigate('/');
+    window.location.href = `/`;
   };
 
   return (
