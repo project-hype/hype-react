@@ -86,7 +86,7 @@ const EventCell = ({ events, toggleFavorite }) => {
         <EventGrid>
           {events.map((event) => (
             <EventContainer key={event.eventId}>
-              <StyledLink to={`/event/${event}.eventId}`}>
+              <StyledLink to={`/event/${event.eventId}`}>
                 <EventImage src={event.imageUrl} />
               </StyledLink>
               <EventInfo>
@@ -103,7 +103,7 @@ const EventCell = ({ events, toggleFavorite }) => {
                     size="2x"
                   />
                 </InfoRow>
-                <StyledLink to={`/event/${event}.eventId}`}>
+                <StyledLink to={`/event/${event.eventId}`}>
                   <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 15) + '...' : event.title}</EventTitle>
                   <EventDates>
                     {event.startDate} ~ {event.endDate}

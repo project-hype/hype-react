@@ -38,7 +38,7 @@ const JoinForm = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [joinError, setJoinError] = useState(false);
+  const [joinError, setJoinError] = useState(true);
   const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 아이디 여부 상태 추가
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const JoinForm = () => {
     // ID 중복 확인 오류 메시지 초기화
     if (name === 'loginId') {
       setDuplicateIdError('');
-      setIsIdAvailable(false); // 아이디가 변경될 때 중복 여부 상태 초기화
+      //setIsIdAvailable(false); // 아이디가 변경될 때 중복 여부 상태 초기화
     }
   };
 
@@ -87,12 +87,14 @@ const JoinForm = () => {
       .post('http://localhost:8080/member/checkLoginId', { loginId: form.loginId })
       .then((response) => {
         if (response.status === 200) {
+          setShowModal(false);
           setDuplicateIdError('사용 가능한 아이디입니다.'); // ID가 사용 가능하면 에러 메시지를 비움
           setIsIdAvailable(true); // 사용 가능한 아이디일 때 상태 변경
           setJoinError(false);
         }
       })
       .catch((error) => {
+        setShowModal(false);
         setDuplicateIdError('중복된 아이디가 있습니다.');
         setIsIdAvailable(false); // 중복된 아이디일 때 상태 변경
         setJoinError(true);
@@ -104,13 +106,30 @@ const JoinForm = () => {
 
     // 중복 확인을 거치지 않고 가입 시도 방지
     if (!isIdAvailable) {
+      if (duplicateIdError === '중복된 아이디가 있습니다.') {
+        setShowModal(true);
+        setModalMessage('중복된 아이디가 있습니다.');
+        return;
+      }
+      setShowModal(true);
       setModalMessage('아이디 중복을 확인해주세요.');
+      return;
+    }
+
+    if (passwordError === '비밀번호가 일치하지 않습니다.') {
+      setModalMessage('비밀번호가 일치하지 않습니다.');
       setShowModal(true);
       return;
     }
 
+    // 생년월일에 9시간 더하기
+    const birthdate = new Date(form.birthdate);
+    birthdate.setHours(birthdate.getHours() + 9);
+    const adjustedBirthdate = birthdate.toISOString(); // 서버가 기대하는 형식에 맞게 조정
+
     // confirmPassword를 제외한 form 데이터 생성
     const { confirmPassword, ...submitForm } = form;
+    submitForm.birthdate = adjustedBirthdate;
     // category 배열 형식으로 전달
     submitForm.category = submitForm.category.map((id) => ({ categoryId: id }));
 
@@ -119,6 +138,7 @@ const JoinForm = () => {
       .then((response) => {
         if (response.status === 200) {
           setModalMessage('가입해주셔서 감사합니다.');
+          setJoinError(false);
           setShowModal(true);
         }
       })
