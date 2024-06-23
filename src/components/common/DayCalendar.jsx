@@ -9,57 +9,14 @@ import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 
-// const CalendarList = styled.div`
-//   width: 100%;
-//   height: auto;
-//   padding: 0 20px;
-//   margin-top: 40px;
-//   overflow: hidden;
-//   padding-bottom: 40px;
-//   border-bottom: 1px solid lightgray;
-// `;
-
-// const Ul = styled.ul`
-//   display: flex;
-//   flex-direction: row;
-//   column-gap: 2.5%;
-//   align-items: center;
-//   justify-content: flex-start;
-//   overflow-x: scroll;
-//   overflow: hidden;
-// `;
-
-// const Li = styled.li`
-//   list-style: none;
-// `;
-
-// const CalendarListBox = styled.div`
-//   font-size: 13px;
-//   border-radius: 50%;
-//   background: #e0ded8;
-//   cursor: pointer;
-//   width: 60px;
-//   height: 60px;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-
-//   &.calendar-list-box-select {
-//     background: #1e9d8b;
-//   }
-// `;
-
-// const Span = styled.span`
-//   display: none;
-
-//   &.calendar-list-box-select {
-//     font-weight: 600;
-//     color: #fff;
-//     display: block;
-//     font-size: 10px;
-//   }
-// `;
+const MoreButton = styled(Link)`
+  text-decoration: none !important;
+  color: inherit;
+  &:hover,
+  &:focus {
+    color: #ff8c00 !important;
+  }
+`;
 
 const P = styled.p`
   font-size: 16px;
@@ -119,7 +76,7 @@ function DayCalendar() {
 
   return (
     <>
-      <div class="calendar-list">
+      <div className="calendar-list">
         <Title>날짜별 행사 📅</Title>
         <ul>
           {baseDayjs.map((day, index) => (
@@ -136,7 +93,7 @@ function DayCalendar() {
       </div>
       <div class="calendar-popup-list">
         <div class="moreview">
-          <Link to={'/event'}>전체보기</Link>
+          <MoreButton to={'/search/'}>전체보기</MoreButton>
         </div>
 
         <EventList2 events={data} />

@@ -8,30 +8,30 @@ const Input = styled.input`
 
 const Label = styled.label`
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 3rem; /* 크기를 키움 */
   color: ${({ isSelected }) => (isSelected ? 'orange' : 'lightgray')};
 
   ${({ isHalf }) =>
     isHalf &&
     css`
       position: absolute;
-      width: 12px;
+      width: 24px; /* 크기를 키움 */
       overflow: hidden;
 
       &:nth-of-type(10) {
-        transform: translate(-108px);
+        transform: translate(-216px);
       }
       &:nth-of-type(8) {
-        transform: translate(-84px);
+        transform: translate(-168px);
       }
       &:nth-of-type(6) {
-        transform: translate(-60px);
+        transform: translate(-120px);
       }
       &:nth-of-type(4) {
-        transform: translate(-36px);
+        transform: translate(-72px);
       }
       &:nth-of-type(2) {
-        transform: translate(-12px);
+        transform: translate(-24px);
       }
     `}
 `;
