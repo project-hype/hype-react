@@ -22,7 +22,7 @@ function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTyp
     setPage(page + 1);
   };
 
-  const fetchData = async (isPage) => {
+  const fetchData = async (isPage, page = 1) => {
     try {
       const requestBody = {
         keyword: keyword,
@@ -57,7 +57,7 @@ function FilteredEvent({ keyword, selectedDate, selectedBranch, selectedEventTyp
 
   useEffect(() => {
     if (page === 1 && prePage === 1) return;
-    fetchData(true);
+    fetchData(true, page);
   }, [page]);
 
   return (
