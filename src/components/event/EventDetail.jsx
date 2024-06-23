@@ -60,14 +60,22 @@ const EventDetail = ({ eventId }) => {
   const averageScore = data.averageScore ? data.averageScore : 0;
 
   const handleClickRating = async (value) => {
+    let newRating = value;
     setRating(value);
     let action = 'INSERT';
     if (value === 0) {
       action = 'DELETE';
+      newRating = 0;
     } else if (data.myScore) {
       action = 'UPDATE';
+      console.log('별점 업데이트');
+    } else if (value === rating) {
+      action = 'DELETE';
+      newRating = 0;
+      console.log('별점 삭제 호출 ');
     }
-    await submitScore({ eventId, score: value, action });
+    setRating(newRating);
+    await submitScore({ eventId, score: newRating, action });
     fetchData();
   };
 
@@ -144,6 +152,7 @@ const EventDetail = ({ eventId }) => {
         score: score,
         action: action,
       });
+      setRating(score);
       console.log('별점 작성 성공:', response.data);
     } catch (error) {
       console.error('별점 작성 중 오류 발생:', error);

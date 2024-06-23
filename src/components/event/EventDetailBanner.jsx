@@ -49,7 +49,7 @@ function EventBanner({ title, type }) {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3.5,
+    slidesToShow: 3.2,
     slidesToScroll: 1,
     swipeToSlide: true,
     arrows: false,

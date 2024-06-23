@@ -8,14 +8,14 @@ const Input = styled.input`
 
 const Label = styled.label`
   cursor: pointer;
-  font-size: 3rem; /* 크기를 키움 */
+  font-size: 3rem;
   color: ${({ isSelected }) => (isSelected ? 'orange' : 'lightgray')};
 
   ${({ isHalf }) =>
     isHalf &&
     css`
       position: absolute;
-      width: 24px; /* 크기를 키움 */
+      width: 24px;
       overflow: hidden;
 
       &:nth-of-type(10) {
@@ -38,7 +38,8 @@ const Label = styled.label`
 
 const StarInput = ({ onClickRating, value, isHalf, selectedRating }) => {
   const handleClickRatingInput = () => {
-    onClickRating(value);
+    const newValue = value === selectedRating ? 0 : value;
+    onClickRating(newValue);
   };
 
   return (

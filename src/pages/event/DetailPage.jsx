@@ -4,7 +4,7 @@ import MainLayout from '../../layout/MainLayout';
 import EventDetail from '../../components/event/EventDetail';
 import '../../assets/scss/common.scss';
 import Loading from '../../components/common/Loading';
-import EventBanner from '../../components/event/EventBanner';
+import EventDetailBanner from '../../components/event/EventDetailBanner';
 
 function DetailPage() {
   const { eventId } = useParams();
@@ -25,7 +25,7 @@ function DetailPage() {
         <MainLayout>
           <article class="main-article" style={{ marginLeft: '250px', marginRight: '250px' }}>
             <EventDetail eventId={eventId} />
-            <EventBanner title={'비슷한 행사도 있어요 👀✨'} type={`like/${eventId}`} slideCount={'3.2'} />
+            <EventDetailBanner title={'비슷한 행사도 있어요 👀✨'} type={`like/${eventId}`} />
           </article>
         </MainLayout>
       </div>
