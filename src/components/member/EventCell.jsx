@@ -104,7 +104,7 @@ const EventCell = ({ events, toggleFavorite }) => {
                   />
                 </InfoRow>
                 <StyledLink to={`/event/${event.eventId}`}>
-                  <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 15) + '...' : event.title}</EventTitle>
+                  <EventTitle>{event.title.length >= 13 ? event.title.substr(0, 13) + '...' : event.title}</EventTitle>
                   <EventDates>
                     {event.startDate} ~ {event.endDate}
                   </EventDates>
