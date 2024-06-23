@@ -7,16 +7,16 @@ import { useRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
 
 const NavContainer = styled.div`
-  -webkit-backdrop-filter: blur(5px) brightness(100%);
   align-items: center;
-  backdrop-filter: blur(5px) brightness(100%);
   background-color: #ffffff;
   display: inline-flex;
   gap: 984px;
   left: 0;
-  padding: 24px 56px;
+  padding: 16px 72px;
   position: absolute;
   top: 0;
+  width: 1440px;
+  border-bottom: 1px solid #dcdcdc;
 `;
 
 const Separator = styled.div`

@@ -37,6 +37,7 @@ const JoinForm = () => {
   const [passwordError, setPasswordError] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   const [joinError, setJoinError] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState(false); // 중복 아이디 여부 상태 추가
   const navigate = useNavigate();
@@ -103,9 +104,12 @@ const JoinForm = () => {
 
     // 중복 확인을 거치지 않고 가입 시도 방지
     if (!isIdAvailable) {
-      setDuplicateIdError('아이디 중복을 확인해주세요.');
+      setModalMessage('아이디 중복을 확인해주세요.');
+      setShowModal(true);
+      setShowModal(false);
       return;
     }
+
     // confirmPassword를 제외한 form 데이터 생성
     const { confirmPassword, ...submitForm } = form;
     // category 배열 형식으로 전달
@@ -115,11 +119,13 @@ const JoinForm = () => {
       .post('http://localhost:8080/member/join', submitForm)
       .then((response) => {
         if (response.status === 200) {
+          setModalMessage('가입해주셔서 감사합니다.');
           setShowModal(true);
         }
       })
       .catch((error) => {
         if (error.response || error.response.status === 400) {
+          setModalMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
           setShowModal(true);
           setJoinError(true);
         }
@@ -129,19 +135,14 @@ const JoinForm = () => {
   const handleConfirm = () => {
     setShowModal(false);
     setJoinError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
-    if (!joinError) {
+    if (!joinError && isIdAvailable) {
       navigate('/login');
     }
   };
 
   return (
     <>
-      {showModal && (
-        <Modal
-          message={joinError ? '회원가입에 실패했습니다. 다시 시도해주세요.' : '가입해주셔서 감사합니다.'}
-          onConfirm={handleConfirm}
-        />
-      )}
+      {showModal && <Modal message={modalMessage} onConfirm={handleConfirm} />}
       <form onSubmit={handleSubmit}>
         <InputSection>
           <InputContainer label="아이디" required error={duplicateIdError} divider>

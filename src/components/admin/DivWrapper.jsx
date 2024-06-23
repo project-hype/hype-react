@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 
 const InnerDiv = styled.div`
   background-color: #ffffff;
-  height: 1024px;
   position: relative;
   width: 100%;
 `;
@@ -25,8 +24,8 @@ const InnerDiv = styled.div`
 const Body = styled.div`
   align-items: flex-start;
   display: flex;
-  gap: 72px;
-  height: 879px;
+  gap: 128px;
+  height: fit-container;
   left: 0;
   padding: 0px 72px;
   position: absolute;
