@@ -34,7 +34,7 @@ function MainPage() {
             <article className="article-wrap">
               <EventBanner title={'지금 핫한 곳은?🔥'} type={'top'} />
               {user.isLoggedIn ? (
-                <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'top'} />
+                <EventBanner title={`${username}님의 취향 저격 행사✨🔫`} type={'recommend'} />
               ) : (
                 <EventBanner title={'HYPE Pick 행사 추천✨'} type={'score'} />
               )}
