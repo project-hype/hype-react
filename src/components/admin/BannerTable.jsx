@@ -85,7 +85,6 @@ const Title = styled.div`
   font-family: '해피니스 산스 타이틀';
   font-size: 32px;
   text-align: center;
-  margin-bottom: 24px;
 `;
 
 const BannerTable = () => {
@@ -196,7 +195,9 @@ const BannerTable = () => {
   return (
     <BannerWrapper>
       <Title>배너 관리</Title>
-      <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다</p>
+      {/* <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다 </p> */}
+
+      <AddButton onClick={toggleModal} domain="배너 " />
       <Header>
         <HeaderRow>
           <HeaderCell width="100px">
@@ -247,8 +248,6 @@ const BannerTable = () => {
       </DragDropContext>
 
       {isApplyButtonVisible && <ApplyButton onClick={applyOrderChanges}>정렬 적용</ApplyButton>}
-
-      <AddButton onClick={toggleModal} domain="배너 " />
 
       {showModal && (
         <>

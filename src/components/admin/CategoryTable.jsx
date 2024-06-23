@@ -60,7 +60,6 @@ const Title = styled.div`
   font-family: '해피니스 산스 타이틀';
   font-size: 32px;
   text-align: center;
-  margin-bottom: 32px;
 `;
 
 // Component
@@ -184,6 +183,7 @@ const CategoryTable = () => {
   return (
     <CategoryWrapper>
       <Title>카테고리 관리</Title>
+      <AddButton onClick={handleAddClick} domain="카테고리" />
       <Header>
         <HeaderRow>
           <HeaderCell width="160px">
@@ -229,7 +229,7 @@ const CategoryTable = () => {
           </HeaderRow>
         ))}
       </div>
-      <AddButton onClick={handleAddClick} domain="카테고리" />
+
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={handleCloseAddModal}
