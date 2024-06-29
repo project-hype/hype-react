@@ -4,7 +4,6 @@ import styled from 'styled-components';
 const StyledAddButton = styled.button`
   width: 120px;
   height: 50px;
-  margin-top: 20px;
   margin-bottom: 20px;
   font-family: '해피니스 산스 볼드', Helvetica;
   font-size: 16px;
