@@ -50,7 +50,7 @@ const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
 
       if (isFavorite) {
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
-        response = await axios.delete('http://localhost:8080/event/deleteFav', {
+        response = await axios.delete('http://localhost:8080/event/favorite', {
           data: {
             memberId: user.userInfo.memberId,
             eventId: eventId,
@@ -58,7 +58,7 @@ const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
         });
       } else {
         // 즐겨찾기 추가 API 호출
-        response = await axios.post('http://localhost:8080/event/addFav', {
+        response = await axios.post('http://localhost:8080/event/favorite', {
           memberId: user.userInfo.memberId,
           eventId: eventId,
         });

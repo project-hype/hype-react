@@ -47,7 +47,7 @@ const FavoriteEventList = () => {
       let response;
 
       if (isFavorite) {
-        response = await axios.delete('http://localhost:8080/event/deleteFav', {
+        response = await axios.delete('http://localhost:8080/event/favorite', {
           data: {
             memberId: user.userInfo.memberId,
             eventId: eventId,
@@ -60,7 +60,7 @@ const FavoriteEventList = () => {
         }
       } else {
         response = await axios.post(
-          'http://localhost:8080/event/addFav',
+          'http://localhost:8080/event/favorite',
           {
             memberId: user.userInfo.memberId,
             eventId: eventId,

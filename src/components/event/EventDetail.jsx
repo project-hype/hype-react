@@ -114,7 +114,7 @@ const EventDetail = ({ eventId }) => {
 
       if (isFavorite) {
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
-        response = await axios.delete('http://localhost:8080/event/deleteFav', {
+        response = await axios.delete('http://localhost:8080/event/favorite', {
           data: {
             memberId: user.userInfo.memberId,
             eventId: eventId,
@@ -124,7 +124,7 @@ const EventDetail = ({ eventId }) => {
         setLikeCount((prevCount) => prevCount - 1);
       } else {
         // 즐겨찾기 추가 API 호출
-        response = await axios.post('http://localhost:8080/event/addFav', {
+        response = await axios.post('http://localhost:8080/event/favorite', {
           memberId: user.userInfo.memberId,
           eventId: eventId,
         });
@@ -152,7 +152,11 @@ const EventDetail = ({ eventId }) => {
         score: score,
         action: action,
       });
-      setRating(score);
+      if (action === 'DELETE') {
+        setRating(0); // 별점 삭제 시 0으로 설정
+      } else {
+        setRating(score);
+      }
       console.log('별점 작성 성공:', response.data);
     } catch (error) {
       console.error('별점 작성 중 오류 발생:', error);
@@ -199,7 +203,7 @@ const EventDetail = ({ eventId }) => {
             {data.hashtags &&
               data.hashtags.map((hashtag, index) => (
                 <div className="item" key={index} onClick={() => handleHashtagClick(hashtag)}>
-                  <div className="text-wrapper-3">{hashtag}</div>
+                  <div className="text-wrapper-3">#{hashtag}</div>
                 </div>
               ))}
           </div>
