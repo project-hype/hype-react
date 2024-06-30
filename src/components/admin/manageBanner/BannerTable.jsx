@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddButton from '../../common/AddButton';
 import AddBannerModal from './AddBannerModal';
 import AdminAPI from '../../../api/admin/adminAPI';
-import { TableWrapper } from '../common/styled';
+import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Title } from '../common/styled';
 
 /**
  * 관리자 페이지 - 배너 관리 테이블
@@ -189,40 +189,6 @@ const BannerTable = () => {
 
 export default BannerTable;
 
-const BannerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: ${(props) => props.align || 'center'};
-  height: 100%;
-  width: ${(props) => props.width || '150px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')};
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
 const DeleteButton = styled.button`
   width: 120px;
   height: 30px;
@@ -261,11 +227,4 @@ const Backdrop = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
 `;

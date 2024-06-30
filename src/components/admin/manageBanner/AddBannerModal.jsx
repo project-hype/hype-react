@@ -80,7 +80,7 @@ const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검은 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,9 +91,9 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 4px;
-  max-width: 800px; /* 최대 너비 설정 */
-  max-height: 80%; /* 최대 높이 설정 */
-  overflow-y: auto; /* 세로 스크롤 추가 */
+  max-width: 800px;
+  max-height: 80%;
+  overflow-y: auto;
 `;
 
 const CloseButton = styled.button`

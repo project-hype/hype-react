@@ -8,7 +8,7 @@ import CancelButton from '../../common/CancleButton';
 import AddButton from '../../common/AddButton';
 import SaveButton from '../../common/SaveButton';
 import AdminAPI from '../../../api/admin/adminAPI';
-import { TableWrapper } from '../common/styled';
+import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Input, Title } from '../common/styled';
 
 /**
  * 관리자 페이지 - 해시태그 관리 테이블
@@ -188,55 +188,3 @@ const HashtagTable = () => {
 };
 
 export default HashtagTable;
-
-const HashtagWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc; /* Gray border color */
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: ${(props) => props.width || '95px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')}; /* Gray border color */
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  height: 100%;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  box-sizing: border-box; /* Padding and border included in the element's total width and height */
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
-`;

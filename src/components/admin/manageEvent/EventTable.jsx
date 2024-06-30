@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import EventRow from './EventRow';
 import EventEditModal from './EventEditModal';
 import EventAddModal from './EventAddModal';
@@ -7,7 +6,7 @@ import ConfirmDelete from '../ConfirmDelete';
 import AddButton from '../../common/AddButton';
 import LoadMoreButton from '../../common/LodeMoreButton';
 import AdminAPI from '../../../api/admin/adminAPI';
-import { TableWrapper } from '../common/styled';
+import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Title } from '../common/styled';
 
 /**
  * 관리자 페이지 - 행사 관리 테이블
@@ -145,44 +144,3 @@ const EventTable = () => {
 };
 
 export default EventTable;
-
-const EventWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: ${(props) => props.width || '95px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')};
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
-`;

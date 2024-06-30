@@ -211,8 +211,8 @@ const ModalContent = styled.div`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   width: 60%;
   max-width: 800px;
-  max-height: 80vh; /* 최대 높이 설정 */
-  overflow-y: auto; /* Y축 스크롤 설정 */
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 const FormField = styled.div`
