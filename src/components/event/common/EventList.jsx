@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import { faBookmark, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../common/Modal';
+import Modal from '../../common/Modal';
+import EventAPI from '../../../api/event/eventAPI';
 
+/**
+ * 이벤트 리스트
+ * @author 정은지
+ * @since 2024.06.19
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.19  	정은지        최초 생성
+ * 2024.06.21   임원정        디자인 수정
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
@@ -83,11 +97,12 @@ const EventGrid = styled.div`
   column-gap: 40px;
 `;
 
-const EventList2 = ({ events, likeEvent }) => {
+const EventList = ({ events }) => {
   const [likeStatus, setLikeStatus] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
+  const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
 
   useEffect(() => {
     const initialLikeStatus = {};
@@ -108,17 +123,9 @@ const EventList2 = ({ events, likeEvent }) => {
       let response;
 
       if (isFavorite) {
-        response = await axios.delete('http://localhost:8080/event/favorite', {
-          data: {
-            memberId: user.userInfo.memberId,
-            eventId: eventId,
-          },
-        });
+        response = await EventAPI.deleteFavorite(eventId);
       } else {
-        response = await axios.post('http://localhost:8080/event/favorite', {
-          memberId: user.userInfo.memberId,
-          eventId: eventId,
-        });
+        response = await EventAPI.addFavorite(eventId);
       }
 
       setLikeStatus((prevStatus) => ({
@@ -135,9 +142,6 @@ const EventList2 = ({ events, likeEvent }) => {
     navigate('/login');
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
     <>
       {events.length > 0 ? (
@@ -157,7 +161,7 @@ const EventList2 = ({ events, likeEvent }) => {
                   <BookmarkIcon
                     icon={likeStatus[event.eventId] ? faBookmark : faRegularBookmark}
                     active={likeStatus[event.eventId]}
-                    onClick={() => toggleFavorite(event.eventId)}
+                    onClick={() => toggleFavorite(event.eventId, memberId)}
                     size="2x"
                   />
                 </InfoRow>
@@ -179,4 +183,4 @@ const EventList2 = ({ events, likeEvent }) => {
   );
 };
 
-export default EventList2;
+export default EventList;

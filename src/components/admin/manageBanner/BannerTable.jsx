@@ -1,92 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import AddButton from '../common/AddButton';
+import AddButton from '../../common/AddButton';
 import AddBannerModal from './AddBannerModal';
+import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Title } from '../common/styled';
 
-// Styled Components
-const BannerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: ${(props) => props.align || 'center'};
-  height: 100%;
-  width: ${(props) => props.width || '150px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')};
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
-const DeleteButton = styled.button`
-  width: 120px;
-  height: 30px;
-  margin-left: 10px;
-  font-family: '해피니스 산스 볼드', Helvetica;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: #ff8c00;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  &:hover {
-    background-color: #eaeaea;
-  }
-`;
-
-const ApplyButton = styled.button`
-  width: 160px;
-  height: 50px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-family: '해피니스 산스 볼드', Helvetica;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #1e9d8b;
-  color: white;
-  border: none;
-  border-radius: 10px;
-`;
-
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 100;
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
-`;
-
+/**
+ * 관리자 페이지 - 배너 관리 테이블
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
 const BannerTable = () => {
   const [bannerList, setBannerList] = useState([]);
   const [isApplyButtonVisible, setIsApplyButtonVisible] = useState(false);
@@ -99,8 +31,7 @@ const BannerTable = () => {
 
   // Fetch banner list from the server
   const fetchBannerList = () => {
-    axios
-      .get('http://localhost:8080/event/list/banner')
+    AdminAPI.getBanner()
       .then((response) => {
         const sortedBannerList = response.data.eventList.sort((a, b) => a.orderPriority - b.orderPriority);
         setBannerList(sortedBannerList);
@@ -112,11 +43,10 @@ const BannerTable = () => {
 
   // Handle adding a new banner
   const handleAddBanner = (eventId, orderPriority) => {
-    axios
-      .post('http://localhost:8080/admin/event/banner', {
-        eventId: eventId,
-        orderPriority: orderPriority,
-      })
+    AdminAPI.createBanner({
+      eventId: eventId,
+      orderPriority: orderPriority,
+    })
       .then((response) => {
         fetchBannerList(); // Refresh banner list
         setShowModal(false); // Close modal after adding
@@ -128,8 +58,7 @@ const BannerTable = () => {
 
   // Handle deleting a banner
   const handleDeleteBanner = (eventId) => {
-    axios
-      .delete(`http://localhost:8080/admin/event/banner/${eventId}`)
+    AdminAPI.deleteBanner(eventId)
       .then((response) => {
         fetchBannerList(); // Refresh banner list
       })
@@ -159,13 +88,12 @@ const BannerTable = () => {
 
   // Handle applying order changes
   const applyOrderChanges = () => {
-    axios
-      .put('http://localhost:8080/admin/event/banner/order', {
-        bannerList: bannerList.map((banner) => ({
-          eventId: banner.eventId,
-          orderPriority: banner.orderPriority,
-        })),
-      })
+    AdminAPI.applyOrderChange({
+      bannerList: bannerList.map((banner) => ({
+        eventId: banner.eventId,
+        orderPriority: banner.orderPriority,
+      })),
+    })
       .then((response) => {
         setIsApplyButtonVisible(false); // Hide apply button after applying changes
         fetchBannerList(); // Refresh banner list
@@ -193,7 +121,7 @@ const BannerTable = () => {
   };
 
   return (
-    <BannerWrapper>
+    <TableWrapper>
       <Title>배너 관리</Title>
       {/* <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다 </p> */}
 
@@ -255,8 +183,48 @@ const BannerTable = () => {
           <AddBannerModal onClose={handleCancelModal} onEventSelect={handleEventSelect} />
         </>
       )}
-    </BannerWrapper>
+    </TableWrapper>
   );
 };
 
 export default BannerTable;
+
+const DeleteButton = styled.button`
+  width: 120px;
+  height: 30px;
+  margin-left: 10px;
+  font-family: '해피니스 산스 볼드', Helvetica;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  &:hover {
+    background-color: #eaeaea;
+  }
+`;
+
+const ApplyButton = styled.button`
+  width: 160px;
+  height: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: '해피니스 산스 볼드', Helvetica;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #1e9d8b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+`;
+
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+`;

@@ -1,13 +1,25 @@
-import Banner from '../components/event/Banner';
-import EventBanner from '../components/event/EventBanner';
+import Banner from '../components/event/main/Banner';
+import EventBanner from '../components/event/common/EventBanner';
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../layout/MainLayout';
-import DayCalendar from '../components/event/DayCalendar';
+import DayCalendar from '../components/event/main/DayCalendar';
 import { userState } from '../state/authState';
 import { useRecoilValue } from 'recoil';
 import '../assets/scss/common.scss';
 import Loading from '../components/common/Loading';
 
+/**
+ * 메인페이지
+ * @author 정은지
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	정은지        최초 생성
+ * </pre>
+ */
 function MainPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const user = useRecoilValue(userState);

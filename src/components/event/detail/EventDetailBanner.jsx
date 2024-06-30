@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import React from 'react';
-import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -9,8 +8,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
+import EventAPI from '../../../api/event/eventAPI';
+
+/**
+ * 상세페이지 유사한 행사 리스트
+ * @author 정은지
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	정은지        최초 생성
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 
 const MoreButton = styled(Link)`
   text-decoration: none !important;
@@ -65,7 +79,7 @@ function EventBanner({ title, type }) {
         if (user.isLoggedIn) {
           memberId = user.userInfo.memberId;
         }
-        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=${memberId}`);
+        const response = await EventAPI.subBanner(type);
         const result = response.data.eventList;
         setData(result);
         // console.log(result);

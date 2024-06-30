@@ -1,6 +1,39 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * 관리자 페이지 - 삭제 확인 창
+ * @author 조영욱
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
+const ConfirmDelete = ({ isOpen, onConfirm, onCancel }) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        <ModalHeader>정말 삭제하시겠습니까?</ModalHeader>
+        <ButtonContainer>
+          <ConfirmButton onClick={onConfirm}>확인</ConfirmButton>
+          <CancelButton onClick={onCancel}>취소</CancelButton>
+        </ButtonContainer>
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
+
+export default ConfirmDelete;
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -49,23 +82,3 @@ const CancelButton = styled.button`
   padding: 10px 20px;
   cursor: pointer;
 `;
-
-const ConfirmDelete = ({ isOpen, onConfirm, onCancel }) => {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <ModalOverlay>
-      <ModalContent>
-        <ModalHeader>정말 삭제하시겠습니까?</ModalHeader>
-        <ButtonContainer>
-          <ConfirmButton onClick={onConfirm}>확인</ConfirmButton>
-          <CancelButton onClick={onCancel}>취소</CancelButton>
-        </ButtonContainer>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
-
-export default ConfirmDelete;

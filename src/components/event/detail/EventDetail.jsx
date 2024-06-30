@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../../assets/scss/common.scss';
-import axios from 'axios';
+import '../../../assets/scss/common.scss';
 import { faEye, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import StarInput from './StarInput';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
-import Modal from '../common/Modal';
-const StarWrapper = styled.div`
-  .star-ratings {
-    position: relative;
-    display: inline-block;
+import Modal from '../../common/Modal';
+import EventAPI from '../../../api/event/eventAPI';
 
-    .star-container {
-      position: relative;
-      display: inline-block;
+/**
+ * 이벤트 상세 조회
+ * @author 정은지
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	정은지        최초 생성
+ * </pre>
+ */
 
-      .star {
-        clip-path: circle(50% at 50% 50%);
-      }
-    }
-  }
-`;
 const Base = styled.section`
   display: flex;
   align-items: center;
@@ -81,8 +80,7 @@ const EventDetail = ({ eventId }) => {
 
   const fetchData = async () => {
     try {
-      const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
-      const response = await axios.get(`http://localhost:8080/event/${eventId}?memberId=${memberId}`);
+      const response = await EventAPI.eventDetail(eventId);
       const result = response.data.event;
       setContent(result[0].content.replace(/\\r\\n|\\n|\\r/gm, '<br />'));
       setLikeStatus(result[0].favorite);
@@ -110,24 +108,15 @@ const EventDetail = ({ eventId }) => {
       }
       const isFavorite = likeStatus;
       let response;
-      console.log(!isFavorite);
 
       if (isFavorite) {
         // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
-        response = await axios.delete('http://localhost:8080/event/favorite', {
-          data: {
-            memberId: user.userInfo.memberId,
-            eventId: eventId,
-          },
-        });
-
+        response = await EventAPI.deleteFavorite(eventId);
+        console.log(response);
         setLikeCount((prevCount) => prevCount - 1);
       } else {
         // 즐겨찾기 추가 API 호출
-        response = await axios.post('http://localhost:8080/event/favorite', {
-          memberId: user.userInfo.memberId,
-          eventId: eventId,
-        });
+        response = await EventAPI.addFavorite(eventId);
         setLikeCount((prevCount) => prevCount + 1);
       }
 
@@ -146,12 +135,7 @@ const EventDetail = ({ eventId }) => {
         setIsModalOpen(true);
         return;
       }
-      const response = await axios.post('http://localhost:8080/event/score', {
-        memberId: user.userInfo.memberId,
-        eventId: eventId,
-        score: score,
-        action: action,
-      });
+      const response = await EventAPI.submitRating(eventId, score, action);
       if (action === 'DELETE') {
         setRating(0); // 별점 삭제 시 0으로 설정
       } else {
@@ -268,7 +252,6 @@ const EventDetail = ({ eventId }) => {
                   <StarInput onClickRating={handleClickRating} value={1} isHalf={false} selectedRating={rating} />
                   <StarInput onClickRating={handleClickRating} value={0.5} isHalf={true} selectedRating={rating} />
                 </RatingField>
-                {/* <RatingValue>{rating}</RatingValue> */}
               </Base>
             </div>
           </div>

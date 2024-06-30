@@ -1,68 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import AddHashtagModal from './AddHashtagModal';
-import ConfirmDelete from './ConfirmDelete';
-import DeleteButton from '../common/DeleteButton';
-import EditButton from '../common/EditButton';
-import CancelButton from '../common/CancleButton';
-import AddButton from '../common/AddButton';
-import SaveButton from '../common/SaveButton';
+import ConfirmDelete from '../ConfirmDelete';
+import DeleteButton from '../../common/DeleteButton';
+import EditButton from '../../common/EditButton';
+import CancelButton from '../../common/CancleButton';
+import AddButton from '../../common/AddButton';
+import SaveButton from '../../common/SaveButton';
+import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Input, Title } from '../common/styled';
 
-// Styled Components
-const HashtagWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc; /* Gray border color */
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: ${(props) => props.width || '95px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')}; /* Gray border color */
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  height: 100%;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  box-sizing: border-box; /* Padding and border included in the element's total width and height */
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
-`;
-
-// Component
+/**
+ * 관리자 페이지 - 해시태그 관리 테이블
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
 const HashtagTable = () => {
   const [hashtagData, setHashtagData] = useState([]);
   const [editHashtagId, setEditHashtagId] = useState(null);
@@ -77,17 +37,12 @@ const HashtagTable = () => {
   }, []);
 
   const fetchData = () => {
-    axios
-      .get('http://localhost:8080/admin/event/hashtag/list')
+    AdminAPI.getHashtagList()
       .then((response) => {
-        // 데이터를 성공적으로 받아왔을 때
-        console.log(response.data); // 받아온 데이터 확인 (개발 중에 유용함)
-        // 데이터를 업데이트
         setHashtagData(response.data.hashtagList);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error fetching hashtag data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -101,23 +56,19 @@ const HashtagTable = () => {
   };
 
   const handleSaveClick = () => {
-    axios
-      .put('http://localhost:8080/admin/event/hashtag', {
-        hashtagId: editHashtagId,
-        hashtagName: editHashtagName,
-      })
+    AdminAPI.modifyHashtag({
+      hashtagId: editHashtagId,
+      hashtagName: editHashtagName,
+    })
       .then((response) => {
-        // 데이터를 성공적으로 업데이트했을 때
-        console.log(response.data);
         const updatedData = hashtagData.map((hashtag) =>
           hashtag.hashtagId === editHashtagId ? { ...hashtag, hashtagName: editHashtagName } : hashtag,
         );
         setHashtagData(updatedData);
-        setEditHashtagId(null); // 수정 모드 종료
+        setEditHashtagId(null);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error updating hashtag data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -136,18 +87,16 @@ const HashtagTable = () => {
   };
 
   const handleAddHashtag = () => {
-    axios
-      .post('http://localhost:8080/admin/event/hashtag', {
-        hashtagName: newHashtagName,
-      })
+    AdminAPI.createHashtag({
+      hashtagName: newHashtagName,
+    })
       .then((response) => {
         fetchData();
         setIsAddModalOpen(false);
         setNewHashtagName('');
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error adding hashtag:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -159,19 +108,15 @@ const HashtagTable = () => {
   const handleConfirmDelete = () => {
     if (!hashtagToDelete) return;
 
-    axios
-      .delete(`http://localhost:8080/admin/event/hashtag/${hashtagToDelete.hashtagId}`)
+    AdminAPI.deleteHashtag(hashtagToDelete.hashtagId)
       .then((response) => {
-        // 데이터를 성공적으로 삭제했을 때
-        console.log(response.data);
         const updatedData = hashtagData.filter((hashtag) => hashtag.hashtagId !== hashtagToDelete.hashtagId);
         setHashtagData(updatedData);
         setHashtagToDelete(null);
         setIsDeleteModalOpen(false);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error deleting hashtag data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -181,7 +126,7 @@ const HashtagTable = () => {
   };
 
   return (
-    <HashtagWrapper>
+    <TableWrapper>
       <Title>해시태그 관리</Title>
       <AddButton onClick={handleAddClick} domain="해시태그" />
       <Header>
@@ -238,7 +183,7 @@ const HashtagTable = () => {
         setNewHashtagName={(value) => setNewHashtagName(value)}
       />
       <ConfirmDelete isOpen={isDeleteModalOpen} onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />
-    </HashtagWrapper>
+    </TableWrapper>
   );
 };
 
