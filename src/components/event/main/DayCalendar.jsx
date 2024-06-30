@@ -2,11 +2,11 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import EventList from './EventList';
-import '../../assets/scss/common.scss';
-import { userState } from '../../state/authState';
+import EventList from '../common/EventList';
+import '../../../assets/scss/common.scss';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
-import EventAPI from '../../api/event/eventAPI';
+import EventAPI from '../../../api/event/eventAPI';
 
 /**
  * 날짜별 이벤트 조회
@@ -46,13 +46,6 @@ const Title = styled.div`
   margin-top: 16px;
   margin-bottom: 32px;
 `;
-
-// const MoreView = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-end;
-//   padding: 15px 20px 10px;
-// }`;
 
 function DayCalendar() {
   const today = dayjs();

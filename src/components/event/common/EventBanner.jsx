@@ -1,29 +1,19 @@
 import styled from 'styled-components';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import React from 'react';
-import axios from 'axios';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
-import EventAPI from '../../api/event/eventAPI';
-
-const MoreButton = styled(Link)`
-  text-decoration: none !important;
-  color: inherit;
-  &:hover,
-  &:focus {
-    color: #ff8c00 !important;
-  }
-`;
+import EventAPI from '../../../api/event/eventAPI';
 
 /**
- * 상세페이지 유사한 행사 리스트
+ * 이벤트 서브 배너 리스트
  * @author 정은지
  * @since 2024.06.18
  * @version 1.0
@@ -35,8 +25,16 @@ const MoreButton = styled(Link)`
  * 2024.06.30   정은지        구조 리팩토링
  * </pre>
  */
+const MoreButton = styled(Link)`
+  text-decoration: none !important;
+  color: inherit;
+  &:hover,
+  &:focus {
+    color: #ff8c00 !important;
+  }
+`;
+
 function EventBanner({ title, type }) {
-  const user = useRecoilValue(userState);
   const [data, setData] = useState([]);
   const [dragging, setDragging] = useState(false);
   const handleBeforeChange = useCallback(() => {
@@ -63,7 +61,7 @@ function EventBanner({ title, type }) {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 3.2,
+    slidesToShow: 3.5,
     slidesToScroll: 1,
     swipeToSlide: true,
     arrows: false,
@@ -75,16 +73,11 @@ function EventBanner({ title, type }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let memberId = '';
-        if (user.isLoggedIn) {
-          memberId = user.userInfo.memberId;
-        }
         const response = await EventAPI.subBanner(type);
-        const result = response.data.eventList;
-        setData(result);
+        setData(response.data.eventList);
         // console.log(result);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
 

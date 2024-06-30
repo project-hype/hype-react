@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
-import EventDetail from '../../components/event/EventDetail';
 import '../../assets/scss/common.scss';
 import Loading from '../../components/common/Loading';
-import EventDetailBanner from '../../components/event/EventDetailBanner';
+import EventDetail from '../../components/event/detail/EventDetail';
+import EventDetailBanner from '../../components/event/detail/EventDetailBanner';
 
 /**
  * 이벤트 상세 페이지

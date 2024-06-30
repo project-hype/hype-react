@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import { faEye, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import StarInput from './StarInput';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import StarRatings from 'react-star-ratings';
-import Modal from '../common/Modal';
-import EventAPI from '../../api/event/eventAPI';
+import Modal from '../../common/Modal';
+import EventAPI from '../../../api/event/eventAPI';
 
 /**
  * 이벤트 상세 조회
@@ -24,21 +24,7 @@ import EventAPI from '../../api/event/eventAPI';
  * 2024.06.20  	정은지        최초 생성
  * </pre>
  */
-const StarWrapper = styled.div`
-  .star-ratings {
-    position: relative;
-    display: inline-block;
 
-    .star-container {
-      position: relative;
-      display: inline-block;
-
-      .star {
-        clip-path: circle(50% at 50% 50%);
-      }
-    }
-  }
-`;
 const Base = styled.section`
   display: flex;
   align-items: center;
@@ -71,7 +57,6 @@ const EventDetail = ({ eventId }) => {
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const averageScore = data.averageScore ? data.averageScore : 0;
-  const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
 
   const handleClickRating = async (value) => {
     let newRating = value;

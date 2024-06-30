@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import EventList from '../EventList';
+import EventList from '../common/EventList';
 import '../../../assets/scss/common.scss';
 import styled from 'styled-components';
 import LoadMoreButton from '../../common/LodeMoreButton';

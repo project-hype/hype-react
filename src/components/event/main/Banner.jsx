@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import EventAPI from '../../api/event/eventAPI';
+import EventAPI from '../../../api/event/eventAPI';
 
 /**
  * 메인페이지 배너 리스트
@@ -43,7 +43,6 @@ function Banner() {
       navigate(`/event/${eventId}`);
     }
   };
-  const slickRef = useRef(null);
 
   // slider custom arrow
   const CustomPrevArrow = (props) => {

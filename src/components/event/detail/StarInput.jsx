@@ -49,7 +49,7 @@ const Label = styled.label`
     `}
 `;
 
-const StarInput = ({ onClickRating, value, isHalf, selectedRating, isZero }) => {
+const StarInput = ({ onClickRating, value, isHalf, selectedRating }) => {
   const handleClickRatingInput = () => {
     const newValue = value === selectedRating ? 0 : value;
     onClickRating(newValue);

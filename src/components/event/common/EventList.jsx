@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../common/Modal';
-import EventAPI from '../../api/event/eventAPI';
+import Modal from '../../common/Modal';
+import EventAPI from '../../../api/event/eventAPI';
 
 /**
  * 이벤트 리스트
@@ -142,9 +142,6 @@ const EventList = ({ events }) => {
     navigate('/login');
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
     <>
       {events.length > 0 ? (
