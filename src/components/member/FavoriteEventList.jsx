@@ -25,9 +25,7 @@ const FavoriteEventList = () => {
   useEffect(() => {
     const fetchFavoriteEvents = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/member/favorites/${user.userInfo.memberId}`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(`http://localhost:8080/member/favorites/${user.userInfo.memberId}`);
         const result = response.data.eventList;
         setData(result);
         console.log(result);

@@ -97,8 +97,8 @@ const EventCell = ({ events, toggleFavorite }) => {
                     {event.branchName}
                   </div>
                   <BookmarkIcon
-                    icon={event.favorite ? faBookmark : faRegularBookmark}
-                    style={{ color: event.favorite ? '#ff8c00' : 'gray', cursor: 'pointer' }}
+                    icon={faBookmark}
+                    style={{ color: '#ff8c00', cursor: 'pointer' }}
                     onClick={() => toggleFavorite(event.eventId)}
                     size="2x"
                   />
