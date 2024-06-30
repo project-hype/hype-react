@@ -4,6 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddButton from '../../common/AddButton';
 import AddBannerModal from './AddBannerModal';
 import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper } from '../common/styled';
 
 /**
  * 관리자 페이지 - 배너 관리 테이블
@@ -120,7 +121,7 @@ const BannerTable = () => {
   };
 
   return (
-    <BannerWrapper>
+    <TableWrapper>
       <Title>배너 관리</Title>
       {/* <p>드래그 앤 드랍으로 배너 노출 순서를 변경하실 수 있습니다 </p> */}
 
@@ -182,7 +183,7 @@ const BannerTable = () => {
           <AddBannerModal onClose={handleCancelModal} onEventSelect={handleEventSelect} />
         </>
       )}
-    </BannerWrapper>
+    </TableWrapper>
   );
 };
 

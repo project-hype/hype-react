@@ -7,6 +7,7 @@ import ConfirmDelete from '../ConfirmDelete';
 import AddButton from '../../common/AddButton';
 import LoadMoreButton from '../../common/LodeMoreButton';
 import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper } from '../common/styled';
 
 /**
  * 관리자 페이지 - 행사 관리 테이블
@@ -93,7 +94,7 @@ const EventTable = () => {
   };
 
   return (
-    <EventWrapper>
+    <TableWrapper>
       <Title>행사 관리</Title>
       <AddButton onClick={openAddModal} domain="행사" />
       <Header>
@@ -139,7 +140,7 @@ const EventTable = () => {
       )}
       <ConfirmDelete isOpen={confirmDeleteOpen} onConfirm={handleDeleteEvent} onCancel={handleCancelDelete} />
       {isNextEventExist && <LoadMoreButton onClick={handleLoadMore} />}
-    </EventWrapper>
+    </TableWrapper>
   );
 };
 

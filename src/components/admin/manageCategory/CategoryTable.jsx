@@ -8,6 +8,7 @@ import CancelButton from '../../common/CancleButton';
 import AddButton from '../../common/AddButton';
 import SaveButton from '../../common/SaveButton';
 import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper } from '../common/styled';
 
 /**
  * 관리자 페이지 - 카테고리 관리 테이블
@@ -125,7 +126,7 @@ const CategoryTable = () => {
   };
 
   return (
-    <CategoryWrapper>
+    <TableWrapper>
       <Title>카테고리 관리</Title>
       <AddButton onClick={handleAddClick} domain="카테고리" />
       <Header>
@@ -182,7 +183,7 @@ const CategoryTable = () => {
         setNewCategoryName={(value) => setNewCategoryName(value)}
       />
       <ConfirmDelete isOpen={isDeleteModalOpen} onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />
-    </CategoryWrapper>
+    </TableWrapper>
   );
 };
 

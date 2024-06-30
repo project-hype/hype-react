@@ -1,5 +1,17 @@
 import instance from '..';
 
+/**
+ * 관리자 페이지 API
+ * @author 조영욱
+ * @since 2024.06.30
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.30  	조영욱        최초 생성
+ * </pre>
+ */
 const AdminAPI = {
   getEventListPaging: (pageNum) => {
     return instance.get(`/admin/event/list?page=${pageNum}&amount=10`);

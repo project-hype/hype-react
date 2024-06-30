@@ -8,6 +8,7 @@ import CancelButton from '../../common/CancleButton';
 import AddButton from '../../common/AddButton';
 import SaveButton from '../../common/SaveButton';
 import AdminAPI from '../../../api/admin/adminAPI';
+import { TableWrapper } from '../common/styled';
 
 /**
  * 관리자 페이지 - 해시태그 관리 테이블
@@ -125,7 +126,7 @@ const HashtagTable = () => {
   };
 
   return (
-    <HashtagWrapper>
+    <TableWrapper>
       <Title>해시태그 관리</Title>
       <AddButton onClick={handleAddClick} domain="해시태그" />
       <Header>
@@ -182,7 +183,7 @@ const HashtagTable = () => {
         setNewHashtagName={(value) => setNewHashtagName(value)}
       />
       <ConfirmDelete isOpen={isDeleteModalOpen} onConfirm={handleConfirmDelete} onCancel={handleCancelDelete} />
-    </HashtagWrapper>
+    </TableWrapper>
   );
 };
 
