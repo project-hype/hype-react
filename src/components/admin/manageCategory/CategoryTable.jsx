@@ -1,68 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import AddCategoryModal from './AddCategoryModal';
-import ConfirmDelete from './ConfirmDelete';
-import DeleteButton from '../common/DeleteButton';
-import EditButton from '../common/EditButton';
-import CancelButton from '../common/CancleButton';
-import AddButton from '../common/AddButton';
-import SaveButton from '../common/SaveButton';
+import ConfirmDelete from '../ConfirmDelete';
+import DeleteButton from '../../common/DeleteButton';
+import EditButton from '../../common/EditButton';
+import CancelButton from '../../common/CancleButton';
+import AddButton from '../../common/AddButton';
+import SaveButton from '../../common/SaveButton';
+import AdminAPI from '../../../api/admin/adminAPI';
 
-// Styled Components
-const CategoryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-`;
-
-const Header = styled.header`
-  background-color: #f0f5f4;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc; /* Gray border color */
-  height: 49px;
-`;
-
-const HeaderCell = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: ${(props) => props.width || '95px'};
-  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')}; /* Gray border color */
-`;
-
-const TextWrapper = styled.div`
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  height: 100%;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-family: 'Happiness Sans-Bold', Helvetica;
-  font-size: 14px;
-  font-weight: 700;
-  box-sizing: border-box; /* Padding and border included in the element's total width and height */
-`;
-
-const Title = styled.div`
-  color: #1e1e1e;
-  font-family: '해피니스 산스 타이틀';
-  font-size: 32px;
-  text-align: center;
-`;
-
-// Component
+/**
+ * 관리자 페이지 - 카테고리 관리 테이블
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
 const CategoryTable = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [editCategoryId, setEditCategoryId] = useState(null);
@@ -77,17 +36,12 @@ const CategoryTable = () => {
   }, []);
 
   const fetchData = () => {
-    axios
-      .get('http://localhost:8080/admin/event/category/list')
+    AdminAPI.getCategoryList()
       .then((response) => {
-        // 데이터를 성공적으로 받아왔을 때
-        console.log(response.data); // 받아온 데이터 확인 (개발 중에 유용함)
-        // 데이터를 업데이트
         setCategoryData(response.data.categoryList);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error fetching category data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -101,23 +55,19 @@ const CategoryTable = () => {
   };
 
   const handleSaveClick = () => {
-    axios
-      .put('http://localhost:8080/admin/event/category', {
-        categoryId: editCategoryId,
-        categoryName: editCategoryName,
-      })
+    AdminAPI.modifyCategory({
+      categoryId: editCategoryId,
+      categoryName: editCategoryName,
+    })
       .then((response) => {
-        // 데이터를 성공적으로 업데이트했을 때
-        console.log(response.data);
         const updatedData = categoryData.map((category) =>
           category.categoryId === editCategoryId ? { ...category, categoryName: editCategoryName } : category,
         );
         setCategoryData(updatedData);
-        setEditCategoryId(null); // 수정 모드 종료
+        setEditCategoryId(null);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error updating category data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -136,18 +86,16 @@ const CategoryTable = () => {
   };
 
   const handleAddCategory = () => {
-    axios
-      .post('http://localhost:8080/admin/event/category', {
-        categoryName: newCategoryName,
-      })
+    AdminAPI.createCategory({
+      categoryName: newCategoryName,
+    })
       .then((response) => {
         fetchData();
         setIsAddModalOpen(false);
         setNewCategoryName('');
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error adding category:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -159,19 +107,15 @@ const CategoryTable = () => {
   const handleConfirmDelete = () => {
     if (!categoryToDelete) return;
 
-    axios
-      .delete(`http://localhost:8080/admin/event/category/${categoryToDelete.categoryId}`)
+    AdminAPI.deleteCategory(categoryToDelete.categoryId)
       .then((response) => {
-        // 데이터를 성공적으로 삭제했을 때
-        console.log(response.data);
         const updatedData = categoryData.filter((category) => category.categoryId !== categoryToDelete.categoryId);
         setCategoryData(updatedData);
         setCategoryToDelete(null);
         setIsDeleteModalOpen(false);
       })
-      .catch((error) => {
-        // 요청이 실패했을 때
-        console.error('Error deleting category data:', error);
+      .catch((e) => {
+        console.error(e);
       });
   };
 
@@ -243,3 +187,55 @@ const CategoryTable = () => {
 };
 
 export default CategoryTable;
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+`;
+
+const Header = styled.header`
+  background-color: #f0f5f4;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc; /* Gray border color */
+  height: 49px;
+`;
+
+const HeaderCell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: ${(props) => props.width || '95px'};
+  border-left: ${(props) => (props.hasBorder ? '1px solid #ccc' : 'none')}; /* Gray border color */
+`;
+
+const TextWrapper = styled.div`
+  font-family: 'Happiness Sans-Bold', Helvetica;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-family: 'Happiness Sans-Bold', Helvetica;
+  font-size: 14px;
+  font-weight: 700;
+  box-sizing: border-box; /* Padding and border included in the element's total width and height */
+`;
+
+const Title = styled.div`
+  color: #1e1e1e;
+  font-family: '해피니스 산스 타이틀';
+  font-size: 32px;
+  text-align: center;
+`;

@@ -1,6 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * 관리자 페이지 - 네비게이션 바
+ * @author 조영욱
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
+const Menu = (props) => {
+  return (
+    <MenuWrapper>
+      <MenuItem onClick={() => props.setActiveMenu('event')}>
+        <TextWrapper>행사 관리</TextWrapper>
+      </MenuItem>
+      <MenuItem onClick={() => props.setActiveMenu('banner')}>
+        <TextWrapper>배너 관리</TextWrapper>
+      </MenuItem>
+      <MenuItem onClick={() => props.setActiveMenu('category')}>
+        <TextWrapper>카테고리 관리</TextWrapper>
+      </MenuItem>
+      <MenuItem onClick={() => props.setActiveMenu('hashtag')}>
+        <TextWrapper>해시태그 관리</TextWrapper>
+      </MenuItem>
+      {/* <MenuItem>
+        <TextWrapper>통계 보기</TextWrapper>
+        <TextWrapper2>즐겨찾기</TextWrapper2>
+        <TextWrapper2>별점</TextWrapper2>
+      </MenuItem> */}
+    </MenuWrapper>
+  );
+};
+
+export default Menu;
+
 const MenuWrapper = styled.div`
   align-items: flex-start;
   align-self: stretch;
@@ -49,29 +88,3 @@ const TextWrapper2 = styled.div`
   position: relative;
   width: fit-content;
 `;
-
-const Menu = (props) => {
-  return (
-    <MenuWrapper>
-      <MenuItem onClick={() => props.setActiveMenu('event')}>
-        <TextWrapper>행사 관리</TextWrapper>
-      </MenuItem>
-      <MenuItem onClick={() => props.setActiveMenu('banner')}>
-        <TextWrapper>배너 관리</TextWrapper>
-      </MenuItem>
-      <MenuItem onClick={() => props.setActiveMenu('category')}>
-        <TextWrapper>카테고리 관리</TextWrapper>
-      </MenuItem>
-      <MenuItem onClick={() => props.setActiveMenu('hashtag')}>
-        <TextWrapper>해시태그 관리</TextWrapper>
-      </MenuItem>
-      {/* <MenuItem>
-        <TextWrapper>통계 보기</TextWrapper>
-        <TextWrapper2>즐겨찾기</TextWrapper2>
-        <TextWrapper2>별점</TextWrapper2>
-      </MenuItem> */}
-    </MenuWrapper>
-  );
-};
-
-export default Menu;

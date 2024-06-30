@@ -1,6 +1,43 @@
 import React from 'react';
 import styled from 'styled-components';
 
+/**
+ * 관리자 페이지 - 카테고리 추가 모달창
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
+const AddCategoryModal = ({ isOpen, onClose, onSave, newCategoryName, setNewCategoryName }) => {
+  if (!isOpen) return null;
+
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        <h2>카테고리 추가</h2>
+        <Input
+          type="text"
+          placeholder="카테고리 이름"
+          value={newCategoryName}
+          onChange={(e) => setNewCategoryName(e.target.value)}
+        />
+        <ButtonContainer>
+          <SaveButton onClick={onSave}>확인</SaveButton>
+          <CancelButton onClick={onClose}>취소</CancelButton>
+        </ButtonContainer>
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
+
+export default AddCategoryModal;
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -60,27 +97,3 @@ const CancelButton = styled.button`
   border: none; /* Remove default border */
   border-radius: 4px; /* Rounded corners */
 `;
-
-const AddHashtagModal = ({ isOpen, onClose, onSave, newHashtagName, setNewHashtagName }) => {
-  if (!isOpen) return null;
-
-  return (
-    <ModalOverlay>
-      <ModalContent>
-        <h2>해시태그 추가</h2>
-        <Input
-          type="text"
-          placeholder="해시태그 이름"
-          value={newHashtagName}
-          onChange={(e) => setNewHashtagName(e.target.value)}
-        />
-        <ButtonContainer>
-          <SaveButton onClick={onSave}>확인</SaveButton>
-          <CancelButton onClick={onClose}>취소</CancelButton>
-        </ButtonContainer>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
-
-export default AddHashtagModal;

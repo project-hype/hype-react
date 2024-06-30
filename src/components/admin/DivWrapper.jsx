@@ -2,10 +2,44 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Nav from './Nav';
 import Menu from './Menu';
-import EventTable from './EventTable';
-import BannerTable from './BannerTable';
-import CategoryTable from './CategoryTable';
-import HashtagTable from './HashtagTable';
+import EventTable from './manageEvent/EventTable';
+import BannerTable from './manageBanner/BannerTable';
+import CategoryTable from './manageCategory/CategoryTable';
+import HashtagTable from './manageHashtag/HashtagTable';
+
+/**
+ * 관리자 페이지 - 테이블 래퍼
+ * @author 조영욱
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	조영욱        최초 생성
+ * 2024.06.30   조영욱        구조 리팩토링
+ * </pre>
+ */
+const DivWrapper = () => {
+  const [activeMenu, setActiveMenu] = useState('event');
+
+  return (
+    <Wrapper>
+      <InnerDiv>
+        <Body>
+          <Menu setActiveMenu={setActiveMenu} />
+          {activeMenu === 'event' && <EventTable />}
+          {activeMenu === 'banner' && <BannerTable />}
+          {activeMenu === 'category' && <CategoryTable />}
+          {activeMenu === 'hashtag' && <HashtagTable />}
+        </Body>
+        <Nav />
+      </InnerDiv>
+    </Wrapper>
+  );
+};
+
+export default DivWrapper;
 
 const Wrapper = styled.div`
   background-color: #ffffff;
@@ -32,24 +66,3 @@ const Body = styled.div`
   top: 113px;
   width: 100%;
 `;
-
-const DivWrapper = () => {
-  const [activeMenu, setActiveMenu] = useState('event'); // Default to 'event' article
-
-  return (
-    <Wrapper>
-      <InnerDiv>
-        <Body>
-          <Menu setActiveMenu={setActiveMenu} />
-          {activeMenu === 'event' && <EventTable />}
-          {activeMenu === 'banner' && <BannerTable />}
-          {activeMenu === 'category' && <CategoryTable />}
-          {activeMenu === 'hashtag' && <HashtagTable />}
-        </Body>
-        <Nav />
-      </InnerDiv>
-    </Wrapper>
-  );
-};
-
-export default DivWrapper;
