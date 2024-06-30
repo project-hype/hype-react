@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import FilterBranchSelect from './FilterBranchSelect';
-import { FilterButton } from '../common/FilterButton';
+import { FilterButton } from '../../common/FilterButton';
 import FilteredEvent from './FilteredEvent';
 import { useLocation } from 'react-router-dom';
-import LoadMoreButton from '../common/LodeMoreButton';
 
 const FilterDiv = styled.div`
   height: 200px;
@@ -43,10 +42,23 @@ const DateInput = styled.input`
   width: 180px;
 `;
 
+/**
+ * 검색 결과 페이지의 필터 컴포넌트
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * </pre>
+ */
 function Filter() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get('keyword');
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedEventTypes, setSelectedEventTypes] = useState(['팝업', '전시', '공연', '강좌']);

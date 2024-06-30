@@ -5,9 +5,9 @@ import EventRow from './EventRow';
 import EventEditModal from './EventEditModal';
 import EventAddModal from './EventAddModal';
 import ConfirmDelete from './ConfirmDelete';
-import Rectangle200 from '../../assets/img/common/Rectangle200.png';
 import AddButton from '../common/AddButton';
 import LoadMoreButton from '../common/LodeMoreButton';
+import AdminAPI from '../../api/admin/adminAPI';
 
 // Styled Components
 const EventWrapper = styled.div`
@@ -65,8 +65,7 @@ const EventTable = () => {
   }, [page]);
 
   const fetchData = (pageNum) => {
-    axios
-      .get(`http://localhost:8080/admin/event/list?page=${pageNum}&amount=10`)
+    AdminAPI.getEventList(pageNum)
       .then((response) => {
         setEventData([...eventData, ...response.data.eventList]);
         setIsNextEventExist(response.data.nextEventExist);
