@@ -20,6 +20,7 @@ import { TableWrapper, Header, HeaderRow, HeaderCell, TextWrapper, Input, Title 
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.23   임원정        Admin 페이지 디자인수정
  * 2024.06.30   조영욱        구조 리팩토링
  * </pre>
  */

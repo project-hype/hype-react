@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectField } from '../MemberStyledComponents';
+import { SelectField } from './MemberStyledComponents';
 
 /**
  * 지점 선택

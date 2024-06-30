@@ -1,5 +1,18 @@
 import React from 'react';
-import { SelectField } from '../MemberStyledComponents';
+import { SelectField } from './MemberStyledComponents';
+
+/**
+ * 지역 선택
+ * @author 임원정
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20   임원정        최초 생성
+ * </pre>
+ */
 
 const CitySelect = ({ name, value, onChange, required }) => (
   <SelectField name={name} value={value} onChange={onChange} required={required}>

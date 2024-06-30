@@ -2,8 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
+
+/**
+ * 즐겨찾기 이벤트 셀
+ * @author 임원정
+ * @since 2024.06.21
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.21   임원정        최초 생성
+ * 2024.06.22   임원정        디자인 수정
+ * </pre>
+ */
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -79,7 +92,7 @@ const EventGrid = styled.div`
   column-gap: 56px;
 `;
 
-const EventCell = ({ events, toggleFavorite }) => {
+const FavoriteEvent = ({ events, toggleFavorite }) => {
   return (
     <>
       {events.length > 0 ? (
@@ -122,4 +135,4 @@ const EventCell = ({ events, toggleFavorite }) => {
   );
 };
 
-export default EventCell;
+export default FavoriteEvent;

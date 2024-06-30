@@ -1,17 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
-// import Main from './components/Main/Main';
 import Main from './pages/MainPage';
 import LogIn from './pages/member/LogInPage';
 import Join from './pages/member/JoinPage';
 import MyPage from './pages/member/MyPage';
 import AdminMain from './pages/admin/AdminMainPage';
-import LogInForm from './components/member/LogInForm';
 import Detail from './pages/event/DetailPage';
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { checkAdmin } from './auth';
+import React from 'react';
 import { RecoilRoot } from 'recoil';
 import SearchPage from './pages/event/SearchPage';
 

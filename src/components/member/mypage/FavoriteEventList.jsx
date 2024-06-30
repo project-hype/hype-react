@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import '../../assets/scss/common.scss';
+import '../../../assets/scss/common.scss';
 import { useRecoilValue } from 'recoil';
-import { userState } from '../../state/authState';
+import { userState } from '../../../state/authState';
 import styled from 'styled-components';
-import EventCell from './EventCell';
-import EventAPI from '../../api/event/eventAPI';
-import MemberAPI from '../../api/member/memberAPI';
+import FavoriteEvent from './FavoriteEvent';
+import EventAPI from '../../../api/event/eventAPI';
+import MemberAPI from '../../../api/member/memberAPI';
+
+/**
+ * 마이페이지 - 즐겨찾기 이벤트 리스트
+ * @author 임원정
+ * @since 2024.06.21
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.21   임원정        최초 생성
+ * 2024.06.30   임원정        코드 리팩토링 (API 적용)
+ * </pre>
+ */
 
 const EventWrapArticle = styled.article`
   height: 100%;
@@ -74,7 +88,7 @@ const FavoriteEventList = () => {
 
   return (
     <EventWrapArticle>
-      <EventCell events={data} toggleFavorite={toggleFavorite} />
+      <FavoriteEvent events={data} toggleFavorite={toggleFavorite} />
     </EventWrapArticle>
   );
 };

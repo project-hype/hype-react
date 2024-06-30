@@ -6,6 +6,20 @@ import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
 
+/**
+ * 관리자 페이지 - 헤더
+ * @author 조영욱
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	조영욱        최초 생성
+ * 2024.06.23   임원정        Admin 페이지 디자인수정
+ * </pre>
+ */
+
 const NavContainer = styled.div`
   align-items: center;
   background-color: #ffffff;

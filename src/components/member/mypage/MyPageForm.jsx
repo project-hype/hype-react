@@ -1,16 +1,33 @@
-import { InputSection, ButtonContainer } from './MemberStyledComponents';
-import Input from './Input';
-import InputContainer from './InputContainer';
-import CategoryButtonGroup from './common/CategoryButtonGroup';
-import CitySelect from './common/CitySelect';
-import BranchSelect from './common/BranchSelect';
-import Button from '../common/Button';
-import Modal from '../common/Modal';
+import { InputSection, ButtonContainer } from '../common/MemberStyledComponents';
+import Input from '../join/Input';
+import InputContainer from '../join/InputContainer';
+import CategoryButtonGroup from '../common/CategoryButtonGroup';
+import CitySelect from '../common/CitySelect';
+import BranchSelect from '../common/BranchSelect';
+import Button from '../../common/Button';
+import Modal from '../../common/Modal';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { userState } from '../../state/authState';
-import MemberAPI from '../../api/member/memberAPI';
+import { userState } from '../../../state/authState';
+import MemberAPI from '../../../api/member/memberAPI';
+
+/**
+ * 마이페이지 - 내정보
+ * @author 임원정
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20   임원정        최초 생성
+ * 2024.06.20   임원정        회원 정보 수정 기능 추가
+ * 2024.06.21   임원정        새로고침시 기존 정보 초기화 오류 수정
+ * 2024.06.22   임원정        회원탈퇴 오류 수정
+ * 2024.06.30   임원정        코드 리팩토링 (API 적용)
+ * </pre>
+ */
 
 const MyPageForm = () => {
   const [form, setForm] = useState({

@@ -1,5 +1,19 @@
 import styled from 'styled-components';
 
+/**
+ * 회원 관련 공동 스타일드 컴포넌트
+ * @author 임원정
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20   임원정        최초 생성
+ * 2024.06.21   임원정        마이페이지 관련 추가
+ * </pre>
+ */
+
 // 회원가입 폼 컨테이너
 export const Container = styled.div`
   position: relative;

@@ -2,7 +2,7 @@ import React from 'react';
 import MainLayout from '../../layout/MainLayout';
 import '../../assets/scss/common.scss';
 import Filter from '../../components/event/search/Filter';
-import { PageTitle } from '../../components/member/MemberStyledComponents';
+import { PageTitle } from '../../components/member/common/MemberStyledComponents';
 import { useLocation } from 'react-router-dom';
 
 /**

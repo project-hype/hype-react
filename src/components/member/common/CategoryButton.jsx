@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyledButtonWrapper, StyledButtonText } from '../MemberStyledComponents';
+import { StyledButtonWrapper, StyledButtonText } from './MemberStyledComponents';
 
 /**
- * 지점 선택
+ * 카테고리 선택 버튼
  * @author 임원정
  * @since 2024.06.20
  * @version 1.0

@@ -9,18 +9,33 @@ import {
   CheckButton,
   RadioGroup,
   BirthdateInput,
-} from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
+} from '../common/MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
-import CategoryButtonGroup from './common/CategoryButtonGroup';
-import CitySelect from './common/CitySelect';
-import BranchSelect from './common/BranchSelect';
-import RadioButton from './RadioButton';
-import Button from '../common/Button';
-import Modal from '../common/Modal';
-import MemberAPI from '../../api/member/memberAPI';
+import CategoryButtonGroup from '../common/CategoryButtonGroup';
+import CitySelect from '../common/CitySelect';
+import BranchSelect from '../common/BranchSelect';
+import RadioButton from '../common/RadioButton';
+import Button from '../../common/Button';
+import Modal from '../../common/Modal';
+import MemberAPI from '../../../api/member/memberAPI';
 
-// 회원가입 폼 컴포넌트
+/**
+ * 회원가입 폼 컴포넌트
+ * @author 임원정
+ * @since 2024.06.19
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.19   임원정        최초 생성
+ * 2024.06.20   임원정        회원관련 공동 컴포넌트 분리
+ * 2024.06.22   임원정        중복 ID 관련 기능 수정
+ * 2024.06.30   임원정        코드 리팩토링(API 적용)
+ * </pre>
+ */
+
 const JoinForm = () => {
   const [form, setForm] = useState({
     loginId: '',
