@@ -1,126 +1,189 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../../assets/scss/common.scss';
-import axios from 'axios';
-import { faLocationDot, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faRegularBookmark } from '@fortawesome/free-regular-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import Modal from '../common/Modal';
+import EventAPI from '../../api/event/eventAPI';
 
+/**
+ * 이벤트 리스트
+ * @author 정은지
+ * @since 2024.06.19
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.19  	정은지        최초 생성
+ * 2024.06.21   임원정        디자인 수정
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 const StyledLink = styled(Link)`
-  width: 100%;
-  text-decoration: none; /* 기본 밑줄 제거 */
-  color: inherit; /* 부모의 색상 상속 */
+  text-decoration: none;
+  color: inherit;
   &:hover,
   &:focus {
-    color: inherit; /* hover와 focus 상태에서도 부모의 색상 유지 */
+    color: inherit;
   }
+`;
+
+const EventContainer = styled.div`
+  display: flex;
+  width: 500px;
+  height: 200px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 16px;
+`;
+
+const EventImage = styled.img`
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid transparent;
+  border-radius: 8px;
+`;
+
+const EventInfo = styled.div`
+  flex-direction: column;
+  flex: 1;
+  padding-left: 16px;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 64px;
 `;
 
 const EventTitle = styled.div`
   font-size: 24px;
   font-family: '해피니스 산스 타이틀';
+  margin-bottom: 16px;
 `;
 
-const EventList = ({ events, setActiveIndex, likeEvent, likeEventSetter }) => {
-  const [likeStatus, setLikeStatus] = useState({}); // 즐겨찾기 상태를 저장할 객체
-  const navigate = useNavigate();
+const EventDates = styled.div`
+  font-size: 14px;
+  color: gray;
+`;
+
+const BookmarkIcon = styled(FontAwesomeIcon)`
+  cursor: pointer;
+  margin-left: auto;
+  color: ${(props) => (props.active ? '#ff8c00' : 'gray')};
+`;
+
+const EmptyContent = styled.div`
+  display: flex;
+  height: 40vh;
+  align-items: center;
+  font-size: 16px;
+  color: gray;
+`;
+
+const EventGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 40px;
+  column-gap: 40px;
+`;
+
+const EventList = ({ events }) => {
+  const [likeStatus, setLikeStatus] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
+  const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
 
   useEffect(() => {
-    // 초기 즐겨찾기 상태 설정
-    const status = {};
+    const initialLikeStatus = {};
     events.forEach((event) => {
-      status[event.eventId] = event.favorite; // 이벤트의 즐겨찾기 상태를 설정
+      initialLikeStatus[event.eventId] = event.favorite;
     });
-    setLikeStatus(status);
+    setLikeStatus(initialLikeStatus);
   }, [events]);
 
   const toggleFavorite = async (eventId) => {
     try {
       if (!user.isLoggedIn) {
-        navigate('/login');
+        setIsModalOpen(true);
         return;
       }
+
       const isFavorite = likeStatus[eventId];
       let response;
-      console.log(!isFavorite + eventId);
 
       if (isFavorite) {
-        // 이미 즐겨찾기 되어 있는 경우 삭제 API 호출
-        response = await axios.delete('http://localhost:8080/event/favorite', {
-          data: {
-            memberId: user.userInfo.memberId,
-            eventId: eventId,
-          },
-        });
+        response = await EventAPI.deleteFavorite(eventId);
       } else {
-        // 즐겨찾기 추가 API 호출
-        response = await axios.post('http://localhost:8080/event/favorite', {
-          memberId: user.userInfo.memberId,
-          eventId: eventId,
-        });
+        response = await EventAPI.addFavorite(eventId);
       }
 
-      // 즐겨찾기 상태 업데이트
-      setLikeStatus({
-        ...likeStatus,
-        [eventId]: !isFavorite, // 해당 이벤트의 즐겨찾기 상태 반전
-      });
+      setLikeStatus((prevStatus) => ({
+        ...prevStatus,
+        [eventId]: !isFavorite,
+      }));
 
       console.log('Toggled favorite:', response.data);
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }
   };
+  const handleConfirm = () => {
+    navigate('/login');
+  };
 
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <ul>
+    <>
       {events.length > 0 ? (
-        events.map((event, index) => (
-          <li key={index}>
-            <div>
-              <div>
-                <StyledLink to={`/event/${event.eventId}`} className="event-img-wrap">
-                  <img src={event.imageUrl} className="event-img" />
+        <EventGrid>
+          {events.map((event) => (
+            <EventContainer key={event.eventId}>
+              <StyledLink to={`/event/${event.eventId}`}>
+                <EventImage src={event.imageUrl} />
+              </StyledLink>
+              <EventInfo>
+                <InfoRow>
+                  <div>{event.eventTypeName} |</div>
+                  <div>
+                    <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '5px' }} />
+                    {event.branchName}
+                  </div>
+                  <BookmarkIcon
+                    icon={likeStatus[event.eventId] ? faBookmark : faRegularBookmark}
+                    active={likeStatus[event.eventId]}
+                    onClick={() => toggleFavorite(event.eventId, memberId)}
+                    size="2x"
+                  />
+                </InfoRow>
+                <StyledLink to={`/event/${event.eventId}`}>
+                  <EventTitle>{event.title.length >= 15 ? event.title.substr(0, 14) + '...' : event.title}</EventTitle>
+                  <EventDates>
+                    {event.startDate} ~ {event.endDate}
+                  </EventDates>
                 </StyledLink>
-              </div>
-              <div className="event-details">
-                <StyledLink to={`/event/${event.eventId}`} style={{ textDecoration: 'none' }}>
-                  <ul>
-                    <li className="event-name">
-                      <p>{event.title}</p>
-                    </li>
-                    <li className="event-branch">
-                      <FontAwesomeIcon icon={faLocationDot} /> {event.branchName}
-                    </li>
-                    <li className="event-type">{event.eventTypeName}</li>
-                    <li>
-                      <p className="event-date">
-                        {event.startDate} ~ {event.endDate}
-                      </p>
-                    </li>
-                  </ul>
-                </StyledLink>
-              </div>
-              <div className="event-favorite">
-                <FontAwesomeIcon
-                  className="favorite-icon"
-                  icon={likeStatus[event.eventId] ? faBookmark : faRegularBookmark}
-                  style={{ color: likeStatus[event.eventId] ? '#ff8c00' : 'gray', cursor: 'pointer' }}
-                  onClick={(e) => toggleFavorite(event.eventId, e)}
-                  size="2x"
-                />
-              </div>
-            </div>
-          </li>
-        ))
+              </EventInfo>
+            </EventContainer>
+          ))}
+        </EventGrid>
       ) : (
-        <div className="calendar-popup-list-blank"></div> // stores가 없거나 길이가 0일 때 빈 화면을 렌더링
+        <EmptyContent />
       )}
-    </ul>
+      {isModalOpen && <Modal message="로그인이 필요합니다." onConfirm={handleConfirm} />}
+    </>
   );
 };
+
 export default EventList;

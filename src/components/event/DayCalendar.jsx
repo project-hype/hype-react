@@ -2,13 +2,25 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-// import EventList from '../event/EventList';
-import EventList2 from './EventList2';
-import axios from 'axios';
+import EventList from './EventList';
 import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
+import EventAPI from '../../api/event/eventAPI';
 
+/**
+ * 날짜별 이벤트 조회
+ * @author 정은지
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	정은지        최초 생성
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 const MoreButton = styled(Link)`
   text-decoration: none !important;
   color: inherit;
@@ -56,16 +68,13 @@ function DayCalendar() {
   useEffect(() => {
     let fetchData = async () => {
       try {
-        let memberId = '';
-        if (user.isLoggedIn) {
-          memberId = user.userInfo.memberId;
-        }
-        const response = await axios.get(
-          `http://localhost:8080/event/list/${selectedDay.format('YYYY-MM-DD')}?memberId=${memberId}`,
-        );
+        const memberId = user.isLoggedIn ? user.userInfo.memberId : '';
+        console.log('memberId: ' + memberId);
+        const response = await EventAPI.eventByDate(selectedDay);
+        console.log(response);
         const result = response.data.eventList;
         setData(result);
-        // console.log(result);
+        console.log(result);
       } catch (error) {
         // console.log(error);
       }
@@ -96,7 +105,7 @@ function DayCalendar() {
           <MoreButton to={'/search/'}>전체보기</MoreButton>
         </div>
 
-        <EventList2 events={data} />
+        <EventList events={data} />
       </div>
     </>
   );

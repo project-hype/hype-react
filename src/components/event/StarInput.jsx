@@ -2,6 +2,19 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { FaStar, FaStarHalf } from 'react-icons/fa';
 
+/**
+ * 별점 입력 컴포넌트
+ * @author 정은지
+ * @since 2024.06.21
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.21  	정은지        최초 생성
+ *
+ * </pre>
+ */
 const Input = styled.input`
   display: none;
 `;

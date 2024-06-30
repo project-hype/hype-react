@@ -6,14 +6,21 @@ import 'slick-carousel/slick/slick-theme.css';
 import '../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
 import EventAPI from '../../api/event/eventAPI';
 
-const InfoContainer = styled.div`
-  display: flex;
-  gap: 5px;
-  margin-top: 8px; /* 원하는 위치로 조정 */
-`;
+/**
+ * 메인페이지 배너 리스트
+ * @author 정은지
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	정은지        최초 생성
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 
 function Banner() {
   const [data, setData] = useState([]);
@@ -76,7 +83,6 @@ function Banner() {
       try {
         const response = await EventAPI.banner();
         setData(response.data.eventList);
-        // console.log(result);
       } catch (error) {
         console.log(error);
       }
@@ -86,7 +92,6 @@ function Banner() {
   }, []);
 
   return (
-    // <div style={{ position: 'relative', textAlign: 'center', width: '800px', margin: '0 auto' }}>
     <div style={{ position: 'relative' }}>
       <Slider {...settings}>
         {data.map((event) => (

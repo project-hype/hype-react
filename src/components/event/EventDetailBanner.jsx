@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { userState } from '../../state/authState';
 import { useRecoilValue } from 'recoil';
+import EventAPI from '../../api/event/eventAPI';
 
 const MoreButton = styled(Link)`
   text-decoration: none !important;
@@ -21,6 +22,19 @@ const MoreButton = styled(Link)`
   }
 `;
 
+/**
+ * 상세페이지 유사한 행사 리스트
+ * @author 정은지
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18  	정은지        최초 생성
+ * 2024.06.30   정은지        구조 리팩토링
+ * </pre>
+ */
 function EventBanner({ title, type }) {
   const user = useRecoilValue(userState);
   const [data, setData] = useState([]);
@@ -65,7 +79,7 @@ function EventBanner({ title, type }) {
         if (user.isLoggedIn) {
           memberId = user.userInfo.memberId;
         }
-        const response = await axios.get(`http://localhost:8080/event/list/${type}?memberId=${memberId}`);
+        const response = await EventAPI.subBanner(type);
         const result = response.data.eventList;
         setData(result);
         // console.log(result);
