@@ -1,16 +1,16 @@
 import { InputSection, ButtonContainer } from './MemberStyledComponents';
 import Input from './Input';
 import InputContainer from './InputContainer';
-import CategoryButtonGroup from './CategoryButtonGroup';
-import CitySelect from './CitySelect';
-import BranchSelect from './BranchSelect';
+import CategoryButtonGroup from './common/CategoryButtonGroup';
+import CitySelect from './common/CitySelect';
+import BranchSelect from './common/BranchSelect';
 import Button from '../common/Button';
 import Modal from '../common/Modal';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
+import MemberAPI from '../../api/member/memberAPI';
 
 const MyPageForm = () => {
   const [form, setForm] = useState({
@@ -103,19 +103,21 @@ const MyPageForm = () => {
     const validCategories = form.category ? form.category.filter((cat) => cat !== null) : [];
 
     const submitForm = {
-      memberId: user.userInfo.memberId,
       password: form.password,
       cityId: form.cityId,
       preferBranchId: form.preferBranchId,
       category: validCategories,
     };
 
-    await axios
-      .put('http://localhost:8080/member/update', submitForm)
+    await MemberAPI.update(submitForm)
       .then((response) => {
         if (response.status === 200) {
           setShowUpdateModal(true);
-          setForm({ password: '', confirmPassword: '', category: selectedCategories, cityId: form.cityId });
+          setUser({
+            isLoggedIn: user.isLoggedIn,
+            userInfo: response.data,
+            isAdmin: user.isAdmin,
+          });
         }
       })
       .catch((error) => {
@@ -133,10 +135,9 @@ const MyPageForm = () => {
 
   const handleDelete = async (e) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/member/delete/${user.userInfo.memberId}`);
+      const response = await MemberAPI.delete();
 
       if (response && response.status === 200) {
-        // 성공적인 응답 처리
         resetUserState();
         localStorage.clear();
         sessionStorage.clear();

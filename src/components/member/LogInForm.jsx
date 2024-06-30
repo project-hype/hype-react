@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
-import axiosInstance from '../../axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { userState } from '../../state/authState'; // Recoil 상태 import
 import Button from '../common/Button';
 import Modal from '../common/Modal';
+import MemberAPI from '../../api/member/memberAPI';
 
 const StyledForm = styled.form`
   display: flex;
@@ -97,11 +97,7 @@ function LogInForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await axiosInstance
-      .post('http://localhost:8080/member/login', {
-        loginId: username,
-        password: password,
-      })
+    await MemberAPI.login(username, password)
       .then((response) => {
         if (response.status === 200) {
           setUser({
@@ -126,10 +122,6 @@ function LogInForm() {
       });
   };
 
-  const handleHomeClick = () => {
-    navigate('/');
-  };
-
   const handleConfirm = () => {
     setShowModal(false);
     setLoginError(false); // 모달을 닫을 때 로그인 실패 상태를 초기화
@@ -141,7 +133,7 @@ function LogInForm() {
         <Modal message={'로그인에 실패했습니다. ID나 비밀번호를 확인해주세요.'} onConfirm={handleConfirm} />
       )}
       <StyledForm onSubmit={handleSubmit}>
-        <HypeLogo src={hypeLogo} alt="Home" onClick={handleHomeClick} />
+        <HypeLogo src={hypeLogo} />
         <InputContainer>
           <Label htmlFor="username">아이디</Label>
           <FormContainer>

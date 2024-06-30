@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import '../../assets/scss/common.scss';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../state/authState';
 import styled from 'styled-components';
-import FavoriteEvent from './FavoriteEvent';
 import EventCell from './EventCell';
+import EventAPI from '../../api/event/eventAPI';
+import MemberAPI from '../../api/member/memberAPI';
 
 const EventWrapArticle = styled.article`
   height: 100%;
@@ -25,10 +25,8 @@ const FavoriteEventList = () => {
   useEffect(() => {
     const fetchFavoriteEvents = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/member/favorites`);
-        const result = response.data.eventList;
-        setData(result);
-        console.log(result);
+        const response = await MemberAPI.favorites();
+        setData(response.data.eventList);
       } catch (error) {
         console.error(error);
       }
@@ -39,43 +37,36 @@ const FavoriteEventList = () => {
     }
   }, [user.userInfo.memberId]);
 
+  const [likeStatus, setLikeStatus] = useState({});
+
+  useEffect(() => {
+    const initialLikeStatus = {};
+    data.forEach((event) => {
+      initialLikeStatus[event.eventId] = true;
+    });
+    setLikeStatus(initialLikeStatus);
+  }, [data]);
+
   const toggleFavorite = async (eventId) => {
     try {
-      const isFavorite = data.some((event) => event.eventId === eventId && event.favorite);
+      const isFavorite = likeStatus[eventId];
       let response;
 
       if (isFavorite) {
-        response = await axios.delete('http://localhost:8080/event/favorite', {
-          data: {
-            memberId: user.userInfo.memberId,
-            eventId: eventId,
-          },
-          withCredentials: true,
-        });
-        // Remove event from list if successfully deleted
+        response = await EventAPI.deleteFavorite(eventId);
         if (response.status === 200) {
           setData(data.filter((event) => event.eventId !== eventId));
         }
       } else {
-        response = await axios.post(
-          'http://localhost:8080/event/favorite',
-          {
-            memberId: user.userInfo.memberId,
-            eventId: eventId,
-          },
-          {
-            withCredentials: true,
-          },
-        );
-        // Fetch the updated favorite list after adding a new favorite
-        if (response.status === 200) {
-          const response = await axios.get(`http://localhost:8080/member/favorites/${user.userInfo.memberId}`, {
-            withCredentials: true,
-          });
-          const result = response.data.eventList;
-          setData(result);
-        }
+        response = await EventAPI.addFavorite(eventId);
       }
+
+      setLikeStatus((prevStatus) => ({
+        ...prevStatus,
+        [eventId]: !isFavorite,
+      }));
+
+      console.log('Toggled favorite:', response.data);
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }

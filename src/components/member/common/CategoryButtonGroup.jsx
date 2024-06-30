@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import CategoryButton from './CategoryButton';
-import { ButtonGroup } from './MemberStyledComponents';
+import { ButtonGroup } from '../MemberStyledComponents';
 
 const CategoryButtonGroup = ({ selectedCategories = [], handleCategoryClick }) => (
   <ButtonGroup>

@@ -6,6 +6,24 @@ import hypeLogo from '../../assets/img/layout/hypeLogo2.png';
 import searchIcon from '../../assets/img/layout/searchIcon.png';
 import { useRecoilState } from 'recoil';
 import { userState } from '../../state/authState';
+import MemberAPI from '../../api/member/memberAPI';
+
+/**
+ * Footer
+ * @author 임원정
+ * @since 2024.06.18
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.18   임원정        최초 생성
+ * 2024.06.19   임원정        로그인, 로그아웃 기능 추가
+ * 2024.06.20   임원정        navigate 수정
+ * 2024.06.21   임원정        디자인 변경
+ * 2024.06.30   임원정        코드 리팩토링(API 사용)
+ * </pre>
+ */
 
 const Navbar = styled.nav`
   display: flex;
@@ -150,15 +168,12 @@ const Separator = styled.div`
 
 const Header = ({ isLoggedIn }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const [user, setUser] = useRecoilState(userState);
   const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      // const response = await axios.get(`http://localhost:5000/search?q=${searchQuery}`);
-      // setSearchResults(response.data);
       window.location.href = `/search?keyword=${searchQuery}`;
     } catch (error) {
       console.error('There was an error fetching the search results!', error);
@@ -178,8 +193,7 @@ const Header = ({ isLoggedIn }) => {
   };
 
   const handleLogoutClick = () => {
-    axios
-      .post('http://localhost:8080/member/logout', {}, { withCredentials: true })
+    MemberAPI.logout()
       .then(() => {
         setUser({ isLoggedIn: false, userInfo: null, isAdmin: false });
         localStorage.clear();

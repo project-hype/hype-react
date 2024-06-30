@@ -1,5 +1,18 @@
 import styled from 'styled-components';
 
+/**
+ * 필터 버튼
+ * @author 조영욱
+ * @since 2024.06.20
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.20  	조영욱        최초 생성
+ * </pre>
+ */
+
 export const FilterButton = styled.button`
   background-color: ${(props) => (props.active ? '#ff8c00' : 'white')};
   color: ${(props) => (props.active ? 'white' : '#000')};

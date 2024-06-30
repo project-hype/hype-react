@@ -12,13 +12,13 @@ import {
 } from './MemberStyledComponents'; // 스타일 컴포넌트를 import 합니다
 import Input from './Input';
 import InputContainer from './InputContainer';
-import CategoryButtonGroup from './CategoryButtonGroup';
-import CitySelect from './CitySelect';
-import BranchSelect from './BranchSelect';
+import CategoryButtonGroup from './common/CategoryButtonGroup';
+import CitySelect from './common/CitySelect';
+import BranchSelect from './common/BranchSelect';
 import RadioButton from './RadioButton';
 import Button from '../common/Button';
 import Modal from '../common/Modal';
-import axios from 'axios';
+import MemberAPI from '../../api/member/memberAPI';
 
 // 회원가입 폼 컴포넌트
 const JoinForm = () => {
@@ -83,8 +83,7 @@ const JoinForm = () => {
   };
 
   const checkIdAvailability = async () => {
-    await axios
-      .post('http://localhost:8080/member/checkLoginId', { loginId: form.loginId })
+    await MemberAPI.checkID(form.loginId)
       .then((response) => {
         if (response.status === 200) {
           setShowModal(false);
@@ -133,8 +132,7 @@ const JoinForm = () => {
     // category 배열 형식으로 전달
     submitForm.category = submitForm.category.map((id) => ({ categoryId: id }));
 
-    await axios
-      .post('http://localhost:8080/member/join', submitForm)
+    await MemberAPI.join(submitForm)
       .then((response) => {
         if (response.status === 200) {
           setModalMessage('가입해주셔서 감사합니다.');

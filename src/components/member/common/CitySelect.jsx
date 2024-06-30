@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectField } from './MemberStyledComponents';
+import { SelectField } from '../MemberStyledComponents';
 
 const CitySelect = ({ name, value, onChange, required }) => (
   <SelectField name={name} value={value} onChange={onChange} required={required}>
