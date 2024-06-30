@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 // import EventList from '../event/EventList';
-import EventList2 from '../event/EventList2';
+import EventList2 from './EventList2';
 import axios from 'axios';
 import '../../assets/scss/common.scss';
 import { userState } from '../../state/authState';

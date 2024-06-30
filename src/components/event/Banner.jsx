@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -8,6 +7,7 @@ import '../../assets/scss/common.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import EventAPI from '../../api/event/eventAPI';
 
 const InfoContainer = styled.div`
   display: flex;
@@ -74,12 +74,11 @@ function Banner() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/event/list/banner');
-        const result = response.data.eventList;
-        setData(result);
+        const response = await EventAPI.banner();
+        setData(response.data.eventList);
         // console.log(result);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
 
