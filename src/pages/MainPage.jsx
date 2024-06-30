@@ -2,7 +2,7 @@ import Banner from '../components/event/Banner';
 import EventBanner from '../components/event/EventBanner';
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../layout/MainLayout';
-import DayCalendar from '../components/common/DayCalendar';
+import DayCalendar from '../components/event/DayCalendar';
 import { userState } from '../state/authState';
 import { useRecoilValue } from 'recoil';
 import '../assets/scss/common.scss';
