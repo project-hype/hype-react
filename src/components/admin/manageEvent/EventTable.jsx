@@ -132,9 +132,9 @@ const EventTable = () => {
       {showAddModal && (
         <EventAddModal
           onClose={closeAddModal}
-          onSave={(newEvent) => {
-            setEventData([...eventData, newEvent]);
+          onSave={() => {
             closeAddModal();
+            window.location.reload();
           }}
         />
       )}
