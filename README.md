@@ -126,3 +126,44 @@
 </tr>
 </table>
 </div>
+
+<br>
+<br>
+
+## 🗂 프로젝트 구조
+
+```sql
+📦src
+ ┣ 📂api
+ ┃ ┣ 📂admin
+ ┃ ┣ 📂event
+ ┃ ┣ 📂member
+ ┣ 📂assets
+ ┃ ┣ 📂img
+ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┣ 📂event
+ ┃ ┃ ┣ 📂layout
+ ┃ ┣ 📂scss
+ ┣ 📂components
+ ┃ ┣ 📂admin
+ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┣ 📂manageBanner
+ ┃ ┃ ┣ 📂manageCategory
+ ┃ ┃ ┣ 📂manageEvent
+ ┃ ┃ ┣ 📂manageHashtag
+ ┃ ┣ 📂common
+ ┃ ┣ 📂event
+ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┣ 📂detail
+ ┃ ┃ ┣ 📂main
+ ┃ ┃ ┗ 📂search
+ ┃ ┗ 📂member
+ ┃ ┃ ┣ 📂common
+ ┣ 📂layout
+ ┃ ┣ 📂admin
+ ┣ 📂pages
+ ┃ ┣ 📂admin
+ ┃ ┣ 📂event
+ ┃ ┣ 📂member
+ ┗ 📂state
+```
